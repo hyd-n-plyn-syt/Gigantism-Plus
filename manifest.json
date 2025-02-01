@@ -1,0 +1,9 @@
+{
+    "id": "gigantism_Plus",
+    "title": "{{metamorphic|Gigantism Plus}}",
+    "description": "The {{rules|Gigantism}} mod activates the physical defect {{rules|Gigantism}}, allowing it to be improved with mutation points as you level up. This makes it one of the few defects that can be ranked up, enhancing its usefulness. The mod introduces gigantic fists, a scaling natural weapon considered a cudgel, which spawns on all your arms and scales with the {{rules|Gigantism}} rank, providing significant damage boosts.\n\nHowever, you cannot wear or wield non-gigantic items, making gear hunting challenging. The defect also increases your weight, causing you to break non-gigantic furniture. The mod is primarily tested by just me, so feedback on any issues is welcome. Enjoy your powerful, gigantic mutants!",
+    "version": "1.0",
+    "author": "{{metamorphic|hydnplynsyt}}",
+    "tags": "Mutation, Balance, Cheat",
+    "PreviewImage": "preview.png"
+}

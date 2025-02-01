@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mods>
+  <mod Part="ModGigantic" Tables="CommonMods,PotteryMods,ShevaPotteryMods,EnergyCellMods,GrenadeMods,NuggetMods,GemstoneMods,TonicMods" Rarity="R" TinkerDisplayName="gigantic" TinkerAllowed="true" CanAutoTinker="false" BonusAllowed="false" Value="1.5" TinkerCategory="utility" />
+</mods>
