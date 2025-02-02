@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<options>
+  <option ID="Option_GigantismPlus_EnableGiganticStartingGear"
+    DisplayText="Gigantify starting equipment for Gigantic ({{r|D}}) players (requires new save)"
+    Category="Mods: Gigantism Plus"
+    Type="Checkbox" Default="Yes" />
+  <option ID="Option_GigantismPlus_EnableGiganticStartingGear_Grenades"
+    Requires="Option_GigantismPlus_EnableGiganticStartingGear==Yes"
+    DisplayText="Include starting grenades (requires new save)"
+    Category="Mods: Gigantism Plus"
+    Type="Checkbox" Default="No" />
+  <option ID="Option_GigantismPlus_SelectGiganticTinkering"
+    DisplayText="Allow tinkering of gigantic modifier for: (requires new save)"
+    Category="Mods: Gigantism Plus"
+    Type="Combo" Default="Gigantic ({{r|D}}) players"
+    Values="No one,Gigantic ({{r|D}}) players,Everyone" />
+  <option ID="Option_GigantismPlus_SelectGiganticDerarification"
+    DisplayText="Make gigantic items slightly more common for: (requires new save)"
+    Category="Mods: Gigantism Plus"
+    Type="Combo" Default="Gigantic ({{r|D}}) players"
+    Values="No one,Gigantic ({{r|D}}) players,Everyone" />
+</options>

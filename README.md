@@ -14,7 +14,11 @@ This mod enhances and enables for character creation, the physical defect Gigant
 
 ## Contributing
 
-I’m still trying to figure out how to tag all starting gear as gigantic upon creation. If you have any ideas on where to look in the assemblies, or want to [contribute](https://github.com/hyd-n-plyn-syt/Gigantism-Plus), feel free to let me know or make a request! This mod has primarily been tested by me, so please report any issues, and we'll work to resolve them!
+If you want to [contribute](https://github.com/hyd-n-plyn-syt/Gigantism-Plus), feel free to let me know or make a request! This mod has primarily been tested by me, so please report any issues, and we'll work to resolve them!
+
+**Things to work out or implement**:
+- Better process for adjusting the tinkerable modifiers list post Blueprint Preload. Currently using "ductape" to achieve this and something more likely to be compatible with other mods is preferable.
+- Process to overcome late-game softlock based on gigantic creatures and their inability to fit into certain interior spaces.
 
 ---
 
