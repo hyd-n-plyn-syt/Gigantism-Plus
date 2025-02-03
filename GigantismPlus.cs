@@ -98,7 +98,7 @@ namespace XRL.World.Parts.Mutation
         public override string GetDescription()
         {
             return "You are unusually large, find it difficult to enter small spaces, and can typically {{rules|only}} use {{rules|gigantic}} equipment.\n" 
-                 + "You are heavy and can carry more weight.\n\n"
+                 + "You are heavy, can carry more weight, and all your natural weapons are now gigantic.\n\n"
                  + "Your gigantic fists gain:\n"
                  + "{{rules|+1}} To-Hit every {{rules|2 mutation levels}}\n"
                  + "{{B|d1}} damage every {{B|3 mutation levels}}\n"
@@ -114,7 +114,7 @@ namespace XRL.World.Parts.Mutation
             int diceType = 3 + (Level / 3); // Start at d3, increase every 3 levels
             int toHitBonus = -3 + (Level / 2); // -3 to start, increases by +1 every 2 levels
 
-            return "gigantic fists {{rules|\x1A 4}}{k|/9999}} {{r|\x03}}{{W|" + diceCount + "}}{{rules|d}}{{B|" + diceType + "}}\n"
+            return "gigantic fists {{rules|\x1A 4}}{{k|/9999}} {{r|\x03}}{{W|" + diceCount + "}}{{rules|d}}{{B|" + diceType + "}}{{rules|+3}}\n"
                  + "and {{rules|" + toHitBonus + "}} To-Hit\n";
         }
 
@@ -156,7 +156,7 @@ namespace XRL.World.Parts.Mutation
                     if (fistWeapon != null)
                     {
                         fistWeapon.BaseDamage = damage; // Adjust base damage
-                        fistWeapon.MaxStrengthBonus = 9995; // Unlimited strength bonus
+                        fistWeapon.MaxStrengthBonus = 9999; // Unlimited strength bonus
                         fistWeapon.HitBonus = toHitBonus; // Hit bonus based on mutation level
                     }
 
