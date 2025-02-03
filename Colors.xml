@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<colors>
+  <shaders>
+    <shader Name="gigantic" Type="alternation" Colors="w-w-w" ShowInPicker="true" />
+  </shaders>
+</colors>

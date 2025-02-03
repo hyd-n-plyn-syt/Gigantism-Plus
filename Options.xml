@@ -1,22 +1,67 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <options>
-  <option ID="Option_GigantismPlus_EnableGiganticStartingGear"
-    DisplayText="Gigantify starting equipment for Gigantic ({{r|D}}) players (requires new save)"
-    Category="Mods: Gigantism Plus"
-    Type="Checkbox" Default="Yes" />
-  <option ID="Option_GigantismPlus_EnableGiganticStartingGear_Grenades"
-    Requires="Option_GigantismPlus_EnableGiganticStartingGear==Yes"
-    DisplayText="Include starting grenades (requires new save)"
-    Category="Mods: Gigantism Plus"
-    Type="Checkbox" Default="No" />
-  <option ID="Option_GigantismPlus_SelectGiganticTinkering"
-    DisplayText="Allow tinkering of gigantic modifier for: (requires new save)"
-    Category="Mods: Gigantism Plus"
-    Type="Combo" Default="Gigantic ({{r|D}}) players"
-    Values="No one,Gigantic ({{r|D}}) players,Everyone" />
-  <option ID="Option_GigantismPlus_SelectGiganticDerarification"
-    DisplayText="Make gigantic items slightly more common for: (requires new save)"
-    Category="Mods: Gigantism Plus"
-    Type="Combo" Default="Gigantic ({{r|D}}) players"
-    Values="No one,Gigantic ({{r|D}}) players,Everyone" />
+	
+	<option 
+		ID="Option_GigantismPlus_EnableGiganticStartingGear"
+	    DisplayText="{{gigantic|Gigantify}} starting equipment for Gigantic ({{r|D}}) players ({{R|new save}})"
+	    Category="Mods: Gigantism Plus"
+	    Type="Checkbox" Default="Yes"
+	>
+		<helptext>
+			A {{gigantic|gigantic}} character would have {{w|gigantic}} equipment when they arrive in Qud.
+			Disabling this option will make for a more difficult start.
+		</helptext>
+	</option>
+	
+	<option 
+		ID="Option_GigantismPlus_EnableGiganticStartingGear_Grenades"
+	    Requires="Option_GigantismPlus_EnableGiganticStartingGear==Yes"
+	    DisplayText="Include starting grenades ({{R|new save}})"
+	    Category="Mods: Gigantism Plus"
+	    Type="Checkbox" Default="No"
+	>
+		<helptext>
+			The {{gigantic|gigantic}} modifier typically increases the radius of grenades which could represent a significant reduction in starting difficulty for characters who generate with several of them.
+		</helptext>
+	</option>
+
+	<option
+		ID="Option_GigantismPlus_EnableGigantismRapidAdvance"
+	    DisplayText="Make Gigantism ({{r|D}}) eligible for rapid advancement"
+	    Category="Mods: Gigantism Plus"
+	    Type="Checkbox" Default="Yes"
+	>
+		<helptext>
+			({{r|D}})efects aren't typically able to be leveled up and are excluded from rapid advancement by default.
+			When enabled, Gigantism ({{r|D}}) will be included in the list of physical mutations for this purpose.
+		</helptext>
+	</option>
+	
+	<option 
+		ID="Option_GigantismPlus_SelectGiganticTinkering"
+	    DisplayText="Allow tinkering of {{gigantic|gigantic}} modifier for: ({{R|new save}})"
+	    Category="Mods: Gigantism Plus"
+	    Type="Combo" Default="Gigantic ({{r|D}}) players"
+	    Values="No one,Gigantic ({{r|D}}) players,Everyone"
+	>
+		<helptext>
+			This makes the {{gigantic|gigantic}} modifier tinkerable, including the availability of the data disk for it.
+			Its tech tier has been adjusted up to 3 so that it will cost at least a {{b|3}} bit to tinker.
+			Tinker I is the required skill.
+		</helptext>
+	</option>
+	
+	<option 
+		ID="Option_GigantismPlus_SelectGiganticDerarification"
+	    DisplayText="Make {{gigantic|gigantic}} items slightly more common for: ({{R|new save}})"
+	    Category="Mods: Gigantism Plus"
+	    Type="Combo" Default="Gigantic ({{r|D}}) players"
+	    Values="No one,Gigantic ({{r|D}}) players,Everyone"
+	>
+		<helptext>
+			This makes {{gigantic|gigantic}} items a little less rare to find by adjusting their rarity from R2 to R.
+			Some examples of other mods with R rarity: {{spiked|Spiked}}, {{k|Nulling}}, and {{C|Radio Powered}}.
+		</helptext>
+	</option>
+	
 </options>

@@ -10,7 +10,7 @@ namespace Mods.GigantismPlus
         public void mutate(GameObject player)
         {
             // Is the player Gigantic, and is the option to have gigantic starting gear set?
-            if (player.HasPart("Gigantism") && Options.EnableGiganticStartingGear)
+            if (player.HasPart("GigantismPlus") && Options.EnableGiganticStartingGear)
             {
                 // Cycle the player's inventory and equipped items.
                 foreach (GameObject item in player.GetInventoryAndEquipment())
