@@ -16,8 +16,8 @@ namespace Mods.GigantismPlus
             // Option Value 2 is "Everyone"
             // Option Value 1 is "Gigantic (D) players"
             // Everyone || (Gigantic && player is Gigantic)
-            bool ShouldDerarify = Options.SelectGiganticDerarification == 2 || (Options.SelectGiganticDerarification == 1 && player.HasPart("Gigantism"));
-            bool ShouldGiganticTinkerable = Options.SelectGiganticTinkering == 2 || (Options.SelectGiganticTinkering == 1 && player.HasPart("Gigantism"));
+            bool ShouldDerarify = Options.SelectGiganticDerarification == 2 || (Options.SelectGiganticDerarification == 1 && player.HasPart("GigantismPlus"));
+            bool ShouldGiganticTinkerable = Options.SelectGiganticTinkering == 2 || (Options.SelectGiganticTinkering == 1 && player.HasPart("GigantismPlus"));
             
             // find the gigantic modifier ModEntry in the ModList
             foreach (ModEntry mod in ModificationFactory.ModList)
