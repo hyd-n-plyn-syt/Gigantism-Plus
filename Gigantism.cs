@@ -7,9 +7,9 @@ using XRL.World.Parts.Mutation;
 namespace XRL.World.Parts.Mutation
 {
     [Serializable]
-    public class Gigantism : BaseDefaultEquipmentMutation
+    public class GigantismPlus : BaseDefaultEquipmentMutation
     {
-        public Gigantism()
+        public GigantismPlus()
         {
             DisplayName = "Gigantism ({{r|D}})";
             base.Type = "Physical";
