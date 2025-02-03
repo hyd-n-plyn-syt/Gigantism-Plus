@@ -23,8 +23,10 @@ namespace Mods.GigantismPlus
 		
         // I believe these might actually need a full reload and not just a new save to take effect.
         // TODO: make them reinitialise between new games if they don't already.
+        // - Rapid advancement option seems to work on the fly.
         public static bool EnableGiganticStartingGear => GetOption("Option_GigantismPlus_EnableGiganticStartingGear").EqualsNoCase("Yes");
         public static bool EnableGiganticStartingGear_Grenades => GetOption("Option_GigantismPlus_EnableGiganticStartingGear_Grenades").EqualsNoCase("Yes");
+        public static bool EnableGigantismRapidAdvance => GetOption("Option_GigantismPlus_EnableGigantismRapidAdvance").EqualsNoCase("Yes");
         public static int SelectGiganticTinkering => ParseSelectPlayer(GetOption("Option_GigantismPlus_SelectGiganticTinkering"));
         public static int SelectGiganticDerarification => ParseSelectPlayer(GetOption("Option_GigantismPlus_SelectGiganticDerarification"));
     
