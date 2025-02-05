@@ -407,6 +407,7 @@ namespace XRL.World.Parts.Mutation
                         Debug.Message("Adjustment", Math.Round((double)(baseWeight * weightFactor) - baseWeight).ToString());
                         Debug.Message("New Weight", actor.Physics._Weight.ToString());
                     }
+                    ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_positiveVitality");
                     Debug.Message("Should be Hunched Over");
                 }
                 else
@@ -427,6 +428,7 @@ namespace XRL.World.Parts.Mutation
                         Debug.Message("New Weight", actor.Physics._Weight.ToString());
                     }
                     Debug.Message("Should be Standing Tall");
+                    ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_negativeVitality");
                 }
                 Debug.Message("IsHunchedGiant", (IsHunchedGiant ? "true" : "false"));
                 Debug.Message("HasPart<HunchedGiant>", (ParentObject.HasPart<HunchedGiant>() ? "true" : "false"));
