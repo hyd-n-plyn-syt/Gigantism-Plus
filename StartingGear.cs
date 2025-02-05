@@ -23,7 +23,10 @@ namespace Mods.GigantismPlus
                         
                         // Is the item a trade good? We don't want gigantic copper nuggets making the start too easy
                         if (item.HasTag("DynamicObjectsTable:TradeGoods")) continue;
-                        
+
+                        // Is the item a tonic? Double doses are basically useless in the early game
+                        if (item.HasTag("DynamicObjectsTable:Tonics_NonRare")) continue;
+
                         // apply the gigantic mod to the item and attempt to auto-equip it
                         ItemModding.ApplyModification(item, "ModGigantic");
                         player.AutoEquip(item);
