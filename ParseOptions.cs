@@ -29,6 +29,7 @@ namespace Mods.GigantismPlus
         public static bool EnableGigantismRapidAdvance => GetOption("Option_GigantismPlus_EnableGigantismRapidAdvance").EqualsNoCase("Yes");
         public static int SelectGiganticTinkering => ParseSelectPlayer(GetOption("Option_GigantismPlus_SelectGiganticTinkering"));
         public static int SelectGiganticDerarification => ParseSelectPlayer(GetOption("Option_GigantismPlus_SelectGiganticDerarification"));
-    
+        public static bool EnableGigantismPlusDebug => GetOption("Option_GigantismPlus_Debug").EqualsNoCase("Yes");
+
     }
 }
