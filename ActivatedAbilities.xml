@@ -7,7 +7,7 @@
 			<br />
 			<p>Attempting to sprint or fly while hunched over will cause you stand up straight.</p>
 		</description>
-		<UITile Tile="Abil_GigantismPlus_Hunch_ToggleOff.png" Foreground="Y" Detail="w" />
+		<UITile Tile="Abil_GigantismPlus_Hunch_ToggleOff.png" Foreground="y" Detail="w" />
 		<UITile Tile="Abil_GigantismPlus_Hunch_ToggleOn.png" Foreground="Y" Detail="w"  State="ToggleOn" />
 	</ability>
 </activatedabilities>
