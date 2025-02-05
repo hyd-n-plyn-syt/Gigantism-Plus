@@ -1,5 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <options>
+
+	<option
+        ID="Option_GigantismPlus_Debug"
+        DisplayText="{{w|Gigantism Plus}}: Show debug messages and logs"
+        Category="Debug"
+        Type="Checkbox"
+        Default="No"
+    >
+		<helptext>
+			When enabled, debug messages and logs will appear when the mod performs certain functions.
+
+			The default is {{w|Disabled}}.
+		</helptext>
+	</option>
 	
 	<option 
 		ID="Option_GigantismPlus_EnableGiganticStartingGear"
@@ -10,6 +24,8 @@
 		<helptext>
 			A {{gigantic|gigantic}} character would have {{w|gigantic}} equipment when they arrive in Qud.
 			Disabling this option will make for a more difficult start.
+
+			The default is {{w|Enabled}}.
 		</helptext>
 	</option>
 	
@@ -22,6 +38,8 @@
 	>
 		<helptext>
 			The {{gigantic|gigantic}} modifier typically increases the radius of grenades which could represent a significant reduction in starting difficulty for characters who generate with several of them.
+
+			The default is {{w|Disabled}}.
 		</helptext>
 	</option>
 
@@ -34,6 +52,8 @@
 		<helptext>
 			({{r|D}})efects aren't typically able to be leveled up and are excluded from rapid advancement by default.
 			When enabled, Gigantism ({{r|D}}) will be included in the list of physical mutations for this purpose.
+
+			The default is {{w|Enabled}}.
 		</helptext>
 	</option>
 	
@@ -48,6 +68,8 @@
 			This makes the {{gigantic|gigantic}} modifier tinkerable, including the availability of the data disk for it.
 			Its tech tier has been adjusted up to 3 so that it will cost at least a {{b|3}} bit to tinker.
 			Tinker I is the required skill.
+
+			The default is {{w|Gigantic ({{r|D}}) players}}.
 		</helptext>
 	</option>
 	
@@ -61,6 +83,8 @@
 		<helptext>
 			This makes {{gigantic|gigantic}} items a little less rare to find by adjusting their rarity from R2 to R.
 			Some examples of other mods with R rarity: {{spiked|Spiked}}, {{k|Nulling}}, and {{C|Radio Powered}}.
+
+			The default is {{w|Gigantic ({{r|D}}) players}}.
 		</helptext>
 	</option>
 	
