@@ -1,5 +1,5 @@
 <mutations>
-  <category Name="PhysicalDefects" Load="merge">
-    <mutation Name="GigantismPlus" Cost="-1" MaxSelected="1" Class="GigantismPlus" Exclusions="" BearerDescription="those who are gigantic" Tile="GigantismPlus.png" />
-  </category>
+    <category Name="PhysicalDefects" Load="merge">
+        <mutation Name="GigantismPlus" Cost="-3" MaxSelected="1" Class="GigantismPlus" Exclusions="" BearerDescription="those who are gigantic" Tile="GigantismPlus.png" Defect="true" />
+    </category>
 </mutations>
