@@ -81,26 +81,10 @@ namespace XRL.World.Parts.Mutation
         {
             get
             {
-                /*
-                if (ParentObject.HasTag("HunchedGiant"))
-                {
-                    return true;
-                }
-                int intProperty = ParentObject.GetIntProperty("HunchedGiant");
-                if (intProperty > 0)
-                {
-                    return true;
-                }
-                if (intProperty < 0)
-                {
-                    return false;
-                }
-                */
                 return ParentObject.HasPart<HunchedGiant>();
             }
             set
             {
-                //ParentObject.SetIntProperty("HunchedGiant", value ? 1 : (-1));
                 if (value)
                 {
                     ParentObject.RequirePart<HunchedGiant>();
@@ -111,6 +95,8 @@ namespace XRL.World.Parts.Mutation
                 }
             }
         }
+
+        private bool IsHunchFree = false;
 
         public string BlueprintName => Variant.Coalesce("GiganticFist");
         
@@ -172,7 +158,6 @@ namespace XRL.World.Parts.Mutation
             return base.ChangeLevel(NewLevel);
         }
 
-        // needs to convert from Burrow Claws.
         public override void CollectStats(Templates.StatCollector stats, int Level)
         {
             
@@ -184,8 +169,6 @@ namespace XRL.World.Parts.Mutation
             stats.Set("HunchedOverMS", HunchedOverMS);
         }
 
-        // #############################
-        // Something is bugging out here it seems that prevents the world from loading.
         public override bool WantEvent(int ID, int cascade)
         {
             /*
@@ -195,13 +178,14 @@ namespace XRL.World.Parts.Mutation
             }
             */
             // Check if the ID parameter matches
-            // BeforeLevelGainedEvent or
-            // AfterLevelGainedEvent or
+            // or if a Wanted Event.ID comes through
             // SingletonEvent<BeforeAbilityManagerOpenEvent>.
             return base.WantEvent(ID, cascade)
                 || ID == BeforeLevelGainedEvent.ID
                 || ID == AfterLevelGainedEvent.ID
-                || ID == GetMaxCarriedWeightEvent.ID;
+                || ID == GetMaxCarriedWeightEvent.ID
+                || ID == CanEnterInteriorEvent.ID
+                || ID == InventoryActionEvent.ID;
         }
 
         // method to swap Gigantism mutation category between Physical and PhysicalDefects
@@ -277,7 +261,31 @@ namespace XRL.World.Parts.Mutation
             {
                 E.AdjustWeight(2.0);
             }
-            return true;
+            return base.HandleEvent(E);
+        }
+
+        public override bool HandleEvent(CanEnterInteriorEvent E)
+        {
+            GameObject actor = E.Actor;
+            if (actor.IsGiganticCreature) 
+            {
+                IsHunchFree = true;
+                CommandEvent.Send(actor, "CommandToggleGigantismPlusHunchOver");
+                bool check = CanEnterInteriorEvent.Check(E.Actor, E.Object, E.Interior, ref E.Status, ref E.Action, ref E.ShowMessage);
+                E.Status = check ? 0 : E.Status;
+            }
+            return base.HandleEvent(E);
+        }
+
+        public override bool HandleEvent(InventoryActionEvent E)
+        {
+            GameObject actor = E.Actor;
+            if (actor.IsGiganticCreature)
+            {
+                IsHunchFree = true;
+                CommandEvent.Send(actor, "CommandToggleGigantismPlusHunchOver");
+            }
+            return base.HandleEvent(E);
         }
 
         public override bool HandleEvent(BeforeAbilityManagerOpenEvent E)
@@ -388,10 +396,17 @@ namespace XRL.World.Parts.Mutation
             if (E.ID == "CommandToggleGigantismPlusHunchOver")
             {
                 GameObject actor = this.ParentObject;
+                if (actor.CurrentZone.GetBlueprint().Name == "Control pit" && !actor.IsGiganticCreature)
+                {
+                    XRL.UI.Popup.Show("This space is too small for you to stand up upright!");
+                    return base.FireEvent(E);
+                }
                 ToggleMyActivatedAbility(EnableActivatedAbilityID, null, Silent: false, null);
+                int EnergyCost = IsHunchFree ? 0 : 1000;
                 if (IsMyActivatedAbilityToggledOn(EnableActivatedAbilityID))
                 {
-                    UseEnergy(1000, "Physical Defect Mutation Gigantism Hunch Over");
+                    // Hunching
+                    UseEnergy(EnergyCost, "Physical Defect Mutation Gigantism Hunch Over");
                     IsHunchedGiant = true;
                     actor.RequirePart<HunchedGiant>();
                     actor.IsGiganticCreature = false;
@@ -412,7 +427,8 @@ namespace XRL.World.Parts.Mutation
                 }
                 else
                 {
-                    UseEnergy(1000, "Physical Defect Mutation Gigantism Straighten Up");
+                    // Standing upright
+                    UseEnergy(EnergyCost, "Physical Defect Mutation Gigantism Straighten Up");
                     actor.IsGiganticCreature = true;
                     actor.RemovePart<HunchedGiant>();
                     IsHunchedGiant = false;
@@ -430,116 +446,25 @@ namespace XRL.World.Parts.Mutation
                     Debug.Message("Should be Standing Tall");
                     ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_negativeVitality");
                 }
+                IsHunchFree = false;
                 Debug.Message("IsHunchedGiant", (IsHunchedGiant ? "true" : "false"));
                 Debug.Message("HasPart<HunchedGiant>", (ParentObject.HasPart<HunchedGiant>() ? "true" : "false"));
                 Debug.Message("IsGiganticCreature", (ParentObject.IsGiganticCreature ? "true" : "false"));
             }
-            
-            /*
-            if (E.ID == "CommandToggleGigantismPlusHunchOver")
-            {
-                XRL.Messages.MessageQueue.AddPlayerMessage("Whoa! Someone Wants to Hunch!");
-                StraightenUp();
-                XRL.Messages.MessageQueue.AddPlayerMessage("Hey now. We were already standing tall!");
-                UseEnergy(1000, "Physical Defect Mutation Gigantism Hunch Over");
-                HunchOver(Message: true);
-                XRL.Messages.MessageQueue.AddPlayerMessage("Whoa! Someone Wanted to Hunch!");
-                The.Core.RenderBase();
-            }*/
-
+            // The.Core.RenderBase();
             return base.FireEvent(E);
         }
 
-        // needs to be converted from Carapace.
-        public void HunchOver(bool Message = false)
+        // Want to move the bulk of the Active Ability here.
+        public void HunchOver()
         {
             return;
-            /*
-            if (IsHunchedGiant)
-            {
-                return;
-            }
-            IsHunchedGiant = true;
-            ParentObject.IsGiganticCreature = false;
-            XRL.Messages.MessageQueue.AddPlayerMessage("Bendin' Ova!");
-
-            /*
-            TightFactor = ACModifier;
-            ParentObject.Statistics["AV"].Bonus += TightFactor;
-            ParentObject.Statistics["DV"].Penalty += 2;
-            ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_positiveVitality");
-            if (!Message)
-            {
-                return;
-            }
-            if (CarapaceObject == null)
-            {
-                MetricsManager.LogError(ParentObject.DebugName + " had no CarapaceObject for Carapace tighten message");
-                if (ParentObject.IsPlayer())
-                {
-                    Popup.Show("You tighten your carapace. Your AV increases by {{G|" + TightFactor + "}}.");
-                }
-                else
-                {
-                    DidX("tighten", ParentObject.its + " carapace", null, null, null, null, null, UseFullNames: false, IndefiniteSubject: false, null, null, DescribeSubjectDirection: false, DescribeSubjectDirectionLate: false, AlwaysVisible: false, FromDialog: true);
-                }
-            }
-            else if (ParentObject.IsPlayer())
-            {
-                Popup.Show("You tighten " + ParentObject.poss(CarapaceObject, Definite: true, null) + ". Your AV increases by {{G|" + TightFactor + "}}.");
-            }
-            else
-            {
-                DidXToY("tighten", CarapaceObject, null, null, null, null, null, null, UseFullNames: false, IndefiniteSubject: false, IndefiniteObject: false, IndefiniteObjectForOthers: false, PossessiveObject: false, null, ParentObject, null, DescribeSubjectDirection: false, DescribeSubjectDirectionLate: false, AlwaysVisible: false, FromDialog: true);
-            }
-            */
-
         } //!--- public void HunchOver(bool Message = false)
 
-        // needs to be converted from Carapace.
-        public void StraightenUp(bool Message = false)
+        // Want to move the bulk of the Active Ability here.
+        public void StraightenUp()
         {
             return;
-            /*
-            if (!IsHunchedGiant)
-            {
-                return;
-            }
-            IsHunchedGiant = false;
-            ParentObject.IsGiganticCreature = true;
-            
-            /*
-            ParentObject.Statistics["AV"].Bonus -= TightFactor;
-            ParentObject.Statistics["DV"].Penalty -= 2;
-            Tight = false;
-            TightFactor = 0;
-            ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_negativeVitality");
-            if (!Message)
-            {
-                return;
-            }
-            if (CarapaceObject == null)
-            {
-                MetricsManager.LogError(ParentObject.DebugName + " had no CarapaceObject for Carapace loosen message");
-                if (ParentObject.IsPlayer())
-                {
-                    Popup.Show(ParentObject.Poss("carapace") + " loosens. Your AV decreases by {{R|" + ACModifier + "}}.");
-                }
-                else
-                {
-                    IComponent<GameObject>.EmitMessage(ParentObject, ParentObject.Poss("carapace") + " loosens.");
-                }
-            }
-            else if (ParentObject.IsPlayer())
-            {
-                Popup.Show(CarapaceObject.Does("loosen", int.MaxValue, null, null, null, AsIfKnown: false, Single: false, NoConfusion: false, NoColor: false, Stripped: false, WithoutTitles: true, Short: true, BaseOnly: false, WithIndefiniteArticle: false, null, IndicateHidden: false, Pronoun: false, SecondPerson: true, null) + ". Your AV decreases by {{R|" + ACModifier + "}}.");
-            }
-            else
-            {
-                IComponent<GameObject>.EmitMessage(ParentObject, CarapaceObject.Does("loosen", int.MaxValue, null, null, null, AsIfKnown: false, Single: false, NoConfusion: false, NoColor: false, Stripped: false, WithoutTitles: true, Short: true, BaseOnly: false, WithIndefiniteArticle: false, null, IndicateHidden: false, Pronoun: false, SecondPerson: true, null) + ".");
-            }
-            */
-
         } //!--- public void StraightenUp(bool Message = false)
 
     } //!--- public class GigantismPlus : BaseDefaultEquipmentMutation
