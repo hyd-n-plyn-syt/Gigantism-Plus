@@ -1,22 +1,153 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <options>
-  <option ID="Option_GigantismPlus_EnableGiganticStartingGear"
-    DisplayText="Gigantify starting equipment for Gigantic ({{r|D}}) players (requires new save)"
-    Category="Mods: Gigantism Plus"
-    Type="Checkbox" Default="Yes" />
-  <option ID="Option_GigantismPlus_EnableGiganticStartingGear_Grenades"
-    Requires="Option_GigantismPlus_EnableGiganticStartingGear==Yes"
-    DisplayText="Include starting grenades (requires new save)"
-    Category="Mods: Gigantism Plus"
-    Type="Checkbox" Default="No" />
-  <option ID="Option_GigantismPlus_SelectGiganticTinkering"
-    DisplayText="Allow tinkering of gigantic modifier for: (requires new save)"
-    Category="Mods: Gigantism Plus"
-    Type="Combo" Default="Gigantic ({{r|D}}) players"
-    Values="No one,Gigantic ({{r|D}}) players,Everyone" />
-  <option ID="Option_GigantismPlus_SelectGiganticDerarification"
-    DisplayText="Make gigantic items slightly more common for: (requires new save)"
-    Category="Mods: Gigantism Plus"
-    Type="Combo" Default="Gigantic ({{r|D}}) players"
-    Values="No one,Gigantic ({{r|D}}) players,Everyone" />
+
+	<option
+        ID="Option_GigantismPlus_DebugV"
+        DisplayText="{{w|Gigantism Plus}}: Output debug entries to Player.log"
+        Category="Debug"
+        Type="Checkbox"
+        Default="No"
+    >
+		<helptext>
+			When enabled, debug entries will be sent to the Player.log file when certain functions are perfomed within this mod.
+
+			The default is {{w|Disabled}}.
+		</helptext>
+	</option>
+
+	<option
+        ID="Option_GigantismPlus_DebugIncludeInMessage"
+		Requires="Option_GigantismPlus_DebugV==Yes"
+        DisplayText="{{w|Gigantism Plus}}: Also show debug entries in the Message Queue"
+        Category="Debug"
+        Type="Checkbox"
+        Default="No"
+    >
+		<helptext>
+			When enabled, debug entries will be sent to the Message Queue any time (with few exceptions) they would be sent to Player.log.
+
+			The default is {{w|Disabled}}.
+		</helptext>
+	</option>
+	
+	<option
+        ID="Option_GigantismPlus_DebugVV"
+		Requires="Option_GigantismPlus_DebugV==Yes"
+        DisplayText="{{w|Gigantism Plus}}: Show verbose debug entries"
+        Category="Debug"
+        Type="Checkbox"
+        Default="No"
+    >
+		<helptext>
+			When enabled, more debug entries will sent to appropriate channels when a wider array of functions are performed within this mod.
+
+			The default is {{w|Disabled}}.
+		</helptext>
+	</option>
+
+	<option
+        ID="Option_GigantismPlus_DebugVVV"
+		Requires="Option_GigantismPlus_DebugV==Yes,Option_GigantismPlus_DebugVV==Yes"
+        DisplayText="{{w|Gigantism Plus}}: Show {{r|very}} verbose debug entries"
+        Category="Debug"
+        Type="Checkbox"
+        Default="No"
+    >
+		<helptext>
+			When enabled, {{r|even more}} debug entries will sent to appropriate channels when {{r|an even wider}} array of functions are performed within this mod.
+
+			The default is {{w|Disabled}}.
+		</helptext>
+	</option>
+
+	<option
+        ID="Option_GigantismPlus_DebugVVVV"
+		Requires="Option_GigantismPlus_DebugV==Yes,Option_GigantismPlus_DebugVV==Yes,Option_GigantismPlus_DebugVVV==Yes"
+        DisplayText="{{w|Gigantism Plus}}: Show {{R|maximally}} verbose debug entries"
+        Category="Debug"
+        Type="Checkbox"
+        Default="No"
+    >
+		<helptext>
+			{{R|Not Recommended}}
+			
+			When enabled, {{R|the most}} debug entries will sent to appropriate channels when {{R|the widest}} array of functions are performed within this mod.
+
+			The default is {{w|Disabled}}.
+		</helptext>
+	</option>
+	
+	<option 
+		ID="Option_GigantismPlus_EnableGiganticStartingGear"
+	    DisplayText="{{gigantic|Gigantify}} starting equipment for Gigantic ({{r|D}}) players ({{R|new save}})"
+	    Category="Mods: Gigantism Plus"
+	    Type="Checkbox" Default="Yes"
+	>
+		<helptext>
+			A {{gigantic|gigantic}} character would have {{w|gigantic}} equipment when they arrive in Qud.
+			Disabling this option will make for a more difficult start.
+
+			The default is {{w|Enabled}}.
+		</helptext>
+	</option>
+	
+	<option 
+		ID="Option_GigantismPlus_EnableGiganticStartingGear_Grenades"
+	    Requires="Option_GigantismPlus_EnableGiganticStartingGear==Yes"
+	    DisplayText="Include starting grenades ({{R|new save}})"
+	    Category="Mods: Gigantism Plus"
+	    Type="Checkbox" Default="No"
+	>
+		<helptext>
+			The {{gigantic|gigantic}} modifier typically increases the radius of grenades which could represent a significant reduction in starting difficulty for characters who generate with several of them.
+
+			The default is {{w|Disabled}}.
+		</helptext>
+	</option>
+
+	<option
+		ID="Option_GigantismPlus_EnableGigantismRapidAdvance"
+	    DisplayText="Make Gigantism ({{r|D}}) eligible for rapid advancement"
+	    Category="Mods: Gigantism Plus"
+	    Type="Checkbox" Default="Yes"
+	>
+		<helptext>
+			({{r|D}})efects aren't typically able to be leveled up and are excluded from rapid advancement by default.
+			When enabled, Gigantism ({{r|D}}) will be included in the list of physical mutations for this purpose.
+
+			The default is {{w|Enabled}}.
+		</helptext>
+	</option>
+	
+	<option 
+		ID="Option_GigantismPlus_SelectGiganticTinkering"
+	    DisplayText="Allow tinkering of {{gigantic|gigantic}} modifier for: ({{R|new save}})"
+	    Category="Mods: Gigantism Plus"
+	    Type="Combo" Default="Gigantic ({{r|D}}) players"
+	    Values="No one,Gigantic ({{r|D}}) players,Everyone"
+	>
+		<helptext>
+			This makes the {{gigantic|gigantic}} modifier tinkerable, including the availability of the data disk for it.
+			Its tech tier has been adjusted up to 3 so that it will cost at least a {{b|3}} bit to tinker.
+			Tinker I is the required skill.
+
+			The default is {{w|Gigantic ({{r|D}}) players}}.
+		</helptext>
+	</option>
+	
+	<option 
+		ID="Option_GigantismPlus_SelectGiganticDerarification"
+	    DisplayText="Make {{gigantic|gigantic}} items slightly more common for: ({{R|new save}})"
+	    Category="Mods: Gigantism Plus"
+	    Type="Combo" Default="Gigantic ({{r|D}}) players"
+	    Values="No one,Gigantic ({{r|D}}) players,Everyone"
+	>
+		<helptext>
+			This makes {{gigantic|gigantic}} items a little less rare to find by adjusting their rarity from R2 to R.
+			Some examples of other mods with R rarity: {{spiked|Spiked}}, {{k|Nulling}}, and {{C|Radio Powered}}.
+
+			The default is {{w|Gigantic ({{r|D}}) players}}.
+		</helptext>
+	</option>
+	
 </options>
