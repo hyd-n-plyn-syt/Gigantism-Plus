@@ -1,11 +1,11 @@
 <activatedabilities>
 	<ability Command="CommandToggleGigantismPlusHunchOver">
 		<description>
-			<p>You can bend over becoming hunched to fit into smaller spaces.</p>
-			<br />
+			<p>Hunching over allows you to enter smaller spaces you wouldn't otherwise fit within.</p>
+			<!--br />
 			<p>While hunched you gain <stat Name="HunchedOverAV" /> AV, take a -6 <stat Name="HunchedOverDV" /> penalty, take a <stat Name="HunchedOverQN" /> Quickness penalty, and take a <stat Name="HunchedOverMS" /> Movement Speed penalty.</p>
 			<br />
-			<p>Attempting to sprint or fly while hunched over will cause you stand up straight.</p>
+			<p>Attempting to sprint or fly while hunched over will cause you stand up straight.</p-->
 		</description>
 		<UITile Tile="Abil_GigantismPlus_Hunch_ToggleOff.png" Foreground="y" Detail="w" />
 		<UITile Tile="Abil_GigantismPlus_Hunch_ToggleOn.png" Foreground="Y" Detail="w"  State="ToggleOn" />

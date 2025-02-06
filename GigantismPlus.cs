@@ -25,6 +25,8 @@ namespace XRL.World.Parts.Mutation
 
         public GameObject GiganticFistObject;
 
+        public static readonly string HUNCH_OVER_COMMAND_NAME = "CommandToggleGigantismPlusHunchOver";
+
         public Guid EnableActivatedAbilityID = Guid.Empty;
 
         public int HunchedOverAVModifier;
@@ -270,7 +272,7 @@ namespace XRL.World.Parts.Mutation
             if (actor.IsGiganticCreature) 
             {
                 IsHunchFree = true;
-                CommandEvent.Send(actor, "CommandToggleGigantismPlusHunchOver");
+                CommandEvent.Send(actor, HUNCH_OVER_COMMAND_NAME);
                 bool check = CanEnterInteriorEvent.Check(E.Actor, E.Object, E.Interior, ref E.Status, ref E.Action, ref E.ShowMessage);
                 E.Status = check ? 0 : E.Status;
             }
@@ -321,8 +323,8 @@ namespace XRL.World.Parts.Mutation
                 MSPenalty = GetHunchedOverMSModifier(Level) + "}} MS";
             }
             return "Gigantic Fists {{rules|\x1A}}{{rules|4}}{{k|/\xEC}} {{r|\x03}}{{W|" + GetFistDamageDieCount(Level) + "}}{{rules|d}}{{B|" + GetFistDamageDieSize(Level) + "}}{{rules|+3}}\n"
-                 + "and {{rules|" + GetFistHitBonus(Level) + "}} To-Hit\n"
-                 + "{{rules|" + GetHunchedOverQNModifier(Level) + " QN}} and {{rules|" + GetHunchedOverMSModifier(Level) + " MS}} when {{g|Hunched Over}}";
+                 + "and {{rules|" + GetFistHitBonus(Level) + "}} To-Hit\n"; /*
+                 + "{{rules|" + GetHunchedOverQNModifier(Level) + " QN}} and {{rules|" + GetHunchedOverMSModifier(Level) + " MS}} when {{g|Hunched Over}}"; */
         }
 
         public override bool Mutate(GameObject GO, int Level)
@@ -387,13 +389,13 @@ namespace XRL.World.Parts.Mutation
 
         public override void Register(GameObject Object, IEventRegistrar Registrar)
         {
-            Registrar.Register("CommandToggleGigantismPlusHunchOver");
+            Registrar.Register(HUNCH_OVER_COMMAND_NAME);
             base.Register(Object, Registrar);
         }
 
         public override bool FireEvent(Event E)
         {
-            if (E.ID == "CommandToggleGigantismPlusHunchOver")
+            if (E.ID == HUNCH_OVER_COMMAND_NAME)
             {
                 GameObject actor = this.ParentObject;
                 if (actor.CurrentZone.GetBlueprint().Name == "Control pit" && !actor.IsGiganticCreature)
