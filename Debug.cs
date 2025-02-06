@@ -1,41 +1,52 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Mods.GigantismPlus
 {
     public static class Debug
     {
-        public static bool send => Options.EnableGigantismPlusDebug;
+        private static int VerbosityOption => Options.DebugVerbosity;
+        // Verbosity translates in roughly the following way:
+        // 0 : Critical. Use sparingly, if at all, as they show up without the option. Move these to 1 when pushing to main.
+        // 1 : Show. Initial debugging entries. Broad, general "did it happen?" style entries for basic trouble-shooting.
+        // 2 : Verbose. Entries have more information in them, indicating how values are passed around and changed.
+        // 3 : Very Verbose. Entries in more locations, or after fewer steps. These contribute to tracing program flow.
+        // 4 : Maximally Verbose. Just like, all of it. Every step of a process, as much detail as possible.
 
-        // XRL.Messages.MessageQueue.AddPlayerMessage("Hello world!")
-        public static void Message(string text)
+        private static bool IncludeInMessage => Options.DebugIncludeInMessage;
+
+        private static void Message(string text)
         {
-            if (send)
+            XRL.Messages.MessageQueue.AddPlayerMessage(text);
+        }
+
+        private static void Log(string text)
+        {
+            UnityEngine.Debug.LogError(text);
+        }
+
+        public static void Entry(int verbosity, string text)
+        {
+            if (verbosity > VerbosityOption) return;
+            Log(text);
+            if (IncludeInMessage) 
             {
-                string output = text;
-                XRL.Messages.MessageQueue.AddPlayerMessage(output);
+                Message(text);
             }
         }
 
-        public static void Message(string label, string text)
+        public static void Entry(string text)
         {
-            string output = label + ": " + text;
-            Message(output);
+            int verbosity = 0;
+            Entry(verbosity, text);
         }
 
-        // UnityEngine.Debug.LogError("Hello world!")
-        public static void Log(string text)
-        {
-            if (send)
-            {
-                string output = text;
-                UnityEngine.Debug.LogError(output);
-            }
-        }
-
-        public static void Log(string label, string text)
+        public static void Entry(int verbosity, string label, string text)
         {
             string output = label + ": " + text;
-            Log(output);
+            Entry(verbosity, output);
         }
-    }
+
+    } //!--- public static class Debug
 }

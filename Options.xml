@@ -2,14 +2,76 @@
 <options>
 
 	<option
-        ID="Option_GigantismPlus_Debug"
-        DisplayText="{{w|Gigantism Plus}}: Show debug messages and logs"
+        ID="Option_GigantismPlus_DebugV"
+        DisplayText="{{w|Gigantism Plus}}: Output debug entries to Player.log"
         Category="Debug"
         Type="Checkbox"
         Default="No"
     >
 		<helptext>
-			When enabled, debug messages and logs will appear when the mod performs certain functions.
+			When enabled, debug entries will be sent to the Player.log file when certain functions are perfomed within this mod.
+
+			The default is {{w|Disabled}}.
+		</helptext>
+	</option>
+
+	<option
+        ID="Option_GigantismPlus_DebugIncludeInMessage"
+		Requires="Option_GigantismPlus_DebugV==Yes"
+        DisplayText="{{w|Gigantism Plus}}: Also show debug entries in the Message Queue"
+        Category="Debug"
+        Type="Checkbox"
+        Default="No"
+    >
+		<helptext>
+			When enabled, debug entries will be sent to the Message Queue any time (with few exceptions) they would be sent to Player.log.
+
+			The default is {{w|Disabled}}.
+		</helptext>
+	</option>
+	
+	<option
+        ID="Option_GigantismPlus_DebugVV"
+		Requires="Option_GigantismPlus_DebugV==Yes"
+        DisplayText="{{w|Gigantism Plus}}: Show verbose debug entries"
+        Category="Debug"
+        Type="Checkbox"
+        Default="No"
+    >
+		<helptext>
+			When enabled, more debug entries will sent to appropriate channels when a wider array of functions are performed within this mod.
+
+			The default is {{w|Disabled}}.
+		</helptext>
+	</option>
+
+	<option
+        ID="Option_GigantismPlus_DebugVVV"
+		Requires="Option_GigantismPlus_DebugV==Yes,Option_GigantismPlus_DebugVV==Yes"
+        DisplayText="{{w|Gigantism Plus}}: Show {{r|very}} verbose debug entries"
+        Category="Debug"
+        Type="Checkbox"
+        Default="No"
+    >
+		<helptext>
+			When enabled, {{r|even more}} debug entries will sent to appropriate channels when {{r|an even wider}} array of functions are performed within this mod.
+
+			The default is {{w|Disabled}}.
+		</helptext>
+	</option>
+
+	<option
+        ID="Option_GigantismPlus_DebugVVVV"
+		Requires="Option_GigantismPlus_DebugV==Yes,Option_GigantismPlus_DebugVV==Yes,Option_GigantismPlus_DebugVVV==Yes"
+        DisplayText="{{w|Gigantism Plus}}: Show {{R|maximally}} verbose debug entries"
+        Category="Debug"
+        Type="Checkbox"
+        Default="No"
+    >
+		<helptext>
+			{{R|Not Recommended}}
+			
+			When enabled, {{R|the most}} debug entries will sent to appropriate channels when {{R|the widest}} array of functions are performed within this mod.
 
 			The default is {{w|Disabled}}.
 		</helptext>

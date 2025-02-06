@@ -25,6 +25,8 @@ namespace XRL.World.Parts.Mutation
 
         public GameObject GiganticFistObject;
 
+        public static readonly string HUNCH_OVER_COMMAND_NAME = "CommandToggleGigantismPlusHunchOver";
+
         public Guid EnableActivatedAbilityID = Guid.Empty;
 
         public int HunchedOverAVModifier;
@@ -270,20 +272,25 @@ namespace XRL.World.Parts.Mutation
             if (actor.IsGiganticCreature) 
             {
                 IsHunchFree = true;
-                CommandEvent.Send(actor, "CommandToggleGigantismPlusHunchOver");
+                CommandEvent.Send(actor, HUNCH_OVER_COMMAND_NAME);
                 bool check = CanEnterInteriorEvent.Check(E.Actor, E.Object, E.Interior, ref E.Status, ref E.Action, ref E.ShowMessage);
                 E.Status = check ? 0 : E.Status;
+
+                XRL.UI.Popup.Show("You try to squeeze into the space.");
             }
             return base.HandleEvent(E);
         }
 
         public override bool HandleEvent(InventoryActionEvent E)
         {
-            GameObject actor = E.Actor;
-            if (actor.IsGiganticCreature)
+            if (E.Command == "EnterInterior")
             {
-                IsHunchFree = true;
-                CommandEvent.Send(actor, "CommandToggleGigantismPlusHunchOver");
+                GameObject actor = E.Actor;
+                if (actor.IsGiganticCreature)
+                {
+                    IsHunchFree = true;
+                    CommandEvent.Send(actor, HUNCH_OVER_COMMAND_NAME);
+                }
             }
             return base.HandleEvent(E);
         }
@@ -321,8 +328,8 @@ namespace XRL.World.Parts.Mutation
                 MSPenalty = GetHunchedOverMSModifier(Level) + "}} MS";
             }
             return "Gigantic Fists {{rules|\x1A}}{{rules|4}}{{k|/\xEC}} {{r|\x03}}{{W|" + GetFistDamageDieCount(Level) + "}}{{rules|d}}{{B|" + GetFistDamageDieSize(Level) + "}}{{rules|+3}}\n"
-                 + "and {{rules|" + GetFistHitBonus(Level) + "}} To-Hit\n"
-                 + "{{rules|" + GetHunchedOverQNModifier(Level) + " QN}} and {{rules|" + GetHunchedOverMSModifier(Level) + " MS}} when {{g|Hunched Over}}";
+                 + "and {{rules|" + GetFistHitBonus(Level) + "}} To-Hit\n"; /*
+                 + "{{rules|" + GetHunchedOverQNModifier(Level) + " QN}} and {{rules|" + GetHunchedOverMSModifier(Level) + " MS}} when {{g|Hunched Over}}"; */
         }
 
         public override bool Mutate(GameObject GO, int Level)
@@ -342,7 +349,7 @@ namespace XRL.World.Parts.Mutation
                 }
             }
 
-            EnableActivatedAbilityID = AddMyActivatedAbility("Hunch Over", "CommandToggleGigantismPlusHunchOver", "Physical Mutations", null, "&#214", null, Toggleable: true, DefaultToggleState: false, ActiveToggle: true, IsAttack: false, IsRealityDistortionBased: false, IsWorldMapUsable: false);
+            EnableActivatedAbilityID = AddMyActivatedAbility("Hunch Over", HUNCH_OVER_COMMAND_NAME, "Physical Mutations", null, "&#214", null, Toggleable: true, DefaultToggleState: false, ActiveToggle: true, IsAttack: false, IsRealityDistortionBased: false, IsWorldMapUsable: false);
             
             return base.Mutate(GO, Level);
         }
@@ -387,13 +394,13 @@ namespace XRL.World.Parts.Mutation
 
         public override void Register(GameObject Object, IEventRegistrar Registrar)
         {
-            Registrar.Register("CommandToggleGigantismPlusHunchOver");
+            Registrar.Register(HUNCH_OVER_COMMAND_NAME);
             base.Register(Object, Registrar);
         }
 
         public override bool FireEvent(Event E)
         {
-            if (E.ID == "CommandToggleGigantismPlusHunchOver")
+            if (E.ID == HUNCH_OVER_COMMAND_NAME)
             {
                 GameObject actor = this.ParentObject;
                 if (actor.CurrentZone.GetBlueprint().Name == "Control pit" && !actor.IsGiganticCreature)
@@ -401,7 +408,7 @@ namespace XRL.World.Parts.Mutation
                     XRL.UI.Popup.Show("This space is too small for you to stand up upright!");
                     return base.FireEvent(E);
                 }
-                ToggleMyActivatedAbility(EnableActivatedAbilityID, null, Silent: false, null);
+                ToggleMyActivatedAbility(EnableActivatedAbilityID, null, Silent: true, null);
                 int EnergyCost = IsHunchFree ? 0 : 1000;
                 if (IsMyActivatedAbilityToggledOn(EnableActivatedAbilityID))
                 {
@@ -409,6 +416,7 @@ namespace XRL.World.Parts.Mutation
                     UseEnergy(EnergyCost, "Physical Defect Mutation Gigantism Hunch Over");
                     IsHunchedGiant = true;
                     actor.RequirePart<HunchedGiant>();
+                    _GiganticBodyWeightCache = actor.GetBodyWeight();
                     actor.IsGiganticCreature = false;
                     if (!actor.IsGiganticCreature && IsHunchedGiant)
                     {
@@ -416,19 +424,25 @@ namespace XRL.World.Parts.Mutation
                         int weightFactor = (int)Math.Floor((double)_GiganticBodyWeightCache / baseWeight);
                         int _Weight = actor.Physics._Weight;
                         actor.Physics._Weight = _Weight + (int)Math.Round((double)((baseWeight * weightFactor) - baseWeight));
-                        Debug.Message("baseWeight",baseWeight.ToString());
-                        Debug.Message("_Weight", _Weight.ToString());
-                        Debug.Message("weightFactor", weightFactor.ToString());
-                        Debug.Message("Adjustment", Math.Round((double)(baseWeight * weightFactor) - baseWeight).ToString());
-                        Debug.Message("New Weight", actor.Physics._Weight.ToString());
+                        Debug.Entry(3,"baseWeight",baseWeight.ToString());
+                        Debug.Entry(3,"_Weight", _Weight.ToString());
+                        Debug.Entry(3,"weightFactor", weightFactor.ToString());
+                        Debug.Entry(3,"Adjustment", Math.Round((double)(baseWeight * weightFactor) - baseWeight).ToString());
+                        Debug.Entry(3,"New Weight", actor.Physics._Weight.ToString());
+
+                        ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_positiveVitality");
+                        XRL.UI.Popup.Show("You hunch over, allowing you access to smaller spaces.");
+
+                        ActivatedAbilityEntry abilityEntry = actor.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
+                        abilityEntry.DisplayName = "Hunched Over";
                     }
-                    ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_positiveVitality");
-                    Debug.Message("Should be Hunched Over");
+                    
+                    Debug.Entry(1,"Should be Hunched Over");
                 }
                 else
                 {
                     // Standing upright
-                    UseEnergy(EnergyCost, "Physical Defect Mutation Gigantism Straighten Up");
+                    UseEnergy(EnergyCost, "Physical Defect Mutation Gigantism Stand Tall");
                     actor.IsGiganticCreature = true;
                     actor.RemovePart<HunchedGiant>();
                     IsHunchedGiant = false;
@@ -438,18 +452,24 @@ namespace XRL.World.Parts.Mutation
                         int WeightAdjustment = baseWeight - (int)Math.Floor((double)baseWeight / 5);
                         int _Weight = actor.Physics._Weight;
                         actor.Physics._Weight = _Weight - WeightAdjustment;
-                        Debug.Message("baseWeight", baseWeight.ToString());
-                        Debug.Message("_Weight", _Weight.ToString());
-                        Debug.Message("Adjustment", WeightAdjustment.ToString());
-                        Debug.Message("New Weight", actor.Physics._Weight.ToString());
+                        Debug.Entry(3,"baseWeight", baseWeight.ToString());
+                        Debug.Entry(3,"_Weight", _Weight.ToString());
+                        Debug.Entry(3,"Adjustment", WeightAdjustment.ToString());
+                        Debug.Entry(3,"New Weight", actor.Physics._Weight.ToString());
+
+                        ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_negativeVitality");
+                        XRL.UI.Popup.Show("You stand tall, relaxing into your immense stature.");
+
+                        ActivatedAbilityEntry abilityEntry = actor.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
+                        abilityEntry.DisplayName = "Hunch Over";
                     }
-                    Debug.Message("Should be Standing Tall");
-                    ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_negativeVitality");
+                    
+                    Debug.Entry(1, "Should be Standing Tall");
                 }
                 IsHunchFree = false;
-                Debug.Message("IsHunchedGiant", (IsHunchedGiant ? "true" : "false"));
-                Debug.Message("HasPart<HunchedGiant>", (ParentObject.HasPart<HunchedGiant>() ? "true" : "false"));
-                Debug.Message("IsGiganticCreature", (ParentObject.IsGiganticCreature ? "true" : "false"));
+                Debug.Entry(2,"IsHunchedGiant", (IsHunchedGiant ? "true" : "false"));
+                Debug.Entry(2,"HasPart<HunchedGiant>", (ParentObject.HasPart<HunchedGiant>() ? "true" : "false"));
+                Debug.Entry(2,"IsGiganticCreature", (ParentObject.IsGiganticCreature ? "true" : "false"));
             }
             // The.Core.RenderBase();
             return base.FireEvent(E);
