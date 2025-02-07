@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <colors>
   <shaders>
-    <shader Name="gigantic" Type="sequence" Colors="1-2-3-4-4-3-2-1" ShowInPicker="true" />
-    <shader Name="gigantism" Type="sequence" Colors="1-2-3-4-3-4-3-2-1" ShowInPicker="true" />
+    <shader Name="gigantic" Type="sequence" Colors="1-2-3-4-4-3-2-1" ShowInPicker="false" />
+    <shader Name="gigantism" Type="sequence" Colors="1-2-3-4-3-4-3-2-1" ShowInPicker="false" />
+    <shader Name="giant" Type="alternation" Colors="1-2-3-4-3-2-1" ShowInPicker="true" />
+    <shader Name="gianter" Type="sequence" Colors="1-2-3-4-3-2-1" ShowInPicker="true" />
   </shaders>
 </colors>
