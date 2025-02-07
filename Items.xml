@@ -3,7 +3,7 @@
 <!-- Gigantic Fist -->
     <object Name="GiganticFist" Inherits="MeleeWeapon">
         <part Name="Armor" WornOn="Hand" />
-        <part Name="Render" DisplayName="gigantic fist" RenderString="F" Tile="GiganticFist.png" TileColor="&amp;w" DetailColor="W" />
+        <part Name="Render" DisplayName="{{gigantic|gigantic}} fist" RenderString="F" Tile="GiganticFist.png" TileColor="&amp;w" DetailColor="W" />
         <part Name="Description" Short="A gigantic fist capable of dealing heavy damage." />
         <part Name="Commerce" Value="0" />
         <part Name="NaturalEquipment" />
@@ -19,7 +19,7 @@
         <tag Name="VisibleAsDefaultBehavior" />
         <tag Name="ShowAsPhysicalFeature" />
     </object>
-	  <!-- object  Name="LightSource" Load="merge">
+	<!-- object  Name="LightSource" Load="merge">
 		<tag Name="Mods" Value="CommonMods" Load="merge" />
 	</object -->
 </objects>
