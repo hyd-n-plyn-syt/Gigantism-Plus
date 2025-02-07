@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using XRL.UI;
 using XRL.World;
 using XRL.World.Anatomy;
 using XRL.World.Parts;
 using XRL.World.Parts.Mutation;
 using Mods.GigantismPlus;
+// using Mods.GigantismPlus.HarmonyPatches;
 
 namespace XRL.World.Parts.Mutation
 {
@@ -21,7 +23,7 @@ namespace XRL.World.Parts.Mutation
 
         public int FistHitBonus;
 
-        public static int FistMaxStrengthBonus = 999;
+        public int FistMaxStrengthBonus = 999;
 
         public GameObject GiganticFistObject;
 
@@ -79,41 +81,81 @@ namespace XRL.World.Parts.Mutation
             return Math.Min(-70 + (int)Math.Floor((double)Level * 10.0),-10);
         }
 
-        public bool IsHunchedGiant
+        public bool IsGiganticCreature // basically a wrapper but forces you to not be PseudoGigantic at the same time 
         {
             get
             {
-                return ParentObject.HasPart<HunchedGiant>();
+                return ParentObject.IsGiganticCreature;
             }
-            set
+            private set
             {
-                if (value)
+                ParentObject.IsGiganticCreature = value;
+                if (IsPseudoGiganticCreature == value)
                 {
-                    ParentObject.RequirePart<HunchedGiant>();
-                }
-                else
-                {
-                    ParentObject.RemovePart<HunchedGiant>();
+                    IsPseudoGiganticCreature = !value;
                 }
             }
         }
 
-        private bool IsHunchFree = false;
-
-        public string BlueprintName => Variant.Coalesce("GiganticFist");
-        
-        [NonSerialized]
-        protected GameObjectBlueprint _Blueprint;
-        
-        public GameObjectBlueprint Blueprint
+        public bool IsPseudoGiganticCreature // designed to ensure you aren't (typically) Gigantic and PseudoGigantic at the same time 
         {
             get
             {
-                if (_Blueprint == null)
+                return ParentObject.HasPart<PseudoGigantism>();
+            }
+            set
+            {
+                if (value) ParentObject.RequirePart<PseudoGigantism>();
+                else ParentObject.RemovePart<PseudoGigantism>();
+
+                if (IsGiganticCreature == value)
                 {
-                    _Blueprint = GameObjectFactory.Factory.GetBlueprint(BlueprintName);
+                    IsGiganticCreature = !value;
                 }
-                return _Blueprint;
+
+            }
+        }
+        
+        private bool IsHunchFree = false;
+
+        private int _hunchOverEnergyCost = 500;
+
+        public int HunchOverEnergyCost
+        {
+            get
+            {
+                Debug.Entry(4, "HunchEnergyCost requested");
+                if (this.IsHunchFree)
+                {
+                    Debug.Entry(3, "Hunch Is Free");
+                    this.IsHunchFree = false;
+                    return 0;
+                }
+                Debug.Entry(4, "Hunch Cost given", this._hunchOverEnergyCost.ToString());
+                return this._hunchOverEnergyCost;
+            }
+            private set
+            {
+                Debug.Entry(3, "attempt to set HunchEnergyCost");
+                this._hunchOverEnergyCost = value;
+                Debug.Entry(4, "new HunchEnergyCost", this._hunchOverEnergyCost.ToString());
+            }
+        }
+
+        public string NaturalWeaponBlueprintName => Variant.Coalesce("GiganticFist");
+        
+        [NonSerialized]
+        protected GameObjectBlueprint _NaturalWeaponBlueprint;
+        
+        public GameObjectBlueprint NaturalWeaponBlueprint
+        {
+            get
+            {
+                if (_NaturalWeaponBlueprint == null)
+                {
+                    _NaturalWeaponBlueprint = GameObjectFactory.Factory.GetBlueprint(NaturalWeaponBlueprintName);
+                }
+                return _NaturalWeaponBlueprint;
             }
         }
 
@@ -137,7 +179,7 @@ namespace XRL.World.Parts.Mutation
             FistHitBonus = GetFistHitBonus(NewLevel);
             if (GiganticFistObject != null)
             {
-                GiganticFistObject = GameObjectFactory.Factory.CreateObject(Blueprint);
+                GiganticFistObject = GameObjectFactory.Factory.CreateObject(NaturalWeaponBlueprint);
                 MeleeWeapon GiantFistWeapon = GiganticFistObject.GetPart<MeleeWeapon>();
                 GiantFistWeapon.BaseDamage = FistBaseDamage;
                 GiantFistWeapon.HitBonus = FistHitBonus;
@@ -257,26 +299,26 @@ namespace XRL.World.Parts.Mutation
             return true;
         }
 
-        public override bool HandleEvent(GetMaxCarriedWeightEvent E)
+        /*public override bool HandleEvent(GetMaxCarriedWeightEvent E)
         {
-            if (!ParentObject.IsGiganticCreature && IsHunchedGiant)
+            if (IsGiganticCreature && IsPseudoGiganticCreature)
             {
                 E.AdjustWeight(2.0);
             }
             return base.HandleEvent(E);
-        }
+        }*/
 
         public override bool HandleEvent(CanEnterInteriorEvent E)
         {
             GameObject actor = E.Actor;
-            if (actor.IsGiganticCreature) 
+            if (IsGiganticCreature) 
             {
                 IsHunchFree = true;
                 CommandEvent.Send(actor, HUNCH_OVER_COMMAND_NAME);
                 bool check = CanEnterInteriorEvent.Check(E.Actor, E.Object, E.Interior, ref E.Status, ref E.Action, ref E.ShowMessage);
                 E.Status = check ? 0 : E.Status;
 
-                XRL.UI.Popup.Show("You try to squeeze into the space.");
+                Popup.Show("You try to squeeze into the space.");
             }
             return base.HandleEvent(E);
         }
@@ -286,7 +328,7 @@ namespace XRL.World.Parts.Mutation
             if (E.Command == "EnterInterior")
             {
                 GameObject actor = E.Actor;
-                if (actor.IsGiganticCreature)
+                if (IsGiganticCreature)
                 {
                     IsHunchFree = true;
                     CommandEvent.Send(actor, HUNCH_OVER_COMMAND_NAME);
@@ -337,8 +379,7 @@ namespace XRL.World.Parts.Mutation
             Body body = GO.Body;
             if (body != null)
             {
-                GO.IsGiganticCreature = true; // Enable the Gigantic flag
-                _GiganticBodyWeightCache = GO.GetBodyWeight();
+                IsGiganticCreature = true; // Enable the Gigantic flag
                 
                 foreach (BodyPart hand in body.GetParts())
                 {
@@ -348,8 +389,7 @@ namespace XRL.World.Parts.Mutation
                     }
                 }
             }
-
-            EnableActivatedAbilityID = AddMyActivatedAbility("Hunch Over", HUNCH_OVER_COMMAND_NAME, "Physical Mutations", null, "&#214", null, Toggleable: true, DefaultToggleState: false, ActiveToggle: true, IsAttack: false, IsRealityDistortionBased: false, IsWorldMapUsable: false);
+            EnableActivatedAbilityID = AddMyActivatedAbility("{{C|" + "{{W|[}}Upright{{W|]}}\nHunched\n" + "}}", HUNCH_OVER_COMMAND_NAME, "Physical Mutations", null, "&#214", null, Toggleable: true, DefaultToggleState: false, ActiveToggle: true, IsAttack: false, IsRealityDistortionBased: false, IsWorldMapUsable: false);
             
             return base.Mutate(GO, Level);
         }
@@ -358,12 +398,13 @@ namespace XRL.World.Parts.Mutation
         {
             if (GO != null)
             {
-                GO.IsGiganticCreature = false; // Revert the Gigantic flag
-            }
+                IsGiganticCreature = false; // Revert the Gigantic flag
+                CleanUpMutationEquipment(GO, ref GiganticFistObject);
+                IsPseudoGiganticCreature = false;
 
-            CleanUpMutationEquipment(GO, ref GiganticFistObject);
-            RemoveMyActivatedAbility(ref EnableActivatedAbilityID);
-            ParentObject.RemovePart<HunchedGiant>();
+                RemoveMyActivatedAbility(ref EnableActivatedAbilityID);
+            }
+            
             return base.Unmutate(GO);
         }
 
@@ -373,7 +414,7 @@ namespace XRL.World.Parts.Mutation
             {
                 if (GiganticFistObject == null)
                 {
-                    GiganticFistObject = GameObjectFactory.Factory.CreateObject(Blueprint);
+                    GiganticFistObject = GameObjectFactory.Factory.CreateObject(NaturalWeaponBlueprint);
                 }
                 part.DefaultBehavior = GiganticFistObject;
             }
@@ -403,88 +444,124 @@ namespace XRL.World.Parts.Mutation
             if (E.ID == HUNCH_OVER_COMMAND_NAME)
             {
                 GameObject actor = this.ParentObject;
-                if (actor.CurrentZone.GetBlueprint().Name == "Control pit" && !actor.IsGiganticCreature)
+                
+                // Things that might stop you from taking this action
+                if (actor.CurrentZone.ZoneWorld == "Interior" && !IsGiganticCreature)
                 {
-                    XRL.UI.Popup.Show("This space is too small for you to stand up upright!");
+                    Popup.Show("This space is too small for you to stand upright!");
                     return base.FireEvent(E);
                 }
+
                 ToggleMyActivatedAbility(EnableActivatedAbilityID, null, Silent: true, null);
-                int EnergyCost = IsHunchFree ? 0 : 1000;
+                Debug.Entry(3, "Hunch Ability Toggled");
+
+                Debug.Entry(3, "Proceeding to Hunch Ability Effects");
                 if (IsMyActivatedAbilityToggledOn(EnableActivatedAbilityID))
                 {
-                    // Hunching
-                    UseEnergy(EnergyCost, "Physical Defect Mutation Gigantism Hunch Over");
-                    IsHunchedGiant = true;
-                    actor.RequirePart<HunchedGiant>();
-                    _GiganticBodyWeightCache = actor.GetBodyWeight();
-                    actor.IsGiganticCreature = false;
-                    if (!actor.IsGiganticCreature && IsHunchedGiant)
-                    {
-                        int baseWeight = actor.GetBodyWeight();
-                        int weightFactor = (int)Math.Floor((double)_GiganticBodyWeightCache / baseWeight);
-                        int _Weight = actor.Physics._Weight;
-                        actor.Physics._Weight = _Weight + (int)Math.Round((double)((baseWeight * weightFactor) - baseWeight));
-                        Debug.Entry(3,"baseWeight",baseWeight.ToString());
-                        Debug.Entry(3,"_Weight", _Weight.ToString());
-                        Debug.Entry(3,"weightFactor", weightFactor.ToString());
-                        Debug.Entry(3,"Adjustment", Math.Round((double)(baseWeight * weightFactor) - baseWeight).ToString());
-                        Debug.Entry(3,"New Weight", actor.Physics._Weight.ToString());
-
-                        ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_positiveVitality");
-                        XRL.UI.Popup.Show("You hunch over, allowing you access to smaller spaces.");
-
-                        ActivatedAbilityEntry abilityEntry = actor.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
-                        abilityEntry.DisplayName = "Hunched Over";
-                    }
-                    
-                    Debug.Entry(1,"Should be Hunched Over");
+                    // Hunch
+                    HunchOver(true);
                 }
                 else
                 {
-                    // Standing upright
-                    UseEnergy(EnergyCost, "Physical Defect Mutation Gigantism Stand Tall");
-                    actor.IsGiganticCreature = true;
-                    actor.RemovePart<HunchedGiant>();
-                    IsHunchedGiant = false;
-                    if (actor.IsGiganticCreature && !IsHunchedGiant)
-                    {
-                        int baseWeight = actor.GetBodyWeight();
-                        int WeightAdjustment = baseWeight - (int)Math.Floor((double)baseWeight / 5);
-                        int _Weight = actor.Physics._Weight;
-                        actor.Physics._Weight = _Weight - WeightAdjustment;
-                        Debug.Entry(3,"baseWeight", baseWeight.ToString());
-                        Debug.Entry(3,"_Weight", _Weight.ToString());
-                        Debug.Entry(3,"Adjustment", WeightAdjustment.ToString());
-                        Debug.Entry(3,"New Weight", actor.Physics._Weight.ToString());
-
-                        ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_negativeVitality");
-                        XRL.UI.Popup.Show("You stand tall, relaxing into your immense stature.");
-
-                        ActivatedAbilityEntry abilityEntry = actor.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
-                        abilityEntry.DisplayName = "Hunch Over";
-                    }
-                    
-                    Debug.Entry(1, "Should be Standing Tall");
+                    // Stand upright
+                    StraightenUp(true);
                 }
-                IsHunchFree = false;
-                Debug.Entry(2,"IsHunchedGiant", (IsHunchedGiant ? "true" : "false"));
-                Debug.Entry(2,"HasPart<HunchedGiant>", (ParentObject.HasPart<HunchedGiant>() ? "true" : "false"));
-                Debug.Entry(2,"IsGiganticCreature", (ParentObject.IsGiganticCreature ? "true" : "false"));
+                Debug.Entry(2, "IsPseudoGiganticCreature", (IsPseudoGiganticCreature ? "true" : "false"));
+                Debug.Entry(2, "IsGiganticCreature", (IsGiganticCreature ? "true" : "false"));
             }
-            // The.Core.RenderBase();
+            The.Core.RenderBase();
             return base.FireEvent(E);
         }
 
         // Want to move the bulk of the Active Ability here.
-        public void HunchOver()
+        public void HunchOver(bool Message = false)
         {
-            return;
+            GameObject actor = ParentObject;
+            if (IsPseudoGiganticCreature) // Already hunched over
+            {
+                Debug.Entry(1, "Tried to hunch, but was already PseudoGigantic");
+                return;
+            }
+
+            IsPseudoGiganticCreature = true;
+
+            if (!IsGiganticCreature && IsPseudoGiganticCreature)
+            {
+                // Action happened 
+                UseEnergy(HunchOverEnergyCost, "Physical Defect Mutation Gigantism Hunch Over");
+
+                //
+                // Add the stat shifting code here.
+                //
+
+                ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_positiveVitality");
+                if (Message)
+                {
+                        Popup.Show("You hunch over, allowing you access to smaller spaces.");
+                }
+
+                ActivatedAbilityEntry abilityEntry = actor.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
+                abilityEntry.DisplayName = "{{C|" + "Upright\n{{W|[}}Hunched{{W|]}}\n" + "}}";
+
+                // Old weight change code. Keeping just in case.
+                /*
+                int baseWeight = actor.GetBodyWeight();
+                int weightFactor = (int)Math.Floor((double)_GiganticBodyWeightCache / baseWeight);
+                int _Weight = actor.Physics._Weight;
+                actor.Physics._Weight = _Weight + (int)Math.Round((double)((baseWeight * weightFactor) - baseWeight));
+                Debug.Entry(3, "baseWeight", baseWeight.ToString());
+                Debug.Entry(3, "_Weight", _Weight.ToString());
+                Debug.Entry(3, "weightFactor", weightFactor.ToString());
+                Debug.Entry(3, "Adjustment", Math.Round((double)(baseWeight * weightFactor) - baseWeight).ToString());
+                Debug.Entry(3, "New Weight", actor.Physics._Weight.ToString());
+                */
+            }
+            Debug.Entry(1, "Should be Hunched Over");
         } //!--- public void HunchOver(bool Message = false)
 
         // Want to move the bulk of the Active Ability here.
-        public void StraightenUp()
+        public void StraightenUp(bool Message = false)
         {
-            return;
+            GameObject actor = ParentObject;
+            if (IsPseudoGiganticCreature) // Already Upright over
+            {
+                Debug.Entry(1, "Tried to straighten up, but wasn't a PseudoGigantic");
+                return;
+            }
+            UseEnergy(HunchOverEnergyCost, "Physical Defect Mutation Gigantism Stand Tall");
+
+            IsPseudoGiganticCreature = false;
+
+            if (IsGiganticCreature && !IsPseudoGiganticCreature)
+
+            {
+                // Action happened 
+                UseEnergy(HunchOverEnergyCost, "Physical Defect Mutation Gigantism Hunch Over");
+                
+                //
+                // Add the stat shifting code here.
+                //
+
+                ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_negativeVitality");
+                Popup.Show("You stand tall, relaxing into your immense stature.");
+
+                ActivatedAbilityEntry abilityEntry = actor.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
+                abilityEntry.DisplayName = "{{C|" + "{{W|[}}Upright{{W|]}}\nHunched\n" + "}}";
+
+                // Old weight change code. Keeping just in case.
+                /*
+                int baseWeight = actor.GetBodyWeight();
+                int WeightAdjustment = baseWeight - (int)Math.Floor((double)baseWeight / 5);
+                int _Weight = actor.Physics._Weight;
+                actor.Physics._Weight = _Weight - WeightAdjustment;
+                Debug.Entry(3,"baseWeight", baseWeight.ToString());
+                Debug.Entry(3,"_Weight", _Weight.ToString());
+                Debug.Entry(3,"Adjustment", WeightAdjustment.ToString());
+                Debug.Entry(3,"New Weight", actor.Physics._Weight.ToString());
+                */
+            }
+
+            Debug.Entry(1, "Should be Standing Tall");
         } //!--- public void StraightenUp(bool Message = false)
 
     } //!--- public class GigantismPlus : BaseDefaultEquipmentMutation
