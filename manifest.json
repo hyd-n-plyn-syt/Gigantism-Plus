@@ -1,9 +1,9 @@
 {
     "id": "gigantism_Plus",
     "title": "{{metamorphic|Gigantism Plus}}",
-    "description": "Adds a modified version of the base-game's Gigantism defect.\n\nUnlike other defects, this one has a mutation level which can be increased with mutation points and even rapidly advanced!\n\nAlso included is the active ability \"Hunch Over\" which will allow gigantic creatures to enter spaces they otherwise wouldn't fit.\nNo more end-game softlock!",
-    "version": "0.2.1",
-    "author": "{{metamorphic|hydnplynsyt}} and {{K-g-G-Y-G-g-K alternation|UnderDoug}}",
-    "tags": "Mutation,Defect,Balance,Cheat,Harmony",
+    "description": "The {{gigantic|Gigantism}} mod activates the physical defect {{gigantic|Gigantism}}, allowing it to be improved with mutation points as you level up. This makes it one of the few defects that can be ranked up, enhancing its usefulness. The mod introduces {{gigantic|gigantic}} fists, a scaling natural weapon that scales with the {{gigantic|Gigantism}} rank, providing significant damage boosts.\n\nHowever, you cannot wear or wield non-{{gigantic|gigantic}} items, making gear hunting challenging. The defect also increases your weight, causing you to break non-{{gigantic|gigantic}} furniture. The mod is primarily tested by just myself and {{crysteel|UnderDoug}}, so feedback on any issues is welcome. Enjoy your powerful, {{gigantic|gigantic}} mutants!",
+    "version": "1.0",
+    "author": "{{metamorphic|hydnplynsyt}} and {{crysteel|UnderDoug}}",
+    "tags": "Mutation, Balance, Cheat",
     "PreviewImage": "preview.png"
 }
