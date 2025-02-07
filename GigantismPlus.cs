@@ -404,7 +404,6 @@ namespace XRL.World.Parts.Mutation
 
                 RemoveMyActivatedAbility(ref EnableActivatedAbilityID);
             }
-
             
             return base.Unmutate(GO);
         }
@@ -454,7 +453,9 @@ namespace XRL.World.Parts.Mutation
                 }
 
                 ToggleMyActivatedAbility(EnableActivatedAbilityID, null, Silent: true, null);
-                                
+                Debug.Entry(3, "Hunch Ability Toggled");
+
+                Debug.Entry(3, "Proceeding to Hunch Ability Effects");
                 if (IsMyActivatedAbilityToggledOn(EnableActivatedAbilityID))
                 {
                     // Hunch
@@ -463,37 +464,10 @@ namespace XRL.World.Parts.Mutation
                 else
                 {
                     // Stand upright
-                    UseEnergy(HunchOverEnergyCost, "Physical Defect Mutation Gigantism Stand Tall");
-
-                    IsPseudoGiganticCreature = false;
-                    if (IsGiganticCreature && !IsPseudoGiganticCreature)
-
-                    {
-                        /*
-                        int baseWeight = actor.GetBodyWeight();
-                        int WeightAdjustment = baseWeight - (int)Math.Floor((double)baseWeight / 5);
-                        int _Weight = actor.Physics._Weight;
-                        actor.Physics._Weight = _Weight - WeightAdjustment;
-                        Debug.Entry(3,"baseWeight", baseWeight.ToString());
-                        Debug.Entry(3,"_Weight", _Weight.ToString());
-                        Debug.Entry(3,"Adjustment", WeightAdjustment.ToString());
-                        Debug.Entry(3,"New Weight", actor.Physics._Weight.ToString());
-                        */
-
-                        ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_negativeVitality");
-                        Popup.Show("You stand tall, relaxing into your immense stature.");
-
-                        ActivatedAbilityEntry abilityEntry = actor.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
-                        abilityEntry.DisplayName = "{{C|" + "{{W|[}}Upright{{W|]}}\nHunched\n" + "}}";
-                    }
-                    
-                    Debug.Entry(1, "Should be Standing Tall");
+                    StraightenUp(true);
                 }
-                IsHunchFree = false;
-
-                Debug.Entry(2,"IsPseudoGiganticCreature", (IsPseudoGiganticCreature ? "true" : "false"));
-                Debug.Entry(2,"HasPart<PseudoGigantism>", (ParentObject.HasPart<PseudoGigantism>() ? "true" : "false"));
-                Debug.Entry(2,"IsGiganticCreature", (IsGiganticCreature ? "true" : "false"));
+                Debug.Entry(2, "IsPseudoGiganticCreature", (IsPseudoGiganticCreature ? "true" : "false"));
+                Debug.Entry(2, "IsGiganticCreature", (IsGiganticCreature ? "true" : "false"));
             }
             The.Core.RenderBase();
             return base.FireEvent(E);
@@ -506,9 +480,9 @@ namespace XRL.World.Parts.Mutation
             if (IsPseudoGiganticCreature) // Already hunched over
             {
                 Debug.Entry(1, "Tried to hunch, but was already PseudoGigantic");
-                return; 
+                return;
             }
-            
+
             IsPseudoGiganticCreature = true;
 
             if (!IsGiganticCreature && IsPseudoGiganticCreature)
@@ -516,6 +490,20 @@ namespace XRL.World.Parts.Mutation
                 // Action happened 
                 UseEnergy(HunchOverEnergyCost, "Physical Defect Mutation Gigantism Hunch Over");
 
+                //
+                // Add the stat shifting code here.
+                //
+
+                ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_positiveVitality");
+                if (Message)
+                {
+                        Popup.Show("You hunch over, allowing you access to smaller spaces.");
+                }
+
+                ActivatedAbilityEntry abilityEntry = actor.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
+                abilityEntry.DisplayName = "{{C|" + "Upright\n{{W|[}}Hunched{{W|]}}\n" + "}}";
+
+                // Old weight change code. Keeping just in case.
                 /*
                 int baseWeight = actor.GetBodyWeight();
                 int weightFactor = (int)Math.Floor((double)_GiganticBodyWeightCache / baseWeight);
@@ -527,25 +515,54 @@ namespace XRL.World.Parts.Mutation
                 Debug.Entry(3, "Adjustment", Math.Round((double)(baseWeight * weightFactor) - baseWeight).ToString());
                 Debug.Entry(3, "New Weight", actor.Physics._Weight.ToString());
                 */
-
-                ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_positiveVitality");
-                if (Message)
-                {
-                    Popup.Show("You hunch over, allowing you access to smaller spaces.");
-                }
-
-                ActivatedAbilityEntry abilityEntry = actor.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
-                abilityEntry.DisplayName = "{{C|" + "Upright\n{{W|[}}Hunched{{W|]}}\n" + "}}";
             }
-
             Debug.Entry(1, "Should be Hunched Over");
-        } //!--- public void HunchOver()
+        } //!--- public void HunchOver(bool Message = false)
 
         // Want to move the bulk of the Active Ability here.
-        public void StraightenUp()
+        public void StraightenUp(bool Message = false)
         {
-            return;
-        } //!--- public void StraightenUp()
+            GameObject actor = ParentObject;
+            if (IsPseudoGiganticCreature) // Already Upright over
+            {
+                Debug.Entry(1, "Tried to straighten up, but wasn't a PseudoGigantic");
+                return;
+            }
+            UseEnergy(HunchOverEnergyCost, "Physical Defect Mutation Gigantism Stand Tall");
+
+            IsPseudoGiganticCreature = false;
+
+            if (IsGiganticCreature && !IsPseudoGiganticCreature)
+
+            {
+                // Action happened 
+                UseEnergy(HunchOverEnergyCost, "Physical Defect Mutation Gigantism Hunch Over");
+                
+                //
+                // Add the stat shifting code here.
+                //
+
+                ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_negativeVitality");
+                Popup.Show("You stand tall, relaxing into your immense stature.");
+
+                ActivatedAbilityEntry abilityEntry = actor.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
+                abilityEntry.DisplayName = "{{C|" + "{{W|[}}Upright{{W|]}}\nHunched\n" + "}}";
+
+                // Old weight change code. Keeping just in case.
+                /*
+                int baseWeight = actor.GetBodyWeight();
+                int WeightAdjustment = baseWeight - (int)Math.Floor((double)baseWeight / 5);
+                int _Weight = actor.Physics._Weight;
+                actor.Physics._Weight = _Weight - WeightAdjustment;
+                Debug.Entry(3,"baseWeight", baseWeight.ToString());
+                Debug.Entry(3,"_Weight", _Weight.ToString());
+                Debug.Entry(3,"Adjustment", WeightAdjustment.ToString());
+                Debug.Entry(3,"New Weight", actor.Physics._Weight.ToString());
+                */
+            }
+
+            Debug.Entry(1, "Should be Standing Tall");
+        } //!--- public void StraightenUp(bool Message = false)
 
     } //!--- public class GigantismPlus : BaseDefaultEquipmentMutation
 
