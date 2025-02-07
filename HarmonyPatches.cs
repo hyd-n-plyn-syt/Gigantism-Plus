@@ -1,5 +1,7 @@
 using HarmonyLib;
+using System;
 using XRL.World;
+using XRL.World.Parts;
 using XRL.World.Parts.Mutation;
 using Mods.GigantismPlus;
 
@@ -87,6 +89,24 @@ namespace Mods.GigantismPlus.HarmonyPatches
                 __state.IsGiganticCreature = false; // make the GameObject not Gigantic 
                 Debug.Entry(2, "Should have Carry Capacity and PseudoGigantic");
             }
+        }
+    }
+
+    [HarmonyPatch(typeof(ModGigantic))]
+    [HarmonyPatch("HandleEvent")]
+    [HarmonyPatch(new Type[] { typeof(GetDisplayNameEvent) })]
+    public static class ModGiganticPatch
+    {
+        static bool Prefix(GetDisplayNameEvent E)
+        {
+            if (!E.Object.HasTagOrProperty("ModGiganticNoDisplayName") && 
+                (!E.Object.HasTagOrProperty("ModGiganticNoUnknownDisplayName") || E.Understood()) && 
+                !E.Object.HasProperName)
+            {
+                E.ApplySizeAdjective("{{gigantic|gigantic}}", 30, -20); // We're changing gigantic to {{gigantic|gigantic}}
+                return false; // Skip the original method
+            }
+            return true; // Continue with the original method
         }
     }
 }
