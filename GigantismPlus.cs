@@ -161,7 +161,7 @@ namespace XRL.World.Parts.Mutation
 
         public GigantismPlus()
         {
-            DisplayName = "Gigantism ({{r|D}})";
+            DisplayName = "{{gigantism|Gigantism}} ({{r|D}})";
             base.Type = "Physical";
         }
 
@@ -369,7 +369,7 @@ namespace XRL.World.Parts.Mutation
             {
                 MSPenalty = GetHunchedOverMSModifier(Level) + "}} MS";
             }
-            return "Gigantic Fists {{rules|\x1A}}{{rules|4}}{{k|/\xEC}} {{r|\x03}}{{W|" + GetFistDamageDieCount(Level) + "}}{{rules|d}}{{B|" + GetFistDamageDieSize(Level) + "}}{{rules|+3}}\n"
+            return "{{gigantic|Gigantic}} Fists {{rules|\x1A}}{{rules|4}}{{k|/\xEC}} {{r|\x03}}{{W|" + GetFistDamageDieCount(Level) + "}}{{rules|d}}{{B|" + GetFistDamageDieSize(Level) + "}}{{rules|+3}}\n"
                  + "and {{rules|" + GetFistHitBonus(Level) + "}} To-Hit\n"; /*
                  + "{{rules|" + GetHunchedOverQNModifier(Level) + " QN}} and {{rules|" + GetHunchedOverMSModifier(Level) + " MS}} when {{g|Hunched Over}}"; */
         }
