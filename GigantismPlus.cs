@@ -494,7 +494,7 @@ namespace XRL.World.Parts.Mutation
                 // Add the stat shifting code here.
                 //
 
-                ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_positiveVitality");
+                actor.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_positiveVitality");
                 if (Message)
                 {
                         Popup.Show("You hunch over, allowing you access to smaller spaces.");
@@ -523,17 +523,15 @@ namespace XRL.World.Parts.Mutation
         public void StraightenUp(bool Message = false)
         {
             GameObject actor = ParentObject;
-            if (IsPseudoGiganticCreature) // Already Upright over
+            if (!IsPseudoGiganticCreature) // Already Upright over
             {
-                Debug.Entry(1, "Tried to straighten up, but wasn't a PseudoGigantic");
+                Debug.Entry(1, "Tried to straighten up, but wasn't PseudoGigantic");
                 return;
             }
-            UseEnergy(HunchOverEnergyCost, "Physical Defect Mutation Gigantism Stand Tall");
 
             IsPseudoGiganticCreature = false;
 
             if (IsGiganticCreature && !IsPseudoGiganticCreature)
-
             {
                 // Action happened 
                 UseEnergy(HunchOverEnergyCost, "Physical Defect Mutation Gigantism Hunch Over");
@@ -542,7 +540,7 @@ namespace XRL.World.Parts.Mutation
                 // Add the stat shifting code here.
                 //
 
-                ParentObject.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_negativeVitality");
+                actor.PlayWorldSound("Sounds/StatusEffects/sfx_statusEffect_negativeVitality");
                 Popup.Show("You stand tall, relaxing into your immense stature.");
 
                 ActivatedAbilityEntry abilityEntry = actor.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
