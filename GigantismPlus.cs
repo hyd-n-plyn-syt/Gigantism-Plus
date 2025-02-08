@@ -389,8 +389,21 @@ namespace XRL.World.Parts.Mutation
                     }
                 }
             }
-            EnableActivatedAbilityID = AddMyActivatedAbility("{{C|" + "{{W|[}}Upright{{W|]}}\nHunched\n" + "}}", HUNCH_OVER_COMMAND_NAME, "Physical Mutations", null, "&#214", null, Toggleable: true, DefaultToggleState: false, ActiveToggle: true, IsAttack: false, IsRealityDistortionBased: false, IsWorldMapUsable: false);
-            
+
+            //  AddActivatedAbility(Name, Command, Class, Description, Icon, DisabledMessage, Toggleable, DefaultToggleState, ActiveToggle, IsAttack, IsRealityDistortionBased, IsWorldMapUsable, Silent, AIDisable, AlwaysAllowToggleOff, AffectedByWillpower, TickPerTurn, Distinct: false, Cooldown, CommandForDescription, UITileDefault, UITileToggleOn, UITileDisabled, UITileCoolingDown);
+            EnableActivatedAbilityID = 
+                AddMyActivatedAbility(Name: "{{C|" + "{{W|[}}Upright{{W|]}}\nHunched\n" + "}}", 
+                                      Command: HUNCH_OVER_COMMAND_NAME, 
+                                      Class: "Physical Mutations", 
+                                      Description: null, 
+                                      Icon: "&#214", 
+                                      DisabledMessage: null,
+                                      Toggleable: true, 
+                                      DefaultToggleState: false, 
+                                      ActiveToggle: true, IsAttack: false, 
+                                      IsRealityDistortionBased: false, 
+                                      IsWorldMapUsable: false);
+
             return base.Mutate(GO, Level);
         }
 

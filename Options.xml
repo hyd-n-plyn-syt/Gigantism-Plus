@@ -95,7 +95,7 @@
 	    Type="Checkbox" Default="Yes"
 	>
 		<helptext>
-			A {{gigantic|gigantic}} character would have {{w|gigantic}} equipment when they arrive in Qud.
+			A {{gigantic|gigantic}} character would have {{gigantic|gigantic}} equipment when they arrive in Qud.
 			Disabling this option will make for a more difficult start.
 
 			The default is {{w|Enabled}}.
