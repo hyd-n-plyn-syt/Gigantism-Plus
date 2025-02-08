@@ -90,7 +90,7 @@
 	
 	<option 
 		ID="Option_GigantismPlus_EnableGiganticStartingGear"
-	    DisplayText="{{gigantic|Gigantify}} starting equipment for Gigantic ({{r|D}}) players ({{R|new save}})"
+	    DisplayText="{{giant|Gigantify}} starting equipment for {{gigantic|Gigantic}} ({{r|D}}) players ({{R|new save}})"
 	    Category="Mods: Gigantism Plus"
 	    Type="Checkbox" Default="Yes"
 	>
@@ -118,13 +118,13 @@
 
 	<option
 		ID="Option_GigantismPlus_EnableGigantismRapidAdvance"
-	    DisplayText="Make Gigantism ({{r|D}}) eligible for rapid advancement"
+	    DisplayText="Make {{gigantic|Gigantism}} ({{r|D}}) eligible for rapid advancement"
 	    Category="Mods: Gigantism Plus"
 	    Type="Checkbox" Default="Yes"
 	>
 		<helptext>
 			({{r|D}})efects aren't typically able to be leveled up and are excluded from rapid advancement by default.
-			When enabled, Gigantism ({{r|D}}) will be included in the list of physical mutations for this purpose.
+			When enabled, {{gigantism|Gigantism}} ({{r|D}}) will be included in the list of physical mutations for this purpose.
 
 			The default is {{w|Enabled}}.
 		</helptext>
