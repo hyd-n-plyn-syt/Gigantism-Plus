@@ -55,8 +55,8 @@ namespace Mods.GigantismPlus.HarmonyPatches
     [HarmonyPatch(typeof(XRL.World.GetMaxCarriedWeightEvent))]
     class PseudoGiganticCreature_CarryCapacity
     {
-
         // Goal is to simulate being Gigantic for the purposes of calculating carry capacity, if the GameObject in question is PseudoGigantic
+        
         [HarmonyPrefix]
         [HarmonyPatch(nameof(GetMaxCarriedWeightEvent.GetFor))]
         static void Prefix(ref GameObject Object, ref GameObject __state) 
@@ -92,19 +92,27 @@ namespace Mods.GigantismPlus.HarmonyPatches
         }
     }
 
+    // Why harmony for this one when it's an available event?
+    // -- this keeps the behaviour consistent with vanilla but hijacks control
+    //    outside of a vanilla getting a significant rework, this should remain compatable.
+
+    [HarmonyPatch]
     [HarmonyPatch(typeof(ModGigantic))]
     [HarmonyPatch("HandleEvent")]
     [HarmonyPatch(new Type[] { typeof(GetDisplayNameEvent) })]
     public static class ModGiganticPatch
     {
+        // goal is to change the display name of the gigantic modifier to include a text shader
         static bool Prefix(GetDisplayNameEvent E)
         {
-            if (!E.Object.HasTagOrProperty("ModGiganticNoDisplayName") && 
-                (!E.Object.HasTagOrProperty("ModGiganticNoUnknownDisplayName") || E.Understood()) && 
-                !E.Object.HasProperName)
+            if (!E.Object.HasTagOrProperty("ModGiganticNoDisplayName")
+                && (!E.Object.HasTagOrProperty("ModGiganticNoUnknownDisplayName") 
+                    || E.Understood()) 
+                /*&& !E.Object.HasProperName*/) // uncommenting this will stop relic items and the like from having gigantic displayed.
             {
+                // don't put Debug.Entry lines here. This runs near constantly for every item with the gigantic mod.
                 E.ApplySizeAdjective("{{gigantic|gigantic}}", 30, -20); // We're changing gigantic to {{gigantic|gigantic}}
-                return false; // Skip the original method
+                return false;
             }
             return true; // Continue with the original method
         }
