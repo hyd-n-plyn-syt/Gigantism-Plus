@@ -1,7 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <options>
 
-	<option
+  <!-- 
+  Debug Options
+  -->
+  
+  <option
         ID="Option_GigantismPlus_DebugV"
         DisplayText="{{w|Gigantism Plus}}: Output debug entries to Player.log"
         Category="Debug"
@@ -10,21 +14,6 @@
     >
 		<helptext>
 			When enabled, debug entries will be sent to the Player.log file when certain functions are perfomed within this mod.
-
-			The default is {{w|Disabled}}.
-		</helptext>
-	</option>
-
-	<option
-        ID="Option_GigantismPlus_DebugIncludeInMessage"
-		Requires="Option_GigantismPlus_DebugV==Yes"
-        DisplayText="{{w|Gigantism Plus}}: Also show debug entries in the Message Queue"
-        Category="Debug"
-        Type="Checkbox"
-        Default="No"
-    >
-		<helptext>
-			When enabled, debug entries will be sent to the Message Queue any time (with few exceptions) they would be sent to Player.log.
 
 			The default is {{w|Disabled}}.
 		</helptext>
@@ -76,6 +65,28 @@
 			The default is {{w|Disabled}}.
 		</helptext>
 	</option>
+
+  <option
+        ID="Option_GigantismPlus_DebugIncludeInMessage"
+		Requires="Option_GigantismPlus_DebugV==Yes"
+        DisplayText="{{w|Gigantism Plus}}: Also show debug entries in the Message Queue"
+        Category="Debug"
+        Type="Checkbox"
+        Default="No"
+    >
+    <helptext>
+      When enabled, debug entries will be sent to the Message Queue any time (with few exceptions) they would be sent to Player.log.
+
+      The default is {{w|Disabled}}.
+    </helptext>
+  </option>
+  
+  <!-- 
+  End of Debug Options
+  -->
+  <!-- 
+  Mod Options
+  -->
 	
 	<option 
 		ID="Option_GigantismPlus_EnableGiganticStartingGear"
@@ -149,5 +160,9 @@
 			The default is {{w|Gigantic ({{r|D}}) players}}.
 		</helptext>
 	</option>
+
+  <!-- 
+  End of Mod Options
+  -->
 	
 </options>
