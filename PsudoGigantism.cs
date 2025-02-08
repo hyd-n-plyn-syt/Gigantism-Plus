@@ -7,9 +7,9 @@ using XRL.World.Parts;
 namespace Mods.GigantismPlus
 {
     [Serializable]
-    public class HunchedGiant : IActivePart
+    public class PseudoGigantism : IActivePart
     {
-        public HunchedGiant()
+        public PseudoGigantism()
         {
             WorksOnSelf = true;
         }
@@ -37,33 +37,9 @@ namespace Mods.GigantismPlus
             return base.HandleEvent(E);
         }
 
-        public void CheckAffected(GameObject Actor, Body Body)
-        {
-            if (Actor == null || Body == null)
-            {
-                return;
-            }
-            List<GameObject> list = Event.NewGameObjectList();
-            foreach (BodyPart item in Body.LoopParts())
-            {
-                GameObject equipped = item.Equipped;
-                if (equipped != null && !list.Contains(equipped))
-                {
-                    list.Add(equipped);
-                    int partCountEquippedOn = Body.GetPartCountEquippedOn(equipped);
-                    int slotsRequiredFor = equipped.GetSlotsRequiredFor(Actor, item.Type);
-                    if (partCountEquippedOn != slotsRequiredFor && item.TryUnequip(Silent: true, SemiForced: true) && partCountEquippedOn > slotsRequiredFor)
-                    {
-                        equipped.SplitFromStack();
-                        item.Equip(equipped, 0, Silent: true, ForDeepCopy: false, Forced: false, SemiForced: true);
-                    }
-                }
-            }
-        }
-
         public override bool AllowStaticRegistration()
         {
             return true;
         }
-    } //!--- public class HunchedGiant : IActivePart
+    } //!--- public class PsudoGigantic : IActivePart
 }
