@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<factions>
+	<faction Name="Barathrumites" Load="Merge">
+		<partreputation About="ElongatedPaws" Value="100" />
+	</faction>
+</factions>

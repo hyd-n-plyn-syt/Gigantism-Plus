@@ -33,4 +33,7 @@
     <object Name="Oboroqoru" Load="Merge">
         <mutation Name="GigantismPlus" Load="Merge" />
     </object>
+    <object Name="Urshiib" Load="Merge">
+        <mutation Name="ElongatedPaws" Load="Merge" />
+    </object>
 </objects>

@@ -7,19 +7,29 @@ using XRL.World;
 namespace XRL.World.Parts.Mutation
 {
     [Serializable]
-    public class ElongatingFingers : BaseMutation
+    public class ElongatedPaws : BaseMutation
     {
         private static readonly string[] AffectedSlotTypes = new string[3] { "Hand", "Hands", "Missile Weapon" };
 
-        public ElongatingFingers()
+        public ElongatedPaws()
         {
-            DisplayName = "{{giant|Elongating Fingers}}";
+            DisplayName = "{{giant|Elongated Paws}}";
             base.Type = "Physical";
+        }
+
+        public override bool CanLevel()
+        {
+            return false;
         }
 
         public override string GetDescription()
         {
-            return "Your hands are unusually large and end in spindly {{giant|elongating fingers}}, allowing you to wear {{gigantic|gigantic}} equipment {{rules|worn on hands}} and {{rules|wield}} {{gigantic|gigantic}} weapons as easily as you do normal sized gear.\n";
+            return "Your long, slender, {{giant|elongated paws}} flutter with composed precision. Your paws are unusually large and end in spindly fingers, allowing you to wear {{gigantic|gigantic}} equipment {{rules|worn on hands}} and {{rules|wield}} {{gigantic|gigantic}} weapons as easily as you do normal sized gear.\n\n+{{rules|100}} reputation with {{w|Barathrumites}}\n";
+        }
+
+        public override string GetLevelText(int Level)
+        {
+            return "";
         }
 
         public override bool WantEvent(int ID, int cascade)
@@ -37,6 +47,12 @@ namespace XRL.World.Parts.Mutation
             {
                 E.Decreases++;
             }
+            return base.HandleEvent(E);
+        }
+
+        public override bool HandleEvent(GetExtraPhysicalFeaturesEvent E)
+        {
+            E.Features.Add("{{giant|elongated paws}}");
             return base.HandleEvent(E);
         }
 
