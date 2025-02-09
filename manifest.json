@@ -1,8 +1,8 @@
 {
     "id": "gigantism_Plus",
-    "title": "{{metamorphic|Gigantism Plus}}",
-    "description": "Adds a modified version of the base-game's Gigantism defect.\n\nUnlike other defects, this one has a mutation level which can be increased with mutation points and even rapidly advanced!\n\nAlso included is the active ability \"Hunch Over\" which will allow gigantic creatures to enter spaces they otherwise wouldn't fit.\nNo more end-game softlock!",
-    "version": "0.2.2",
+    "title": "{{giant|Gigantism Plus}}",
+    "description": "Adds a modified version of the base-game's {{gigantism|Gigantism}} defect.\n\nUnlike other defects, this one has a mutation level which can be increased with mutation points and even rapidly advanced!\n\nAlso included is the active ability \"Hunch Over\" which will allow gigantic creatures to enter spaces they otherwise wouldn't fit.\nNo more end-game softlock!",
+    "version": "0.2.3",
     "author": "{{metamorphic|hydnplynsyt}} and {{K-g-G-Y-G-g-K alternation|UnderDoug}}",
     "tags": "Mutation,Defect,Balance,Cheat,Harmony",
     "PreviewImage": "preview.png"
