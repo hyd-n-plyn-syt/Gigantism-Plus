@@ -18,16 +18,19 @@
     <object Name="Star Kraken" Load="Merge">
         <mutation Name="GigantismPlus" Load="Merge" />
     </object>
-    <object Name="VehicleTemplarMech" Load="Merge">
+    <!--object Name="VehicleTemplarMech" Load="Merge">
         <mutation Name="GigantismPlus" Load="Merge" />
-    </object>
+    </object-->
     <object Name="BaseNephal" Load="Merge">
         <mutation Name="GigantismPlus" Load="Merge" />
     </object>
-    <object Name="BaseVehicleGolem" Load="Merge">
+    <!--object Name="BaseVehicleGolem" Load="Merge">
+        <mutation Name="GigantismPlus" Load="Merge" />
+    </object-->
+    <object Name="Rodanis Y" Load="Merge">
         <mutation Name="GigantismPlus" Load="Merge" />
     </object>
-    <object Name="Rodanis Y" Load="Merge">
+    <object Name="Oboroqoru" Load="Merge">
         <mutation Name="GigantismPlus" Load="Merge" />
     </object>
 </objects>
