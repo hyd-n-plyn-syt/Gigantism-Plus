@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<objects>
+    <object Name="Great Saltback" Load="Merge">
+        <mutation Name="GigantismPlus" Load="Merge" />
+    </object>
+    <object Name="Chrome Pyramid" Load="Merge">
+        <mutation Name="GigantismPlus" Load="Merge" />
+    </object>
+    <object Name="Great Magma Crab" Load="Merge">
+        <mutation Name="GigantismPlus" Load="Merge" />
+    </object>
+    <object Name="Saltwurm" Load="Merge">
+        <mutation Name="GigantismPlus" Load="Merge" />
+    </object>
+    <object Name="Star Kraken" Load="Merge">
+        <mutation Name="GigantismPlus" Load="Merge" />
+    </object>
+    <object Name="VehicleTemplarMech" Load="Merge">
+        <mutation Name="GigantismPlus" Load="Merge" />
+    </object>
+    <object Name="BaseNephal" Load="Merge">
+        <mutation Name="GigantismPlus" Load="Merge" />
+    </object>
+    <object Name="BaseVehicleGolem" Load="Merge">
+        <mutation Name="GigantismPlus" Load="Merge" />
+    </object>
+    <object Name="Rodanis Y" Load="Merge">
+        <mutation Name="GigantismPlus" Load="Merge" />
+    </object>
+</objects>

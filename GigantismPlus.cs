@@ -229,7 +229,8 @@ namespace XRL.World.Parts.Mutation
                 || ID == AfterLevelGainedEvent.ID
                 || ID == GetMaxCarriedWeightEvent.ID
                 || ID == CanEnterInteriorEvent.ID
-                || ID == InventoryActionEvent.ID;
+                || ID == InventoryActionEvent.ID
+                || ID == GetExtraPhysicalFeaturesEvent.ID;
         }
 
         // method to swap Gigantism mutation category between Physical and PhysicalDefects
@@ -299,6 +300,12 @@ namespace XRL.World.Parts.Mutation
             return true;
         }
 
+        public override bool HandleEvent(GetExtraPhysicalFeaturesEvent E)
+        {
+            E.Features.Add("{{gianter|gigantic stature}}");
+            return base.HandleEvent(E);
+        }
+        
         /*public override bool HandleEvent(GetMaxCarriedWeightEvent E)
         {
             if (IsGiganticCreature && IsPseudoGiganticCreature)
