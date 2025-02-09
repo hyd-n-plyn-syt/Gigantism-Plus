@@ -34,11 +34,9 @@ namespace XRL.World.Parts.Mutation
 
         public override bool WantEvent(int ID, int cascade)
         {
-            if (!base.WantEvent(ID, cascade) && ID != PooledEvent<GetSlotsRequiredEvent>.ID)
-            {
-                return false;
-            }
-            return true;
+            return base.WantEvent(ID, cascade)
+                || ID == PooledEvent<GetSlotsRequiredEvent>.ID
+                || ID == GetExtraPhysicalFeaturesEvent.ID;
         }
 
         public override bool HandleEvent(GetSlotsRequiredEvent E)
