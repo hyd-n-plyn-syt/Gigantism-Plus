@@ -1,6 +1,6 @@
 <mutations>
     <category Name="Physical" Load="merge">
-        <mutation Name="ElongatedPaws" Cost="4" MaxSelected="1" Class="ElongatedPaws" Exclusions="GigantismPlus" BearerDescription="those with triple-jointed fingers" Tile="GiganticFist.png" Hidden="true" ExcludeFromPool="true" />
+        <mutation Name="ElongatedPaws" Cost="4" MaxSelected="1" Class="ElongatedPaws" Exclusions="GigantismPlus" BearerDescription="those with elongated paws" Tile="ElongatedPaws.png" Hidden="true" ExcludeFromPool="true" />
     </category>
     <category Name="PhysicalDefects" Load="merge">
         <mutation Name="GigantismPlus" Cost="-3" MaxSelected="1" Class="GigantismPlus" Exclusions="ElongatedPaws" BearerDescription="those who are gigantic" Tile="GigantismPlus.png" Defect="true" />
