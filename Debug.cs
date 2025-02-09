@@ -18,7 +18,7 @@ namespace Mods.GigantismPlus
 
         private static void Message(string text)
         {
-            XRL.Messages.MessageQueue.AddPlayerMessage(text);
+            XRL.Messages.MessageQueue.AddPlayerMessage("{{Y|" + text + "}}");
         }
 
         private static void Log(string text)

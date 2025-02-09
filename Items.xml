@@ -19,7 +19,7 @@
         <tag Name="VisibleAsDefaultBehavior" />
         <tag Name="ShowAsPhysicalFeature" />
     </object>
-	<!-- object  Name="LightSource" Load="merge">
-		<tag Name="Mods" Value="CommonMods" Load="merge" />
-	</object -->
+	<object  Name="LightSource" Load="Merge">
+		<tag Name="Mods" Value="CommonMods" Load="Merge" />
+	</object>
 </objects>

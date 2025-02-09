@@ -14,7 +14,7 @@ namespace Mods.GigantismPlus.HarmonyPatches
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(GameObject.GetBodyWeight))]
-        static void Prefix(ref GameObject __state, GameObject __instance)
+        static void GetBodyWeightPrefix(ref GameObject __state, GameObject __instance)
         {
             // Object matches the paramater of the original,
             // __state lets you keep stuff between Pre- and Postfixes (might be redundant for this one)
@@ -32,7 +32,7 @@ namespace Mods.GigantismPlus.HarmonyPatches
 
         [HarmonyPostfix]
         [HarmonyPatch(nameof(GameObject.GetBodyWeight))]
-        static void Postfix(GameObject __state)
+        static void GetBodyWeightPostfix(GameObject __state)
         {
             // only need __state this time, since it holds the __instance anyway.
 
@@ -45,7 +45,7 @@ namespace Mods.GigantismPlus.HarmonyPatches
                 Debug.Entry(2, "Should be Heavy and PseudoGigantic\n");
             }
         }
-    }
+    } //!--- class PseudoGiganticCreature_BodyWeight
 
 
     // Why harmony for this one when it's an available event?
@@ -59,7 +59,7 @@ namespace Mods.GigantismPlus.HarmonyPatches
         
         [HarmonyPrefix]
         [HarmonyPatch(nameof(GetMaxCarriedWeightEvent.GetFor))]
-        static void Prefix(ref GameObject Object, ref GameObject __state) 
+        static void GetMaxCarryWeightPrefix(ref GameObject Object, ref GameObject __state) 
         {
             // Object matches the paramater of the original,
             // __state lets you keep stuff between Pre- and Postfixes (might be redundant for this one)
@@ -77,7 +77,7 @@ namespace Mods.GigantismPlus.HarmonyPatches
 
         [HarmonyPostfix]
         [HarmonyPatch(nameof(GetMaxCarriedWeightEvent.GetFor))]
-        static void Postfix(GameObject __state)
+        static void GetMaxCarryWeightPostfix(GameObject __state)
         {
             // only need __state this time, since it holds the __instance anyway.
 
@@ -90,31 +90,45 @@ namespace Mods.GigantismPlus.HarmonyPatches
                 Debug.Entry(2, "Should have Carry Capacity and PseudoGigantic");
             }
         }
-    }
+    } //!--- class PseudoGiganticCreature_CarryCapacity
 
     // Why harmony for this one when it's an available event?
-    // -- this keeps the behaviour consistent with vanilla but hijacks control
+    // -- this keeps the behaviour consistent with vanilla but hijacks the value
     //    outside of a vanilla getting a significant rework, this should remain compatable.
 
     [HarmonyPatch]
-    [HarmonyPatch(typeof(ModGigantic))]
-    [HarmonyPatch("HandleEvent")]
-    [HarmonyPatch(new Type[] { typeof(GetDisplayNameEvent) })]
-    public static class ModGiganticPatch
+    public static class ModGiganticDisplayName_Shader
     {
-        // goal is to change the display name of the gigantic modifier to include a text shader
-        static bool Prefix(GetDisplayNameEvent E)
+
+        static void GetDisplayNameEventOverride(GetDisplayNameEvent E, string Adjective, int Priority, bool IncludeProperName = false)
         {
-            if (!E.Object.HasTagOrProperty("ModGiganticNoDisplayName")
-                && (!E.Object.HasTagOrProperty("ModGiganticNoUnknownDisplayName") 
-                    || E.Understood()) 
-                /*&& !E.Object.HasProperName*/) // uncommenting this will stop relic items and the like from having gigantic displayed.
+            if (E.Object.HasProperName && !IncludeProperName) return; // skip for Proper Named items, unless including them.
+            if (E.Object.HasTagOrProperty("ModGiganticNoDisplayName")) return; // skip for items that explicitly hide the adjective
+            if (E.Object.HasTagOrProperty("ModGiganticNoUnknownDisplayName")) return; // skip for unknown items that explicitly hide the advective
+            if (!E.Understood()) return; // skip items not understood by the player
+
+            if (E.DB.SizeAdjective == Adjective && E.DB.SizeAdjectivePriority == Priority)
             {
-                // don't put Debug.Entry lines here. This runs near constantly for every item with the gigantic mod.
-                E.ApplySizeAdjective("{{gigantic|gigantic}}", 30, -20); // We're changing gigantic to {{gigantic|gigantic}}
-                return false;
+                // The base event runs every game tick for equipped range weapons.
+                // possibly due to the item being displayed in the UI (bottom right)
+                // Any form of output here will completely clog up the logs.
+
+                Adjective = "{{gigantic|" + Adjective + "}}";
+
+                E.DB.SizeAdjective = Adjective;
+                
+                // Debug.Entry(E.DB.GetDebugInfo());
             }
-            return true; // Continue with the original method
+
         }
-    }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(XRL.World.Parts.ModGigantic), "HandleEvent", new Type[] { typeof(GetDisplayNameEvent) })]
+        static void ModGiganticPatch(GetDisplayNameEvent E)
+        {
+            GetDisplayNameEventOverride(E, "gigantic", 30, true);
+        }
+
+    } //!--- public static class ModGiganticDisplayName_Shader
+
 }
