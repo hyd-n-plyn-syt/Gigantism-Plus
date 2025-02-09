@@ -7,14 +7,19 @@ using XRL.World;
 namespace XRL.World.Parts.Mutation
 {
     [Serializable]
-    public class HamFisted : BaseMutation
+    public class ElongatingFingers : BaseMutation
     {
         private static readonly string[] AffectedSlotTypes = new string[3] { "Hand", "Hands", "Missile Weapon" };
 
-        public HamFisted()
+        public ElongatingFingers()
         {
-            DisplayName = "{{giant|Ham Fisted}}";
+            DisplayName = "{{giant|Elongating Fingers}}";
             base.Type = "Physical";
+        }
+
+        public override string GetDescription()
+        {
+            return "Your hands are unusually large and end in spindly {{giant|elongating fingers}}, allowing you to wear {{gigantic|gigantic}} equipment {{rules|worn on hands}} and {{rules|wield}} {{gigantic|gigantic}} weapons as easily as you do normal sized gear.\n";
         }
 
         public override bool WantEvent(int ID, int cascade)
