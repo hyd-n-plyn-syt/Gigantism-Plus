@@ -8,15 +8,39 @@ using Mods.GigantismPlus;
 namespace Mods.GigantismPlus.HarmonyPatches
 {
     [HarmonyPatch(typeof(XRL.World.GameObject))]
-    class PseudoGiganticCreature_BodyWeight
+    public static class PseudoGiganticCreature_GameObject_Patches
     {
         // Goal is to simulate being Gigantic for the purposes of calculating body weight, if the GameObject in question is PseudoGigantic
+
+        /*
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(GameObject.IsGiganticCreature), "get")]
+        static bool IsGiganticCreatureGetter(GameObject __instance, ref bool __result)
+        {
+            // This is a skip. It's designed to make the only thing that counts towards gigantism whether the IntProperty is 1 or not.
+            // --instance gives you the instantiated object on which the original method call is happening
+            Debug.Entry(1,"We're in the Getter");
+            __instance.ParentObject.RemovePart<Gigantism>();
+            int intProperty = __instance.ParentObject.GetIntProperty("Gigantic");
+            if (intProperty > 0)
+            {
+                intProperty = 1;
+                __result = true;
+                Debug.Entry(1, "Gigantic IntProperty is true");
+                return false;
+            }
+            intProperty = 0;
+            __result = false;
+            Debug.Entry(1, "Gigantic IntProperty is false");
+            return false;
+        }
+        */
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(GameObject.GetBodyWeight))]
         static void GetBodyWeightPrefix(ref GameObject __state, GameObject __instance)
         {
-            // Object matches the paramater of the original,
+            // --instance gives you the instantiated object on which the original method call is happening,
             // __state lets you keep stuff between Pre- and Postfixes (might be redundant for this one)
 
             __state = __instance; // make the transferable object the current instance.
@@ -45,18 +69,19 @@ namespace Mods.GigantismPlus.HarmonyPatches
                 Debug.Entry(2, "Should be Heavy and PseudoGigantic\n");
             }
         }
-    } //!--- class PseudoGiganticCreature_BodyWeight
+    } //!--- public static class PseudoGiganticCreature_GameObject_Patches
 
 
     // Why harmony for this one when it's an available event?
     // -- in the event that this hard-coded element is adjusted (such as the increase amount),
     //    this just ensures the "vanilla" behaviour is preserved by "masking" as Gigantic for the check.
 
+    // Goal is to simulate being Gigantic for the purposes of calculating carry capacity, if the GameObject in question is PseudoGigantic
+
     [HarmonyPatch(typeof(XRL.World.GetMaxCarriedWeightEvent))]
-    class PseudoGiganticCreature_CarryCapacity
+    public static class PseudoGiganticCreature_GetMaxCarriedWeightEvent_Patches
     {
-        // Goal is to simulate being Gigantic for the purposes of calculating carry capacity, if the GameObject in question is PseudoGigantic
-        
+
         [HarmonyPrefix]
         [HarmonyPatch(nameof(GetMaxCarriedWeightEvent.GetFor))]
         static void GetMaxCarryWeightPrefix(ref GameObject Object, ref GameObject __state) 
@@ -90,15 +115,18 @@ namespace Mods.GigantismPlus.HarmonyPatches
                 Debug.Entry(2, "Should have Carry Capacity and PseudoGigantic");
             }
         }
-    } //!--- class PseudoGiganticCreature_CarryCapacity
+
+    } //!--- public static class PseudoGiganticCreature_GetMaxCarriedWeightEvent_Patches
+
 
     // Why harmony for this one when it's an available event?
     // -- this keeps the behaviour consistent with vanilla but hijacks the value
     //    outside of a vanilla getting a significant rework, this should remain compatable.
 
     [HarmonyPatch]
-    public static class ModGiganticDisplayName_Shader
+    public static class ModGigantic_DisplayName_Shader
     {
+        // goal display the SizeAdjective gigantic with its associated shader.
 
         static void GetDisplayNameEventOverride(GetDisplayNameEvent E, string Adjective, int Priority, bool IncludeProperName = false)
         {
