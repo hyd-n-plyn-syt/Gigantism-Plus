@@ -1,4 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <mods>
-  <mod Part="ModGigantic" TinkerTier="3" TinkerDisplayName="gigantic" Load="Merge"/>
+  <mod Part="ModGigantic" TinkerTier="3" TinkerDisplayName="gigantic" Tables="Gigantify" Load="Merge"/>
 </mods>

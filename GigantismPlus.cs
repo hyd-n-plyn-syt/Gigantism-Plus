@@ -39,7 +39,23 @@ namespace XRL.World.Parts.Mutation
 
         public int HunchedOverMSModifier;
 
-        private int _GiganticBodyWeightCache = -1;
+        private bool _IsVehicleCreature = false;
+
+        public bool IsVehicleCreature
+        {
+            get
+            {
+                if (ParentObject.HasPart(typeof(Vehicle)))
+                {
+                    _IsVehicleCreature = true;
+                }
+                else
+                {
+                    _IsVehicleCreature = false;
+                }
+                return _IsVehicleCreature;
+            }
+        }
 
         public static int GetFistDamageDieCount(int Level)
         {
@@ -190,7 +206,7 @@ namespace XRL.World.Parts.Mutation
             // update HunchOver ability stats.
             // Hunch over if hunched before level up.
             bool WasHunched = false;
-            if (IsPseudoGiganticCreature)
+            if (IsPseudoGiganticCreature && !IsVehicleCreature)
             {
                 WasHunched = true;
                 IsHunchFree = true;
@@ -203,7 +219,7 @@ namespace XRL.World.Parts.Mutation
             HunchedOverMSModifier = GetHunchedOverMSModifier(NewLevel);
             
 
-            if (WasHunched)
+            if (WasHunched && !IsVehicleCreature)
             {
                 IsHunchFree = true;
                 HunchOver(Message: false);
@@ -223,28 +239,6 @@ namespace XRL.World.Parts.Mutation
             stats.Set("HunchedOverMS", HunchedOverMS);
         }
 
-<<<<<<< Updated upstream
-        public override bool WantEvent(int ID, int cascade)
-        {
-            /*
-            if (!base.WantEvent(ID, cascade) && ID != SingletonEvent<AfterGameLoadedEvent>.ID && ID != PooledEvent<PartSupportEvent>.ID && ID != PooledEvent<PreferDefaultBehaviorEvent>.ID)
-            {
-                return ID == SingletonEvent<BeforeAbilityManagerOpenEvent>.ID;
-            }
-            */
-            // Check if the ID parameter matches
-            // or if a Wanted Event.ID comes through
-            // SingletonEvent<BeforeAbilityManagerOpenEvent>.
-            return base.WantEvent(ID, cascade)
-                || ID == BeforeLevelGainedEvent.ID
-                || ID == AfterLevelGainedEvent.ID
-                || ID == GetMaxCarriedWeightEvent.ID
-                || ID == CanEnterInteriorEvent.ID
-                || ID == InventoryActionEvent.ID;
-        }
-
-=======
->>>>>>> Stashed changes
         // method to swap Gigantism mutation category between Physical and PhysicalDefects
         // - Rapid advancement checks the Physical MutationCategory Entries.
         private void SwapMutationCategory(bool Before = true)
@@ -332,6 +326,12 @@ namespace XRL.World.Parts.Mutation
             return true;
         }
 
+        public override bool HandleEvent(GetExtraPhysicalFeaturesEvent E)
+        {
+            E.Features.Add("{{gianter|gigantic stature}}");
+            return base.HandleEvent(E);
+        }
+
         /*public override bool HandleEvent(GetMaxCarriedWeightEvent E)
         {
             if (IsGiganticCreature && IsPseudoGiganticCreature)
@@ -343,59 +343,60 @@ namespace XRL.World.Parts.Mutation
 
         public override bool HandleEvent(CanEnterInteriorEvent E)
         {
-            Debug.Entry("Checking CanEnterInteriorEvent");
-            /* if (E.ParentObject == E.Object)
+            Debug.Entry(1,"Checking CanEnterInteriorEvent");
+            if (ParentObject == E.Object)
             {
-                Debug.Entry("Parent Object is the Target of Entry, Skip to base CanEnterInteriorEvent");
+                Debug.Entry(1,"Parent Object is the Target of Entry, Skip to base CanEnterInteriorEvent");
                 return base.HandleEvent(E);
-            }*/
+            }
             GameObject actor = E.Actor;
-            if (actor.IsGiganticCreature)
+            if (actor != null && actor.IsGiganticCreature && !IsVehicleCreature)
             {
-                Debug.Entry("We are big, gonna HunchOver");
+                Debug.Entry(2,"We are big, gonna HunchOver");
                 IsHunchFree = true;
                 CommandEvent.Send(actor, HUNCH_OVER_COMMAND_NAME);
-                Debug.Entry("HunchOver Sent for CanEnterInteriorEvent");
+                Debug.Entry(3, "HunchOver Sent for CanEnterInteriorEvent");
                 bool check = CanEnterInteriorEvent.Check(E.Actor, E.Object, E.Interior, ref E.Status, ref E.Action, ref E.ShowMessage);
                 E.Status = check ? 0 : E.Status;
                 string status = "";
                 status += E.Status;
-                Debug.Entry(1, "E.Status", status);
+                Debug.Entry(3, "E.Status", status);
 
                 Popup.Show("You try to squeeze into the space.");
-                
-                // Haven't tested this yet.
-                // return E.Interior.TryEnter(E.Actor);
             }
             else
             {
-                Debug.Entry("CanEnterInteriorEvent - We aren't big.");
+                Debug.Entry(2, "CanEnterInteriorEvent - We aren't big.");
             }
-            Debug.Entry("Sending to base CanEnterInteriorEvent");
+            Debug.Entry(1, "Sending to base CanEnterInteriorEvent");
             return base.HandleEvent(E);
         }
 
+        /* This was part of the code we were using, I thought, to enable entering interiors while gigantic.
+         * Debug-logging revealed that it wasn't firing at all. Leaving it here for the time being.
+         * 
         public override bool HandleEvent(InventoryActionEvent E)
         {
             if (E.Command == "EnterInterior")
             {
-                Debug.Entry("Attempting InteriorEntry");
+                Debug.Entry("A) Attempting InteriorEntry");
                 GameObject actor = E.Actor;
-                if (actor.IsGiganticCreature)
+                if (actor.IsGiganticCreature && !actor.HasPart<Vehicle>())
                 {
-                    Debug.Entry("We are big, so we'll HunchOver");
+                    Debug.Entry("A)A) We are big, so we'll HunchOver");
                     IsHunchFree = true;
                     CommandEvent.Send(actor, HUNCH_OVER_COMMAND_NAME);
-                    Debug.Entry("HunchOver Sent for Enter InventoryActionEvent");
+                    Debug.Entry("A)A)A) HunchOver Sent for Enter InventoryActionEvent");
                 }
                 else
                 {
-                    Debug.Entry("InventoryActionEvent - We aren't big");
+                    Debug.Entry("A)A) InventoryActionEvent - We aren't big");
                 }
-                Debug.Entry("Sending to base InventoryActionEvent");
+                Debug.Entry("A)A)A)A) Sending to base InventoryActionEvent");
             }
             return base.HandleEvent(E);
         }
+        */
 
         public override bool HandleEvent(BeforeAbilityManagerOpenEvent E)
         {
@@ -451,22 +452,25 @@ namespace XRL.World.Parts.Mutation
                 }
             }
 
-            //  AddActivatedAbility(Name, Command, Class, Description, Icon, DisabledMessage, Toggleable, DefaultToggleState, ActiveToggle, IsAttack, IsRealityDistortionBased, IsWorldMapUsable, Silent, AIDisable, AlwaysAllowToggleOff, AffectedByWillpower, TickPerTurn, Distinct: false, Cooldown, CommandForDescription, UITileDefault, UITileToggleOn, UITileDisabled, UITileCoolingDown);
-            EnableActivatedAbilityID = 
-                AddMyActivatedAbility(Name: "{{C|" + "{{W|[}}Upright{{W|]}}/Hunched" + "}}", 
-                                      Command: HUNCH_OVER_COMMAND_NAME, 
-                                      Class: "Physical Mutations", 
-                                      Description: null, 
-                                      Icon: "&#214", 
-                                      DisabledMessage: null,
-                                      Toggleable: true, 
-                                      DefaultToggleState: false, 
-                                      ActiveToggle: true, IsAttack: false, 
-                                      IsRealityDistortionBased: false, 
-                                      IsWorldMapUsable: false);
+            if (!GO.HasPart<Vehicle>())
+            {
+                //  AddActivatedAbility(Name, Command, Class, Description, Icon, DisabledMessage, Toggleable, DefaultToggleState, ActiveToggle, IsAttack, IsRealityDistortionBased, IsWorldMapUsable, Silent, AIDisable, AlwaysAllowToggleOff, AffectedByWillpower, TickPerTurn, Distinct: false, Cooldown, CommandForDescription, UITileDefault, UITileToggleOn, UITileDisabled, UITileCoolingDown);
+                EnableActivatedAbilityID =
+                    AddMyActivatedAbility(Name: "{{C|" + "{{W|[}}Upright{{W|]}}/Hunched" + "}}",
+                                          Command: HUNCH_OVER_COMMAND_NAME,
+                                          Class: "Physical Mutations",
+                                          Description: null,
+                                          Icon: "&#214",
+                                          DisabledMessage: null,
+                                          Toggleable: true,
+                                          DefaultToggleState: false,
+                                          ActiveToggle: true, IsAttack: false,
+                                          IsRealityDistortionBased: false,
+                                          IsWorldMapUsable: false);
 
-            ActivatedAbilityEntry abilityEntry = GO.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
-            abilityEntry.DisplayName = "{{C|" + "{{W|[}}Upright{{W|]}}\nHunched\n" + "}}";
+                ActivatedAbilityEntry abilityEntry = GO.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
+                abilityEntry.DisplayName = "{{C|" + "{{W|[}}Upright{{W|]}}\nHunched\n" + "}}";
+            }
 
             return base.Mutate(GO, Level);
         }
@@ -479,7 +483,10 @@ namespace XRL.World.Parts.Mutation
                 CleanUpMutationEquipment(GO, ref GiganticFistObject);
                 IsPseudoGiganticCreature = false;
 
-                RemoveMyActivatedAbility(ref EnableActivatedAbilityID);
+                if (EnableActivatedAbilityID != Guid.Empty)
+                {
+                    RemoveMyActivatedAbility(ref EnableActivatedAbilityID);
+                }
             }
             
             return base.Unmutate(GO);
@@ -526,6 +533,11 @@ namespace XRL.World.Parts.Mutation
                 if (actor.CurrentZone.ZoneWorld == "Interior" && !IsGiganticCreature)
                 {
                     Popup.Show("This space is too small for you to stand upright!");
+                    return base.FireEvent(E);
+                }
+
+                if (IsVehicleCreature)
+                {
                     return base.FireEvent(E);
                 }
 
@@ -580,18 +592,6 @@ namespace XRL.World.Parts.Mutation
                 ActivatedAbilityEntry abilityEntry = actor.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
                 abilityEntry.DisplayName = "{{C|" + "Upright\n{{W|[}}Hunched{{W|]}}\n" + "}}";
 
-                // Old weight change code. Keeping just in case.
-                /*
-                int baseWeight = actor.GetBodyWeight();
-                int weightFactor = (int)Math.Floor((double)_GiganticBodyWeightCache / baseWeight);
-                int _Weight = actor.Physics._Weight;
-                actor.Physics._Weight = _Weight + (int)Math.Round((double)((baseWeight * weightFactor) - baseWeight));
-                Debug.Entry(3, "baseWeight", baseWeight.ToString());
-                Debug.Entry(3, "_Weight", _Weight.ToString());
-                Debug.Entry(3, "weightFactor", weightFactor.ToString());
-                Debug.Entry(3, "Adjustment", Math.Round((double)(baseWeight * weightFactor) - baseWeight).ToString());
-                Debug.Entry(3, "New Weight", actor.Physics._Weight.ToString());
-                */
             }
             Debug.Entry(1, "Should be Hunched Over");
         } //!--- public void HunchOver(bool Message = false)
