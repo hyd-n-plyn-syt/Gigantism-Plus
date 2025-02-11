@@ -14,7 +14,8 @@ namespace XRL.World.Parts.Mutation
 
         public GameObject ElongatedPawObject;
 
-        public int StrengthModifier => CalculateStrengthModifier(ParentObject.Statistics["Strength"].BaseValue);
+        private int StrengthModifier => ParentObject.StatMod("Strength");
+            //CalculateStrengthModifier(ParentObject.Statistics["Strength"].BaseValue);
 
         public ElongatedPaws()
         {
@@ -155,7 +156,8 @@ namespace XRL.World.Parts.Mutation
                 }
                 part.DefaultBehavior = ElongatedPawObject;
                 MeleeWeapon elongatedPawWeapon = ElongatedPawObject.GetPart<MeleeWeapon>();
-                elongatedPawWeapon.BaseDamage = $"1d4+{StrengthModifier}";
+                int StatMod = StrengthModifier;
+                elongatedPawWeapon.BaseDamage = $"1d4+{StatMod}";
             }
         }
 
