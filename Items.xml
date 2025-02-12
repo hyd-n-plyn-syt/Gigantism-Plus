@@ -71,7 +71,7 @@
     <tag Name="ShowAsPhysicalFeature" />
       <tag Name="SwingSound" Value="Sounds/Melee/shortBlades/sfx_melee_foldedCarbide_wristblade_swing" />
       <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_cudgel_fistOfTheApeGod_block" />
-		<tag Name="EquipmentFrameColors" Value="Yryr" />
+		<!--tag Name="EquipmentFrameColors" Value="Yryr" /-->
   </object>
   
   <!-- End Gigantic Natural Weapons -->
