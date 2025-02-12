@@ -62,7 +62,7 @@
     <part Name="Physics" Category="Natural Weapon" IsReal="false" Weight="3" />
     <removepart Name="TinkerItem" />
     <intproperty Name="Natural" Value="1" />
-    <tag Name="MutationEquipment" Value="ElongatedPaw" />
+    <tag Name="MutationEquipment" Value="GiganticElongatedPaw" />
     <tag Name="ExcludeFromDynamicEncounters" />
     <tag Name="NoSparkingQuest" />
     <tag Name="NaturalGear" />
@@ -72,6 +72,52 @@
       <tag Name="SwingSound" Value="Sounds/Melee/shortBlades/sfx_melee_foldedCarbide_wristblade_swing" />
       <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_cudgel_fistOfTheApeGod_block" />
 		<!--tag Name="EquipmentFrameColors" Value="Yryr" /-->
+  </object>
+
+  <object Name="GiganticBurrowingClaw" Inherits="MeleeWeapon">
+    <part Name="Armor" WornOn="Hand" />
+    <part Name="Render" DisplayName="{{gigantic|gigantic}} burrowing claw" RenderString="F" Tile="sw_burrowingclaws.bmp" ColorString="&amp;x" DetailColor="z" />
+    <part Name="Description" Short="A long, slender, elongated paw flutters with composed precision, of gigantic proportions." />
+    <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
+    <part Name="Commerce" Value="0" />
+    <part Name="NaturalEquipment" />
+    <part Name="NoDamage" />
+    <part Name="NoBreak" />
+    <part Name="Physics" Category="Natural Weapon" IsReal="false" Weight="3" />
+    <removepart Name="TinkerItem" />
+    <intproperty Name="Natural" Value="1" />
+    <tag Name="MutationEquipment" Value="GiganticBurrowingClaw" />
+    <tag Name="ExcludeFromDynamicEncounters" />
+    <tag Name="NoSparkingQuest" />
+    <tag Name="NaturalGear" />
+    <tag Name="WeaponUnarmed" />
+    <tag Name="VisibleAsDefaultBehavior" />
+    <tag Name="ShowAsPhysicalFeature" />
+      <tag Name="SwingSound" Value="Sounds/Melee/shortBlades/sfx_melee_foldedCarbide_wristblade_swing" />
+      <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_cudgel_fistOfTheApeGod_block" />
+  </object>
+
+  <object Name="GiganticElongatedBurrowingClaw" Inherits="MeleeWeapon">
+    <part Name="Armor" WornOn="Hand" />
+    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{giant|elongated}} burrowing claw" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;x" DetailColor="z" />
+    <part Name="Description" Short="A long, slender, elongated paw flutters with composed precision, of gigantic proportions." />
+    <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
+    <part Name="Commerce" Value="0" />
+    <part Name="NaturalEquipment" />
+    <part Name="NoDamage" />
+    <part Name="NoBreak" />
+    <part Name="Physics" Category="Natural Weapon" IsReal="false" Weight="3" />
+    <removepart Name="TinkerItem" />
+    <intproperty Name="Natural" Value="1" />
+    <tag Name="MutationEquipment" Value="GiganticBurrowingClaw" />
+    <tag Name="ExcludeFromDynamicEncounters" />
+    <tag Name="NoSparkingQuest" />
+    <tag Name="NaturalGear" />
+    <tag Name="WeaponUnarmed" />
+    <tag Name="VisibleAsDefaultBehavior" />
+    <tag Name="ShowAsPhysicalFeature" />
+      <tag Name="SwingSound" Value="Sounds/Melee/shortBlades/sfx_melee_foldedCarbide_wristblade_swing" />
+      <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_cudgel_fistOfTheApeGod_block" />
   </object>
   
   <!-- End Gigantic Natural Weapons -->
