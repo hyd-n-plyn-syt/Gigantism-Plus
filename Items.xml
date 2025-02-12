@@ -5,7 +5,7 @@
   
   <object Name="GiganticFist" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{gigantic|gigantic}} fist" RenderString="F" Tile="GiganticFist.png" ColorString="&amp;x" TileColor="z" DetailColor="Z" />
+    <part Name="Render" DisplayName="{{gigantic|gigantic}} fist" RenderString="F" Tile="GiganticFist.png" ColorString="&amp;x" DetailColor="z" />
     <part Name="Description" Short="A gigantic fist capable of dealing heavy damage." />
     <part Name="Commerce" Value="0" />
     <part Name="NaturalEquipment" />
@@ -28,7 +28,7 @@
 
   <object Name="ElongatedPaw" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{giant|elongated paw}}" RenderString="F" Tile="ElongatedPaw.png" ColorString="&amp;x" TileColor="z" DetailColor="Z" />
+    <part Name="Render" DisplayName="{{giant|elongated paw}}" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;x" DetailColor="z" />
     <part Name="Description" Short="A long, slender, elongated paw flutters with composed precision." />
     <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
