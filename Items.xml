@@ -109,7 +109,7 @@
     <part Name="Physics" Category="Natural Weapon" IsReal="false" Weight="3" />
     <removepart Name="TinkerItem" />
     <intproperty Name="Natural" Value="1" />
-    <tag Name="MutationEquipment" Value="GiganticBurrowingClaw" />
+    <tag Name="MutationEquipment" Value="GiganticElongatedBurrowingClaw" />
     <tag Name="ExcludeFromDynamicEncounters" />
     <tag Name="NoSparkingQuest" />
     <tag Name="NaturalGear" />
