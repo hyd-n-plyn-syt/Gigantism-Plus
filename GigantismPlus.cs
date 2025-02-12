@@ -27,6 +27,8 @@ namespace XRL.World.Parts.Mutation
 
         public GameObject GiganticFistObject;
 
+        public GameObject GiganticElongatedPawObject;
+
         public static readonly string HUNCH_OVER_COMMAND_NAME = "CommandToggleGigantismPlusHunchOver";
 
         public Guid EnableActivatedAbilityID = Guid.Empty;
@@ -69,7 +71,7 @@ namespace XRL.World.Parts.Mutation
 
         private static string GetFistBaseDamage(int Level)
         {
-            return $"{GetFistDamageDieCount(Level)}d{GetFistDamageDieSize(Level)}";
+            return $"{GetFistDamageDieCount(Level)}d{GetFistDamageDieSize(Level)}+3";
         }
 
         public static int GetFistHitBonus(int Level)
@@ -508,13 +510,33 @@ namespace XRL.World.Parts.Mutation
         {
             if (part != null && part.Type == "Hand")
             {
-                if (GiganticFistObject == null)
+                if (ParentObject.HasPart<ElongatedPaws>())
                 {
-                    GiganticFistObject = GameObjectFactory.Factory.CreateObject(NaturalWeaponBlueprint);
+                    if (GiganticElongatedPawObject == null)
+                    {
+                        GiganticElongatedPawObject = GameObjectFactory.Factory.CreateObject("GiganticElongatedPaw");
+                    }
+                    part.DefaultBehavior = GiganticElongatedPawObject;
+                    var elongatedPaws = ParentObject.GetPart<ElongatedPaws>();
+                    var weapon = GiganticElongatedPawObject.GetPart<MeleeWeapon>();
+                    weapon.BaseDamage = $"{FistDamageDieCount}d{FistDamageDieSize}+{(elongatedPaws.StrengthModifier / 2) + 3}";
+                    weapon.HitBonus = FistHitBonus;
+                    weapon.MaxStrengthBonus = FistMaxStrengthBonus;
                 }
-                part.DefaultBehavior = GiganticFistObject;
+                else
+                {
+                    if (GiganticFistObject == null)
+                    {
+                        GiganticFistObject = GameObjectFactory.Factory.CreateObject(NaturalWeaponBlueprint);
+                    }
+                    part.DefaultBehavior = GiganticFistObject;
+                    var weapon = GiganticFistObject.GetPart<MeleeWeapon>();
+                    weapon.BaseDamage = FistBaseDamage;
+                    weapon.HitBonus = FistHitBonus;
+                    weapon.MaxStrengthBonus = FistMaxStrengthBonus;
+                }
             }
-        } //!--- public void AddGiganticFistTo(BodyPart body)
+        }
 
         public override void OnRegenerateDefaultEquipment(Body body)
         {

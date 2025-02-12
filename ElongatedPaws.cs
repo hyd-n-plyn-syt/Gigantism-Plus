@@ -13,9 +13,9 @@ namespace XRL.World.Parts.Mutation
         private static readonly string[] AffectedSlotTypes = new string[3] { "Hand", "Hands", "Missile Weapon" };
 
         public GameObject ElongatedPawObject;
+        public GameObject GiganticElongatedPawObject;
 
-        private int StrengthModifier => ParentObject.StatMod("Strength");
-            //CalculateStrengthModifier(ParentObject.Statistics["Strength"].BaseValue);
+        public int StrengthModifier => ParentObject.StatMod("Strength");
 
         public ElongatedPaws()
         {
@@ -102,7 +102,7 @@ namespace XRL.World.Parts.Mutation
             {
                 foreach (BodyPart hand in body.GetParts())
                 {
-                    if (hand.Type == "Hand" && hand.DefaultBehavior != null && hand.DefaultBehavior == ElongatedPawObject)
+                    if (hand.Type == "Hand" && (hand.DefaultBehavior == ElongatedPawObject || hand.DefaultBehavior == GiganticElongatedPawObject))
                     {
                         hand.DefaultBehavior = null;
                     }
@@ -110,6 +110,7 @@ namespace XRL.World.Parts.Mutation
             }
             CheckAffected(GO, body);
             CleanUpMutationEquipment(GO, ref ElongatedPawObject);
+            CleanUpMutationEquipment(GO, ref GiganticElongatedPawObject);
             return base.Unmutate(GO);
         }
 
@@ -141,23 +142,34 @@ namespace XRL.World.Parts.Mutation
             }
         }
 
-        public int CalculateStrengthModifier(int value)
-        {
-            return (int)Math.Floor((double)(value - 16 + ((value >= 16) ? 0 : 1)) / 2);
-        }
-
         public void AddElongatedPawTo(BodyPart part)
         {
             if (part != null && part.Type == "Hand")
             {
-                if (ElongatedPawObject == null)
-                {
-                    ElongatedPawObject = GameObjectFactory.Factory.CreateObject("ElongatedPaw");
-                }
-                part.DefaultBehavior = ElongatedPawObject;
-                MeleeWeapon elongatedPawWeapon = ElongatedPawObject.GetPart<MeleeWeapon>();
                 int StatMod = StrengthModifier;
-                elongatedPawWeapon.BaseDamage = $"1d4+{StatMod}";
+                if (ParentObject.HasPart<GigantismPlus>())
+                {
+                    if (GiganticElongatedPawObject == null)
+                    {
+                        GiganticElongatedPawObject = GameObjectFactory.Factory.CreateObject("GiganticElongatedPaw");
+                    }
+                    part.DefaultBehavior = GiganticElongatedPawObject;
+                    var gigantism = ParentObject.GetPart<GigantismPlus>();
+                    var weapon = GiganticElongatedPawObject.GetPart<MeleeWeapon>();
+                    weapon.BaseDamage = $"{gigantism.FistDamageDieCount}d{gigantism.FistDamageDieSize}+{(StatMod / 2) + 3}";
+                    weapon.HitBonus = gigantism.FistHitBonus;
+                    weapon.MaxStrengthBonus = gigantism.FistMaxStrengthBonus;
+                }
+                else
+                {
+                    if (ElongatedPawObject == null)
+                    {
+                        ElongatedPawObject = GameObjectFactory.Factory.CreateObject("ElongatedPaw");
+                    }
+                    part.DefaultBehavior = ElongatedPawObject;
+                    var weapon = ElongatedPawObject.GetPart<MeleeWeapon>();
+                    weapon.BaseDamage = $"1d4+{StatMod}";
+                }
             }
         }
 

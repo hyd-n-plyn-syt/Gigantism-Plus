@@ -50,9 +50,9 @@
       <!--tag Name="EquipmentFrameColors" Value="ZKKZ" /-->
   </object>
 
-  <!--object Name="GiganticElongatedPaw" Inherits="MeleeWeapon">
+  <object Name="GiganticElongatedPaw" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{gigantic|gigantic}}{{giant|elongated paw}}" RenderString="F" Tile="ElongatedPaw.png" ColorString="&amp;x" TileColor="z" DetailColor="Z" />
+    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{giant|elongated paw}}" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;x" DetailColor="z" />
     <part Name="Description" Short="A long, slender, elongated paw flutters with composed precision, of gigantic proportions." />
     <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
@@ -71,8 +71,8 @@
     <tag Name="ShowAsPhysicalFeature" />
       <tag Name="SwingSound" Value="Sounds/Melee/shortBlades/sfx_melee_foldedCarbide_wristblade_swing" />
       <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_cudgel_fistOfTheApeGod_block" />
-      <tag Name="EquipmentFrameColors" Value="ZKKZ" />
-  </object-->
+		<tag Name="EquipmentFrameColors" Value="Yryr" />
+  </object>
   
   <!-- End Gigantic Natural Weapons -->
 
