@@ -5,7 +5,7 @@
   
   <object Name="GiganticFist" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{gigantic|gigantic}} fist" RenderString="F" Tile="GiganticFist.png" ColorString="&amp;x" DetailColor="z" />
+    <part Name="Render" DisplayName="{{gigantic|gigantic}} fist" RenderString="F" Tile="GiganticFist_Alt.png" ColorString="&amp;x" DetailColor="z" />
     <part Name="Description" Short="A gigantic fist capable of dealing heavy damage." />
     <part Name="Commerce" Value="0" />
     <part Name="NaturalEquipment" />
