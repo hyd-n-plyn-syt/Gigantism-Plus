@@ -59,12 +59,6 @@ namespace XRL.World.Parts.Mutation
             return base.HandleEvent(E);
         }
 
-        public override bool HandleEvent(GetExtraPhysicalFeaturesEvent E)
-        {
-            E.Features.Add("{{giant|elongated paws}}");
-            return base.HandleEvent(E);
-        }
-
         public override bool HandleEvent(StatChangeEvent E)
         {
             Body body = E.Object.Body;
