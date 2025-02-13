@@ -188,7 +188,7 @@ namespace Mods.GigantismPlus.HarmonyPatches
                             weapon.BaseDamage = $"{gigantism.FistDamageDieCount}d{gigantism.FistDamageDieSize}+{(elongatedPaws.StrengthModifier / 2) + 3}";
                             weapon.HitBonus = gigantism.FistHitBonus;
                             weapon.MaxStrengthBonus = gigantism.FistMaxStrengthBonus;
-                        }
+                        }//GiganticElongatedBurrowingClawObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
                         else
                         {
                             if (gigantism.GiganticBurrowingClawObject == null)
@@ -200,7 +200,7 @@ namespace Mods.GigantismPlus.HarmonyPatches
                             weapon.BaseDamage = XRL.World.Parts.Mutation.GigantismPlus.GetFistBaseDamage(__instance.Level);
                             weapon.HitBonus = gigantism.FistHitBonus;
                             weapon.MaxStrengthBonus = gigantism.FistMaxStrengthBonus;
-                        }
+                        }//GiganticBurrowingClawObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
                     }
                     else if (__instance.ParentObject.HasPart<XRL.World.Parts.Mutation.ElongatedPaws>())
                     {
@@ -212,14 +212,16 @@ namespace Mods.GigantismPlus.HarmonyPatches
                         hand.DefaultBehavior = elongatedPaws.ElongatedBurrowingClawObject;
                         var weapon = elongatedPaws.ElongatedBurrowingClawObject.GetPart<MeleeWeapon>();
                         weapon.BaseDamage = $"1d5+{elongatedPaws.StrengthModifier}";
-                    }
+                    }//ElongatedBurrowingClawObject uses 1d5 + StrengthMod.
                     else
                     {
-                        var blueprint = GameObjectFactory.Factory.GetBlueprint("BurrowingClawsClaw");
-                        hand.DefaultBehavior = GameObjectFactory.Factory.CreateObject(blueprint);
+                        if (hand.DefaultBehavior == null || hand.DefaultBehavior.GetBlueprint(true).Name != "Burrowing Claws")
+                        {
+                            hand.DefaultBehavior = GameObjectFactory.Factory.CreateObject("Burrowing Claws");
+                        }
                         var weapon = hand.DefaultBehavior.GetPart<MeleeWeapon>();
                         weapon.BaseDamage = __instance.GetClawsDamage(__instance.Level);
-                    }
+                    }//Uses basic Burrowing Claws behavior, only on all hands.
                 }
             }
             return false; // Skip the original method

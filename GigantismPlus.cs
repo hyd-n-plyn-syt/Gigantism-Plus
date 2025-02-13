@@ -528,7 +528,7 @@ namespace XRL.World.Parts.Mutation
                         weapon.BaseDamage = $"{FistDamageDieCount}d{FistDamageDieSize}+{(elongatedPaws.StrengthModifier / 2) + 3}";
                         weapon.HitBonus = FistHitBonus;
                         weapon.MaxStrengthBonus = FistMaxStrengthBonus;
-                    }
+                    }//GiganticElongatedBurrowingClawObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
                     else
                     {
                         if (GiganticElongatedPawObject == null)
@@ -541,7 +541,7 @@ namespace XRL.World.Parts.Mutation
                         weapon.BaseDamage = $"{FistDamageDieCount}d{FistDamageDieSize}+{(elongatedPaws.StrengthModifier / 2) + 3}";
                         weapon.HitBonus = FistHitBonus;
                         weapon.MaxStrengthBonus = FistMaxStrengthBonus;
-                    }
+                    }//GiganticElongatedPawObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
                 }
                 else if (ParentObject.HasPart<XRL.World.Parts.Mutation.BurrowingClaws>())
                 {
@@ -554,7 +554,7 @@ namespace XRL.World.Parts.Mutation
                     weapon.BaseDamage = FistBaseDamage;
                     weapon.HitBonus = FistHitBonus;
                     weapon.MaxStrengthBonus = FistMaxStrengthBonus;
-                }
+                }//GiganticBurrowingClawObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
                 else
                 {
                     if (GiganticFistObject == null)
@@ -566,7 +566,7 @@ namespace XRL.World.Parts.Mutation
                     weapon.BaseDamage = FistBaseDamage;
                     weapon.HitBonus = FistHitBonus;
                     weapon.MaxStrengthBonus = FistMaxStrengthBonus;
-                }
+                }//GiganticFistObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
             }
         }
 
