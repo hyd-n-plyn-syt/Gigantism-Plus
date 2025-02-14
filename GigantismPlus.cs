@@ -278,6 +278,17 @@ namespace XRL.World.Parts.Mutation
             }
         } //!--- private void SwapMutationCategory(bool Before = true)
 
+        private bool ShouldRapidAdvance(int Level, GameObject Actor)
+        {
+            bool IsMutant = Actor.IsMutant();
+            bool RapidAdvancement = IsMutant
+                                 && (Level + 5) % 10 == 0
+                                 && !Actor.IsEsper()
+                                 && Mods.GigantismPlus.Options.EnableGigantismRapidAdvance;
+
+            return RapidAdvancement;
+        } //!--- private bool ShouldRapidAdvance(int Level, GameObject Actor)
+
         public override bool WantEvent(int ID, int cascade)
         {
             /*
@@ -302,34 +313,20 @@ namespace XRL.World.Parts.Mutation
         // I'm certain there's a way to collapse them into a single function that accepts either.
         public override bool HandleEvent(BeforeLevelGainedEvent E)
         {
-            int Level = E.Level;
-            GameObject Actor = E.Actor;
-            bool IsMutant = Actor.IsMutant();
-            bool RapidAdvancement = IsMutant 
-                                 && (Level + 5) % 10 == 0 
-                                 && !Actor.IsEsper() 
-                                 && Mods.GigantismPlus.Options.EnableGigantismRapidAdvance;
-            if (RapidAdvancement)
+            if (ShouldRapidAdvance(E.Level, E.Actor))
             {
                 SwapMutationCategory(true);
             }
-            return true;
+            return base.HandleEvent(E);
         }
 
         public override bool HandleEvent(AfterLevelGainedEvent E)
         {
-            int Level = E.Level;
-            GameObject Actor = E.Actor;
-            bool IsMutant = Actor.IsMutant();
-            bool RapidAdvancement = IsMutant
-                                 && (Level + 5) % 10 == 0
-                                 && !Actor.IsEsper()
-                                 && Mods.GigantismPlus.Options.EnableGigantismRapidAdvance;
-            if (RapidAdvancement)
+            if (ShouldRapidAdvance(E.Level, E.Actor))
             {
                 SwapMutationCategory(false);
             }
-            return true;
+            return base.HandleEvent(E);
         }
 
         public override bool HandleEvent(GetExtraPhysicalFeaturesEvent E)
