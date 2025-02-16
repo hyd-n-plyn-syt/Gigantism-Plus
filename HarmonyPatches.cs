@@ -165,6 +165,24 @@ namespace Mods.GigantismPlus.HarmonyPatches
     [HarmonyPatch(typeof(XRL.World.Parts.Mutation.BurrowingClaws))]
     public static class BurrowingClaws_Patches
     {
+        public static int GetBurrowingDieSize(int Level)
+        {
+            if (Level >= 10) return 6;      // 1d6
+            else if (Level >= 8) return 5;   // 1d5  
+            else if (Level >= 6) return 4;   // 1d4
+            else if (Level >= 4) return 3;   // 1d3
+            else return 2;                   // 1d2
+        }
+
+        public static int GetBurrowingBonusDamage(int Level)
+        {
+            if (Level >= 10) return 3;      // 1d6 equivalent
+            else if (Level >= 8) return 2;   // 1d5 equivalent
+            else if (Level >= 6) return 2;   // 1d4 equivalent  
+            else if (Level >= 4) return 1;   // 1d3 equivalent
+            else return 0;                   // 1d2 equivalent
+        }
+
         [HarmonyPrefix]
         [HarmonyPatch(nameof(XRL.World.Parts.Mutation.BurrowingClaws.OnRegenerateDefaultEquipment))]
         static bool OnRegenerateDefaultEquipmentPrefix(XRL.World.Parts.Mutation.BurrowingClaws __instance, Body body)
@@ -173,6 +191,10 @@ namespace Mods.GigantismPlus.HarmonyPatches
             {
                 if (hand.Type == "Hand")
                 {
+                    int burrowingBonus = GetBurrowingBonusDamage(__instance.Level);
+                    // Get the die size and add 1 for elongated variants
+                    int burrowingDieSize = GetBurrowingDieSize(__instance.Level);
+                    
                     if (__instance.ParentObject.HasPart<XRL.World.Parts.Mutation.GigantismPlus>())
                     {
                         var gigantism = __instance.ParentObject.GetPart<XRL.World.Parts.Mutation.GigantismPlus>();
@@ -185,10 +207,10 @@ namespace Mods.GigantismPlus.HarmonyPatches
                             hand.DefaultBehavior = gigantism.GiganticElongatedBurrowingClawObject;
                             var elongatedPaws = __instance.ParentObject.GetPart<XRL.World.Parts.Mutation.ElongatedPaws>();
                             var weapon = gigantism.GiganticElongatedBurrowingClawObject.GetPart<MeleeWeapon>();
-                            weapon.BaseDamage = $"{gigantism.FistDamageDieCount}d{gigantism.FistDamageDieSize}+{(elongatedPaws.StrengthModifier / 2) + 3}";
+                            weapon.BaseDamage = $"{gigantism.FistDamageDieCount}d{gigantism.FistDamageDieSize}+{(elongatedPaws.StrengthModifier / 2) + 3 + burrowingBonus}";
                             weapon.HitBonus = gigantism.FistHitBonus;
                             weapon.MaxStrengthBonus = gigantism.FistMaxStrengthBonus;
-                        }//GiganticElongatedBurrowingClawObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
+                        }
                         else
                         {
                             if (gigantism.GiganticBurrowingClawObject == null)
@@ -197,10 +219,21 @@ namespace Mods.GigantismPlus.HarmonyPatches
                             }
                             hand.DefaultBehavior = gigantism.GiganticBurrowingClawObject;
                             var weapon = gigantism.GiganticBurrowingClawObject.GetPart<MeleeWeapon>();
-                            weapon.BaseDamage = XRL.World.Parts.Mutation.GigantismPlus.GetFistBaseDamage(__instance.Level);
+                            string baseDamage = XRL.World.Parts.Mutation.GigantismPlus.GetFistBaseDamage(__instance.Level);
+                            // Insert burrowingBonus before the last number in the damage string
+                            int plusIndex = baseDamage.LastIndexOf('+');
+                            if (plusIndex != -1)
+                            {
+                                int baseBonus = int.Parse(baseDamage.Substring(plusIndex + 1));
+                                weapon.BaseDamage = $"{baseDamage.Substring(0, plusIndex)}+{baseBonus + burrowingBonus}";
+                            }
+                            else
+                            {
+                                weapon.BaseDamage = $"{baseDamage}+{burrowingBonus}";
+                            }
                             weapon.HitBonus = gigantism.FistHitBonus;
                             weapon.MaxStrengthBonus = gigantism.FistMaxStrengthBonus;
-                        }//GiganticBurrowingClawObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
+                        }
                     }
                     else if (__instance.ParentObject.HasPart<XRL.World.Parts.Mutation.ElongatedPaws>())
                     {
@@ -211,8 +244,9 @@ namespace Mods.GigantismPlus.HarmonyPatches
                         }
                         hand.DefaultBehavior = elongatedPaws.ElongatedBurrowingClawObject;
                         var weapon = elongatedPaws.ElongatedBurrowingClawObject.GetPart<MeleeWeapon>();
-                        weapon.BaseDamage = $"1d5+{elongatedPaws.StrengthModifier}";
-                    }//ElongatedBurrowingClawObject uses 1d5 + StrengthMod.
+                        // Use the increased die size for elongated paws (+1)
+                        weapon.BaseDamage = $"1d{burrowingDieSize + 1}+{(elongatedPaws.StrengthModifier / 2) + burrowingBonus}";
+                    }
                     else
                     {
                         if (hand.DefaultBehavior == null || hand.DefaultBehavior.GetBlueprint(true).Name != "Burrowing Claws")
@@ -221,7 +255,7 @@ namespace Mods.GigantismPlus.HarmonyPatches
                         }
                         var weapon = hand.DefaultBehavior.GetPart<MeleeWeapon>();
                         weapon.BaseDamage = __instance.GetClawsDamage(__instance.Level);
-                    }//Uses basic Burrowing Claws behavior, only on all hands.
+                    }
                 }
             }
             return false; // Skip the original method

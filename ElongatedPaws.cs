@@ -4,6 +4,7 @@ using XRL.World.Anatomy;
 using XRL.World.Parts.Mutation;
 using XRL.World;
 using Mods.GigantismPlus;
+using Mods.GigantismPlus.HarmonyPatches; // Add this line
 
 namespace XRL.World.Parts.Mutation
 {
@@ -146,8 +147,12 @@ namespace XRL.World.Parts.Mutation
                 int StatMod = StrengthModifier;
                 if (ParentObject.HasPart<GigantismPlus>())
                 {
-                    if (ParentObject.HasPart<XRL.World.Parts.Mutation.BurrowingClaws>())
+                    if (ParentObject.HasPart<BurrowingClaws>())
                     {
+                        var burrowingClaws = ParentObject.GetPart<BurrowingClaws>();
+                        int burrowingDieSize = BurrowingClaws_Patches.GetBurrowingDieSize(burrowingClaws.Level);
+                        int burrowingBonus = BurrowingClaws_Patches.GetBurrowingBonusDamage(burrowingClaws.Level);
+                        
                         if (GiganticElongatedBurrowingClawObject == null)
                         {
                             GiganticElongatedBurrowingClawObject = GameObjectFactory.Factory.CreateObject("GiganticElongatedBurrowingClaw");
@@ -155,10 +160,10 @@ namespace XRL.World.Parts.Mutation
                         part.DefaultBehavior = GiganticElongatedBurrowingClawObject;
                         var gigantism = ParentObject.GetPart<GigantismPlus>();
                         var weapon = GiganticElongatedBurrowingClawObject.GetPart<MeleeWeapon>();
-                        weapon.BaseDamage = $"{gigantism.FistDamageDieCount}d{gigantism.FistDamageDieSize}+{(StatMod / 2) + 3}";
+                        weapon.BaseDamage = $"{gigantism.FistDamageDieCount}d{gigantism.FistDamageDieSize}+{(StatMod / 2) + 3 + burrowingBonus}";
                         weapon.HitBonus = gigantism.FistHitBonus;
                         weapon.MaxStrengthBonus = gigantism.FistMaxStrengthBonus;
-                    }//GiganticElongatedBurrowingClawObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
+                    }
                     else
                     {
                         if (GiganticElongatedPawObject == null)
@@ -171,18 +176,23 @@ namespace XRL.World.Parts.Mutation
                         weapon.BaseDamage = $"{gigantism.FistDamageDieCount}d{gigantism.FistDamageDieSize}+{(StatMod / 2) + 3}";
                         weapon.HitBonus = gigantism.FistHitBonus;
                         weapon.MaxStrengthBonus = gigantism.FistMaxStrengthBonus;
-                    }//GiganticElongatedPawObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
+                    }
                 }
-                else if (ParentObject.HasPart<XRL.World.Parts.Mutation.BurrowingClaws>())
+                else if (ParentObject.HasPart<BurrowingClaws>())
                 {
+                    var burrowingClaws = ParentObject.GetPart<BurrowingClaws>();
+                    int burrowingDieSize = BurrowingClaws_Patches.GetBurrowingDieSize(burrowingClaws.Level);
+                    int burrowingBonus = BurrowingClaws_Patches.GetBurrowingBonusDamage(burrowingClaws.Level);
+                        
                     if (ElongatedBurrowingClawObject == null)
                     {
                         ElongatedBurrowingClawObject = GameObjectFactory.Factory.CreateObject("ElongatedBurrowingClaw");
                     }
                     part.DefaultBehavior = ElongatedBurrowingClawObject;
                     var weapon = ElongatedBurrowingClawObject.GetPart<MeleeWeapon>();
-                    weapon.BaseDamage = $"1d5+{StatMod}";
-                }//ElongatedBurrowingClawObject uses 1d5 + StrengthMod
+                    // Fix: Add burrowingBonus to final calculation
+                    weapon.BaseDamage = $"1d{burrowingDieSize + 2}+{StatMod / 2}";
+                }
                 else
                 {
                     if (ElongatedPawObject == null)
@@ -191,8 +201,8 @@ namespace XRL.World.Parts.Mutation
                     }
                     part.DefaultBehavior = ElongatedPawObject;
                     var weapon = ElongatedPawObject.GetPart<MeleeWeapon>();
-                    weapon.BaseDamage = $"1d4+{StatMod}";
-                }//ElongatedPawObject uses 1d4 + StrengthMod
+                    weapon.BaseDamage = $"1d4+{StatMod / 2}";
+                }
             }
         }
 

@@ -24,6 +24,11 @@
       <tag Name="SwingSound" Value="Sounds/Melee/cudgels/sfx_melee_cudgel_fistOfTheApeGod_swing" />
       <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_cudgel_fistOfTheApeGod_block" />
   </object>
+  <!-- Damage Calculation for GiganticFist ********************************************************
+
+  {gigantism.FistDamageDieCount}d{gigantism.FistDamageDieSize} + gigantismBonus}
+
+  **********************************************************************************************-->
 
   <object Name="GiganticElongatedPaw" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
@@ -47,6 +52,11 @@
       <tag Name="SwingSound" Value="Sounds/Melee/shortBlades/sfx_melee_foldedCarbide_wristblade_swing" />
       <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_cudgel_fistOfTheApeGod_block" />
   </object>
+  <!-- Damage Calculation for GiganticElongatedPaw ************************************************
+
+  {gigantism.FistDamageDieCount}d{gigantism.FistDamageDieSize}+{(StatMod / 2) + giganticBonus}
+
+  **********************************************************************************************-->
 
   <object Name="GiganticBurrowingClaw" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
@@ -70,6 +80,11 @@
       <tag Name="SwingSound" Value="Sounds/Melee/shortBlades/sfx_melee_foldedCarbide_wristblade_swing" />
       <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_cudgel_fistOfTheApeGod_block" />
   </object>
+  <!-- Damage Calculation for GiganticBurrowingClaw ***********************************************
+
+  {gigantism.FistDamageDieCount}d{gigantism.FistDamageDieSize}+{giganticBonus + burrowingBonus}
+  
+  **********************************************************************************************-->
 
   <object Name="GiganticElongatedBurrowingClaw" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
@@ -92,7 +107,12 @@
     <tag Name="ShowAsPhysicalFeature" />
       <tag Name="SwingSound" Value="Sounds/Melee/shortBlades/sfx_melee_foldedCarbide_wristblade_swing" />
       <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_cudgel_fistOfTheApeGod_block" />
-  </object>
+  </object> 
+  <!-- Damage Calculation for GiganticElongatedBurrowingClaw **************************************
+
+  {gigantism.FistDamageDieCount}d{gigantism.FistDamageDieSize}+{(StatMod / 2) + 3 + burrowingBonus}
+
+  **********************************************************************************************-->
 
   <!-- End Gigantic Natural Weapons -->
   <!-- Elongated Natural Weapons -->
@@ -119,6 +139,11 @@
       <tag Name="SwingSound" Value="Sounds/Melee/shortBlades/sfx_melee_foldedCarbide_wristblade_swing" />
       <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_cudgel_fistOfTheApeGod_block" />
   </object>
+  <!-- Damage Calculation for ElongatedPaw ********************************************************
+
+  {1d4+{StatMod / 2}}
+
+  **********************************************************************************************-->
 
   <object Name="ElongatedBurrowingClaw" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
@@ -142,9 +167,15 @@
       <tag Name="SwingSound" Value="Sounds/Melee/shortBlades/sfx_melee_foldedCarbide_wristblade_swing" />
       <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_cudgel_fistOfTheApeGod_block" />
   </object>
+  <!-- Damage Calculation for ElongatedBurrowingClaw **********************************************
+
+  {1d{burrowingDieSize + 2}+{StatMod / 2}}
+
+  **********************************************************************************************-->
 
   <!-- End Elongated Natural Weapons -->
   <!-- Crystalline Natural Weapons -->
+  <!--Remove me to uncomment (and the ending below, duh)
 
   <object Name="GiganticCrystallineFist" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
@@ -260,7 +291,7 @@
       <tag Name="SwingSound" Value="Sounds/Melee/shortBlades/sfx_melee_foldedCarbide_wristblade_swing" />
       <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_cudgel_fistOfTheApeGod_block" />
   </object>
-
+Remove me to uncomment-->
   <!-- End Crystalline Natural Weapons -->
   <!-- Gigantic Modable Changes -->
   

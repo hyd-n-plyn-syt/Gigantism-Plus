@@ -7,7 +7,7 @@ using XRL.World.Anatomy;
 using XRL.World.Parts;
 using XRL.World.Parts.Mutation;
 using Mods.GigantismPlus;
-// using Mods.GigantismPlus.HarmonyPatches;
+using Mods.GigantismPlus.HarmonyPatches;
 
 namespace XRL.World.Parts.Mutation
 {
@@ -513,8 +513,12 @@ namespace XRL.World.Parts.Mutation
             {
                 if (ParentObject.HasPart<ElongatedPaws>())
                 {
-                    if (ParentObject.HasPart<XRL.World.Parts.Mutation.BurrowingClaws>())
+                    if (ParentObject.HasPart<BurrowingClaws>())
                     {
+                        var burrowingClaws = ParentObject.GetPart<BurrowingClaws>();
+                        int burrowingDieSize = BurrowingClaws_Patches.GetBurrowingDieSize(burrowingClaws.Level);
+                        int burrowingBonus = BurrowingClaws_Patches.GetBurrowingBonusDamage(burrowingClaws.Level);
+
                         if (GiganticElongatedBurrowingClawObject == null)
                         {
                             GiganticElongatedBurrowingClawObject = GameObjectFactory.Factory.CreateObject("GiganticElongatedBurrowingClaw");
@@ -522,7 +526,7 @@ namespace XRL.World.Parts.Mutation
                         part.DefaultBehavior = GiganticElongatedBurrowingClawObject;
                         var elongatedPaws = ParentObject.GetPart<ElongatedPaws>();
                         var weapon = GiganticElongatedBurrowingClawObject.GetPart<MeleeWeapon>();
-                        weapon.BaseDamage = $"{FistDamageDieCount}d{FistDamageDieSize}+{(elongatedPaws.StrengthModifier / 2) + 3}";
+                        weapon.BaseDamage = $"{FistDamageDieCount}d{FistDamageDieSize}+{(elongatedPaws.StrengthModifier / 2) + 3 + burrowingBonus}";
                         weapon.HitBonus = FistHitBonus;
                         weapon.MaxStrengthBonus = FistMaxStrengthBonus;
                     }//GiganticElongatedBurrowingClawObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
@@ -540,15 +544,29 @@ namespace XRL.World.Parts.Mutation
                         weapon.MaxStrengthBonus = FistMaxStrengthBonus;
                     }//GiganticElongatedPawObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
                 }
-                else if (ParentObject.HasPart<XRL.World.Parts.Mutation.BurrowingClaws>())
+                else if (ParentObject.HasPart<BurrowingClaws>())
                 {
+                    var burrowingClaws = ParentObject.GetPart<BurrowingClaws>();
+                    int burrowingDieSize = BurrowingClaws_Patches.GetBurrowingDieSize(burrowingClaws.Level);
+                    int burrowingBonus = BurrowingClaws_Patches.GetBurrowingBonusDamage(burrowingClaws.Level);
+                    
                     if (GiganticBurrowingClawObject == null)
                     {
                         GiganticBurrowingClawObject = GameObjectFactory.Factory.CreateObject("GiganticBurrowingClaw");
                     }
                     part.DefaultBehavior = GiganticBurrowingClawObject;
                     var weapon = GiganticBurrowingClawObject.GetPart<MeleeWeapon>();
-                    weapon.BaseDamage = FistBaseDamage;
+                    string baseDamage = GetFistBaseDamage(burrowingClaws.Level);
+                    int plusIndex = baseDamage.LastIndexOf('+');
+                    if (plusIndex != -1)
+                    {
+                        int baseBonus = int.Parse(baseDamage.Substring(plusIndex + 1));
+                        weapon.BaseDamage = $"{baseDamage.Substring(0, plusIndex)}+{baseBonus + burrowingBonus}";
+                    }
+                    else
+                    {
+                        weapon.BaseDamage = $"{baseDamage}+{burrowingBonus}";
+                    }
                     weapon.HitBonus = FistHitBonus;
                     weapon.MaxStrengthBonus = FistMaxStrengthBonus;
                 }//GiganticBurrowingClawObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
