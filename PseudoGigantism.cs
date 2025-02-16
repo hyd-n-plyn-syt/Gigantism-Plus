@@ -16,11 +16,8 @@ namespace Mods.GigantismPlus
 
         public override bool WantEvent(int ID, int cascade)
         {
-            if (!base.WantEvent(ID, cascade) && ID != PooledEvent<GetSlotsRequiredEvent>.ID)
-            {
-                return false;
-            }
-            return true;
+            return base.WantEvent(ID, cascade)
+                || ID == PooledEvent<GetSlotsRequiredEvent>.ID;
         }
 
         public override bool HandleEvent(GetSlotsRequiredEvent E)

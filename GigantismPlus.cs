@@ -27,6 +27,12 @@ namespace XRL.World.Parts.Mutation
 
         public GameObject GiganticFistObject;
 
+        public GameObject GiganticElongatedPawObject;
+
+        public GameObject GiganticBurrowingClawObject;
+
+        public GameObject GiganticElongatedBurrowingClawObject;
+
         public static readonly string HUNCH_OVER_COMMAND_NAME = "CommandToggleGigantismPlusHunchOver";
 
         public Guid EnableActivatedAbilityID = Guid.Empty;
@@ -67,9 +73,9 @@ namespace XRL.World.Parts.Mutation
             return 3 + (int)Math.Floor((double)Level / 3.0);
         }
 
-        private static string GetFistBaseDamage(int Level)
+        public static string GetFistBaseDamage(int Level)
         {
-            return $"{GetFistDamageDieCount(Level)}d{GetFistDamageDieSize(Level)}";
+            return $"{GetFistDamageDieCount(Level)}d{GetFistDamageDieSize(Level)}+3";
         }
 
         public static int GetFistHitBonus(int Level)
@@ -272,6 +278,17 @@ namespace XRL.World.Parts.Mutation
             }
         } //!--- private void SwapMutationCategory(bool Before = true)
 
+        private bool ShouldRapidAdvance(int Level, GameObject Actor)
+        {
+            bool IsMutant = Actor.IsMutant();
+            bool RapidAdvancement = IsMutant
+                                 && (Level + 5) % 10 == 0
+                                 && !Actor.IsEsper()
+                                 && Mods.GigantismPlus.Options.EnableGigantismRapidAdvance;
+
+            return RapidAdvancement;
+        } //!--- private bool ShouldRapidAdvance(int Level, GameObject Actor)
+
         public override bool WantEvent(int ID, int cascade)
         {
             /*
@@ -296,34 +313,20 @@ namespace XRL.World.Parts.Mutation
         // I'm certain there's a way to collapse them into a single function that accepts either.
         public override bool HandleEvent(BeforeLevelGainedEvent E)
         {
-            int Level = E.Level;
-            GameObject Actor = E.Actor;
-            bool IsMutant = Actor.IsMutant();
-            bool RapidAdvancement = IsMutant 
-                                 && (Level + 5) % 10 == 0 
-                                 && !Actor.IsEsper() 
-                                 && Mods.GigantismPlus.Options.EnableGigantismRapidAdvance;
-            if (RapidAdvancement)
+            if (ShouldRapidAdvance(E.Level, E.Actor))
             {
                 SwapMutationCategory(true);
             }
-            return true;
+            return base.HandleEvent(E);
         }
 
         public override bool HandleEvent(AfterLevelGainedEvent E)
         {
-            int Level = E.Level;
-            GameObject Actor = E.Actor;
-            bool IsMutant = Actor.IsMutant();
-            bool RapidAdvancement = IsMutant
-                                 && (Level + 5) % 10 == 0
-                                 && !Actor.IsEsper()
-                                 && Mods.GigantismPlus.Options.EnableGigantismRapidAdvance;
-            if (RapidAdvancement)
+            if (ShouldRapidAdvance(E.Level, E.Actor))
             {
                 SwapMutationCategory(false);
             }
-            return true;
+            return base.HandleEvent(E);
         }
 
         public override bool HandleEvent(GetExtraPhysicalFeaturesEvent E)
@@ -431,7 +434,7 @@ namespace XRL.World.Parts.Mutation
                 MSPenalty = GetHunchedOverMSModifier(Level) + "}} MS";
             }
             return "{{gigantic|Gigantic}} Fists {{rules|\x1A}}{{rules|4}}{{k|/\xEC}} {{r|\x03}}{{W|" + GetFistDamageDieCount(Level) + "}}{{rules|d}}{{B|" + GetFistDamageDieSize(Level) + "}}{{rules|+3}}\n"
-                 + "and {{rules|" + GetFistHitBonus(Level) + "}} To-Hit\n"; /*
+                 + "and {{rules|" + GetFistHitBonus(Level) + "}} To-Hit\n"; /*+ "{{rules|" + GetHunchedOverQNModifier(Level) + " QN}} and {{rules|" + GetHunchedOverMSModifier(Level) + " MS}} when {{g|Hunched Over}}";
                  + "{{rules|" + GetHunchedOverQNModifier(Level) + " QN}} and {{rules|" + GetHunchedOverMSModifier(Level) + " MS}} when {{g|Hunched Over}}"; */
         }
 
@@ -508,13 +511,61 @@ namespace XRL.World.Parts.Mutation
         {
             if (part != null && part.Type == "Hand")
             {
-                if (GiganticFistObject == null)
+                if (ParentObject.HasPart<ElongatedPaws>())
                 {
-                    GiganticFistObject = GameObjectFactory.Factory.CreateObject(NaturalWeaponBlueprint);
+                    if (ParentObject.HasPart<XRL.World.Parts.Mutation.BurrowingClaws>())
+                    {
+                        if (GiganticElongatedBurrowingClawObject == null)
+                        {
+                            GiganticElongatedBurrowingClawObject = GameObjectFactory.Factory.CreateObject("GiganticElongatedBurrowingClaw");
+                        }
+                        part.DefaultBehavior = GiganticElongatedBurrowingClawObject;
+                        var elongatedPaws = ParentObject.GetPart<ElongatedPaws>();
+                        var weapon = GiganticElongatedBurrowingClawObject.GetPart<MeleeWeapon>();
+                        weapon.BaseDamage = $"{FistDamageDieCount}d{FistDamageDieSize}+{(elongatedPaws.StrengthModifier / 2) + 3}";
+                        weapon.HitBonus = FistHitBonus;
+                        weapon.MaxStrengthBonus = FistMaxStrengthBonus;
+                    }//GiganticElongatedBurrowingClawObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
+                    else
+                    {
+                        if (GiganticElongatedPawObject == null)
+                        {
+                            GiganticElongatedPawObject = GameObjectFactory.Factory.CreateObject("GiganticElongatedPaw");
+                        }
+                        part.DefaultBehavior = GiganticElongatedPawObject;
+                        var elongatedPaws = ParentObject.GetPart<ElongatedPaws>();
+                        var weapon = GiganticElongatedPawObject.GetPart<MeleeWeapon>();
+                        weapon.BaseDamage = $"{FistDamageDieCount}d{FistDamageDieSize}+{(elongatedPaws.StrengthModifier / 2) + 3}";
+                        weapon.HitBonus = FistHitBonus;
+                        weapon.MaxStrengthBonus = FistMaxStrengthBonus;
+                    }//GiganticElongatedPawObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
                 }
-                part.DefaultBehavior = GiganticFistObject;
+                else if (ParentObject.HasPart<XRL.World.Parts.Mutation.BurrowingClaws>())
+                {
+                    if (GiganticBurrowingClawObject == null)
+                    {
+                        GiganticBurrowingClawObject = GameObjectFactory.Factory.CreateObject("GiganticBurrowingClaw");
+                    }
+                    part.DefaultBehavior = GiganticBurrowingClawObject;
+                    var weapon = GiganticBurrowingClawObject.GetPart<MeleeWeapon>();
+                    weapon.BaseDamage = FistBaseDamage;
+                    weapon.HitBonus = FistHitBonus;
+                    weapon.MaxStrengthBonus = FistMaxStrengthBonus;
+                }//GiganticBurrowingClawObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
+                else
+                {
+                    if (GiganticFistObject == null)
+                    {
+                        GiganticFistObject = GameObjectFactory.Factory.CreateObject(NaturalWeaponBlueprint);
+                    }
+                    part.DefaultBehavior = GiganticFistObject;
+                    var weapon = GiganticFistObject.GetPart<MeleeWeapon>();
+                    weapon.BaseDamage = FistBaseDamage;
+                    weapon.HitBonus = FistHitBonus;
+                    weapon.MaxStrengthBonus = FistMaxStrengthBonus;
+                }//GiganticFistObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
             }
-        } //!--- public void AddGiganticFistTo(BodyPart body)
+        }
 
         public override void OnRegenerateDefaultEquipment(Body body)
         {
