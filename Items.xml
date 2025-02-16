@@ -175,7 +175,6 @@
 
   <!-- End Elongated Natural Weapons -->
   <!-- Crystalline Natural Weapons -->
-  <!--Remove me to uncomment (and the ending below, duh)
 
   <object Name="GiganticCrystallineFist" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
@@ -291,7 +290,6 @@
       <tag Name="SwingSound" Value="Sounds/Melee/shortBlades/sfx_melee_foldedCarbide_wristblade_swing" />
       <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_cudgel_fistOfTheApeGod_block" />
   </object>
-Remove me to uncomment-->
   <!-- End Crystalline Natural Weapons -->
   <!-- Gigantic Modable Changes -->
   

@@ -1,5 +1,7 @@
 using HarmonyLib;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using XRL.World;
 using XRL.World.Anatomy;
 using XRL.World.Parts;
@@ -167,20 +169,24 @@ namespace Mods.GigantismPlus.HarmonyPatches
     {
         public static int GetBurrowingDieSize(int Level)
         {
-            if (Level >= 10) return 6;      // 1d6
-            else if (Level >= 8) return 5;   // 1d5  
-            else if (Level >= 6) return 4;   // 1d4
-            else if (Level >= 4) return 3;   // 1d3
-            else return 2;                   // 1d2
+            if (Level >= 19) return 12;      // 1d12
+            if (Level >= 16) return 10;      // 1d10  
+            if (Level >= 13) return 8;       // 1d8
+            if (Level >= 10) return 6;       // 1d6
+            if (Level >= 7) return 4;        // 1d4
+            if (Level >= 4) return 3;        // 1d3
+            return 2;                        // 1d2
         }
 
         public static int GetBurrowingBonusDamage(int Level)
         {
-            if (Level >= 10) return 3;      // 1d6 equivalent
-            else if (Level >= 8) return 2;   // 1d5 equivalent
-            else if (Level >= 6) return 2;   // 1d4 equivalent  
-            else if (Level >= 4) return 1;   // 1d3 equivalent
-            else return 0;                   // 1d2 equivalent
+            if (Level >= 19) return 6;       // Going from 1d10 to 1d12
+            if (Level >= 16) return 5;       // Going from 1d8 to 1d10
+            if (Level >= 13) return 4;       // Going from 1d6 to 1d8
+            if (Level >= 10) return 3;       // Going from 1d4 to 1d6
+            if (Level >= 7) return 2;        // Going from 1d3 to 1d4
+            if (Level >= 4) return 1;        // Going from 1d2 to 1d3
+            return 0;                        // Base 1d2
         }
 
         [HarmonyPrefix]
@@ -255,6 +261,172 @@ namespace Mods.GigantismPlus.HarmonyPatches
                         }
                         var weapon = hand.DefaultBehavior.GetPart<MeleeWeapon>();
                         weapon.BaseDamage = __instance.GetClawsDamage(__instance.Level);
+                    }
+                }
+            }
+            return false; // Skip the original method
+        }
+    }
+
+    [HarmonyPatch(typeof(XRL.World.Parts.Mutation.Crystallinity))]
+    public static class Crystallinity_Patches
+    {
+        [HarmonyPrefix]  
+        [HarmonyPatch(nameof(XRL.World.Parts.Mutation.Crystallinity.OnRegenerateDefaultEquipment))]
+        static bool OnRegenerateDefaultEquipmentPrefix(XRL.World.Parts.Mutation.Crystallinity __instance, Body body)
+        {
+            // Just change the body part search logic
+            List<BodyPart> list = (from p in body.GetParts()
+                                  where p.Type == "Quincunx"  // Changed from VariantType to Type
+                                  select p).ToList<BodyPart>();
+
+            foreach (BodyPart part in list)
+            {
+                if (part.Type == "Quincunx") // Changed from "Hand" to "Quincunx"
+                {
+                    // Create the base crystalline point
+                    if (part.DefaultBehavior == null || part.DefaultBehavior.GetBlueprint(true).Name != "Crystalline Point")
+                    {
+                        part.DefaultBehavior = GameObjectFactory.Factory.CreateObject("Crystalline Point");
+                        part.DefaultBehavior.SetStringProperty("TemporaryDefaultBehavior", "Crystallinity", false);
+                    }
+
+                    // Apply the same weapon logic as before, just to the Quincunx part
+                    MeleeWeapon weaponPart = null;
+
+                    if (__instance.ParentObject.HasPart<XRL.World.Parts.Mutation.GigantismPlus>())
+                    {
+                        // Gigantism + Other combinations
+                        var gigantism = __instance.ParentObject.GetPart<XRL.World.Parts.Mutation.GigantismPlus>();  
+                        // Gigantism + Elongated + Burrowing
+                        if (__instance.ParentObject.HasPart<ElongatedPaws>() && __instance.ParentObject.HasPart<BurrowingClaws>())
+                        {
+                            var burrowingClaws = __instance.ParentObject.GetPart<BurrowingClaws>();
+                            int burrowingBonus = BurrowingClaws_Patches.GetBurrowingBonusDamage(burrowingClaws.Level);
+                            
+                            if (gigantism.GiganticElongatedBurrowingClawObject == null)
+                            {
+                                gigantism.GiganticElongatedBurrowingClawObject = GameObjectFactory.Factory.CreateObject("GiganticElongatedCrystallineBurrowingClaw");
+                            }
+                            part.DefaultBehavior = gigantism.GiganticElongatedBurrowingClawObject;
+                            var elongatedPaws = __instance.ParentObject.GetPart<ElongatedPaws>();
+                            weaponPart = gigantism.GiganticElongatedBurrowingClawObject.GetPart<MeleeWeapon>();
+                            weaponPart.BaseDamage = $"{gigantism.FistDamageDieCount}d{gigantism.FistDamageDieSize + 1}+{(elongatedPaws.StrengthModifier / 2) + 3 + burrowingBonus}";
+                            weaponPart.HitBonus = gigantism.FistHitBonus;
+                            weaponPart.MaxStrengthBonus = gigantism.FistMaxStrengthBonus;
+                        }
+                        // Gigantism + Elongated
+                        else if (__instance.ParentObject.HasPart<ElongatedPaws>())
+                        {
+                            if (gigantism.GiganticElongatedPawObject == null)
+                            {
+                                gigantism.GiganticElongatedPawObject = GameObjectFactory.Factory.CreateObject("GiganticElongatedCrystallinePaw");
+                            }
+                            part.DefaultBehavior = gigantism.GiganticElongatedPawObject;
+                            var elongatedPaws = __instance.ParentObject.GetPart<ElongatedPaws>();
+                            weaponPart = gigantism.GiganticElongatedPawObject.GetPart<MeleeWeapon>();
+                            weaponPart.BaseDamage = $"{gigantism.FistDamageDieCount}d{gigantism.FistDamageDieSize + 1}+{(elongatedPaws.StrengthModifier / 2) + 3}";
+                            weaponPart.HitBonus = gigantism.FistHitBonus;
+                            weaponPart.MaxStrengthBonus = gigantism.FistMaxStrengthBonus;
+                        }
+                        // Gigantism + Burrowing
+                        else if (__instance.ParentObject.HasPart<BurrowingClaws>())
+                        {
+                            var burrowingClaws = __instance.ParentObject.GetPart<BurrowingClaws>();
+                            int burrowingBonus = BurrowingClaws_Patches.GetBurrowingBonusDamage(burrowingClaws.Level);
+                            
+                            if (gigantism.GiganticBurrowingClawObject == null)
+                            {
+                                gigantism.GiganticBurrowingClawObject = GameObjectFactory.Factory.CreateObject("GiganticCrystallineBurrowingClaw");
+                            }
+                            part.DefaultBehavior = gigantism.GiganticBurrowingClawObject;
+                            weaponPart = gigantism.GiganticBurrowingClawObject.GetPart<MeleeWeapon>();
+                            string baseDamage = XRL.World.Parts.Mutation.GigantismPlus.GetFistBaseDamage(__instance.Level);  
+                            int dIndex = baseDamage.IndexOf('d');
+                            int plusIndex = baseDamage.LastIndexOf('+');
+                            if (dIndex != -1)
+                            {
+                                int dieCount = int.Parse(baseDamage.Substring(0, dIndex));
+                                int dieSize = int.Parse(baseDamage.Substring(dIndex + 1, plusIndex - (dIndex + 1)));
+                                weaponPart.BaseDamage = $"{dieCount}d{dieSize + 1}+{int.Parse(baseDamage.Substring(plusIndex + 1)) + burrowingBonus}";
+                            }
+                            weaponPart.HitBonus = gigantism.FistHitBonus;
+                            weaponPart.MaxStrengthBonus = gigantism.FistMaxStrengthBonus;
+                        }
+                        // Just Gigantism
+                        else
+                        {
+                            if (gigantism.GiganticFistObject == null)
+                            {
+                                gigantism.GiganticFistObject = GameObjectFactory.Factory.CreateObject("GiganticCrystallineFist");
+                            }
+                            part.DefaultBehavior = gigantism.GiganticFistObject;
+                            weaponPart = gigantism.GiganticFistObject.GetPart<MeleeWeapon>();
+                            string baseDamage = XRL.World.Parts.Mutation.GigantismPlus.GetFistBaseDamage(__instance.Level);  
+                            int dIndex = baseDamage.IndexOf('d');
+                            int plusIndex = baseDamage.LastIndexOf('+');
+                            if (dIndex != -1)
+                            {
+                                int dieCount = int.Parse(baseDamage.Substring(0, dIndex));
+                                int dieSize = int.Parse(baseDamage.Substring(dIndex + 1, plusIndex - (dIndex + 1)));
+                                weaponPart.BaseDamage = $"{dieCount}d{dieSize + 1}+{baseDamage.Substring(plusIndex + 1)}";
+                            }
+                            weaponPart.HitBonus = gigantism.FistHitBonus;
+                            weaponPart.MaxStrengthBonus = gigantism.FistMaxStrengthBonus;
+                        }
+                    }
+                    // Non-Gigantism combinations 
+                    else 
+                    {
+                        // Elongated + Burrowing
+                        if (__instance.ParentObject.HasPart<ElongatedPaws>() && __instance.ParentObject.HasPart<BurrowingClaws>())
+                        {
+                            var elongatedPaws = __instance.ParentObject.GetPart<ElongatedPaws>();
+                            var burrowingClaws = __instance.ParentObject.GetPart<BurrowingClaws>();
+                            int burrowingDieSize = BurrowingClaws_Patches.GetBurrowingDieSize(burrowingClaws.Level);
+                            int burrowingBonus = BurrowingClaws_Patches.GetBurrowingBonusDamage(burrowingClaws.Level);
+                            
+                            if (elongatedPaws.ElongatedBurrowingClawObject == null)
+                            {
+                                elongatedPaws.ElongatedBurrowingClawObject = GameObjectFactory.Factory.CreateObject("CrystallineBurrowingClaw");
+                            }
+                            part.DefaultBehavior = elongatedPaws.ElongatedBurrowingClawObject;
+                            weaponPart = elongatedPaws.ElongatedBurrowingClawObject.GetPart<MeleeWeapon>();
+                            weaponPart.BaseDamage = $"1d{burrowingDieSize + 2}+{elongatedPaws.StrengthModifier / 2 + burrowingBonus}";
+                        }
+                        // Just Elongated
+                        else if (__instance.ParentObject.HasPart<ElongatedPaws>())
+                        {
+                            var elongatedPaws = __instance.ParentObject.GetPart<ElongatedPaws>();
+                            if (elongatedPaws.ElongatedPawObject == null)
+                            {
+                                elongatedPaws.ElongatedPawObject = GameObjectFactory.Factory.CreateObject("ElongatedCrystallinePaw");
+                            }
+                            part.DefaultBehavior = elongatedPaws.ElongatedPawObject;
+                            weaponPart = elongatedPaws.ElongatedPawObject.GetPart<MeleeWeapon>();
+                            weaponPart.BaseDamage = $"1d5+{elongatedPaws.StrengthModifier / 2}"; // Base 1d4 + 1 for crystalline
+                        }
+                        // Just Burrowing
+                        else if (__instance.ParentObject.HasPart<BurrowingClaws>())
+                        {
+                            var burrowingClaws = __instance.ParentObject.GetPart<BurrowingClaws>();
+                            int burrowingDieSize = BurrowingClaws_Patches.GetBurrowingDieSize(burrowingClaws.Level);
+                            
+                            if (part.DefaultBehavior == null || part.DefaultBehavior.GetBlueprint(true).Name != "Crystalline Burrowing Claws")
+                            {
+                                part.DefaultBehavior = GameObjectFactory.Factory.CreateObject("CrystallineBurrowingClaw");
+                            }
+                            weaponPart = part.DefaultBehavior.GetPart<MeleeWeapon>();
+                            int dIndex = burrowingClaws.GetClawsDamage(burrowingClaws.Level).IndexOf('d');
+                            int dieSize = int.Parse(burrowingClaws.GetClawsDamage(burrowingClaws.Level).Substring(dIndex + 1));
+                            weaponPart.BaseDamage = $"1d{dieSize + 1}"; // Add 1 to die size for crystalline
+                        }
+                        // Default case - just Crystallinity
+                        else
+                        {
+                            weaponPart = part.DefaultBehavior.GetPart<MeleeWeapon>();
+                            weaponPart.BaseDamage = __instance.GetPointDamage(__instance.Level);
+                        }
                     }
                 }
             }
