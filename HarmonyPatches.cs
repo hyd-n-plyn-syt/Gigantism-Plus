@@ -523,14 +523,14 @@ namespace Mods.GigantismPlus.HarmonyPatches
                             int burrowingDieSize = BurrowingClaws_Patches.GetBurrowingDieSize(burrowingClaws.Level);
                             int burrowingBonus = BurrowingClaws_Patches.GetBurrowingBonusDamage(burrowingClaws.Level);
                             
-                            if (elongatedPaws.ElongatedBurrowingClawObject == null || elongatedPaws.ElongatedBurrowingClawObject.Blueprint != "BurrowingCrystallinePoint")
+                            if (elongatedPaws.ElongatedBurrowingClawObject == null || elongatedPaws.ElongatedBurrowingClawObject.Blueprint != "ElongatedBurrowingCrystallinePoint")
                             {
-                                Debug.Entry(4, "----- ElongatedBurrowingClawObject was null, init as BurrowingCrystallinePoint");
-                                elongatedPaws.ElongatedBurrowingClawObject = GameObjectFactory.Factory.CreateObject("BurrowingCrystallinePoint");
+                                Debug.Entry(4, "----- ElongatedBurrowingClawObject was null, init as ElongatedBurrowingCrystallinePoint");
+                                elongatedPaws.ElongatedBurrowingClawObject = GameObjectFactory.Factory.CreateObject("ElongatedBurrowingCrystallinePoint");
                             }
                             part.DefaultBehavior = elongatedPaws.ElongatedBurrowingClawObject;
                             weaponPart = elongatedPaws.ElongatedBurrowingClawObject.GetPart<MeleeWeapon>();
-                            weaponPart.BaseDamage = $"1d{burrowingDieSize + 2}+{elongatedPaws.StrengthModifier / 2 + burrowingBonus}";
+                            weaponPart.BaseDamage = $"1d{burrowingDieSize + 2 + 1}+{elongatedPaws.StrengthModifier / 2}";
                             Debug.Entry(4, "**part.DefaultBehavior = elongatedPaws.ElongatedBurrowingClawObject (as BurrowingCrystallinePoint)");
                             Debug.Entry(4, $"---- Base: {weaponPart.BaseDamage} | Hit: {weaponPart.HitBonus} | PenCap: {weaponPart.MaxStrengthBonus}");
                         }

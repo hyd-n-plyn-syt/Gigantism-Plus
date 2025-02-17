@@ -182,7 +182,7 @@
 
   <object Name="GiganticCrystallinePoint" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{crystalline|crystalline point}}" RenderString="F" Tile="GiganticFist_Alt.png" ColorString="&amp;b" DetailColor="B" />
+    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{crystallized|crystalline point}}" RenderString="F" Tile="GiganticFist_Alt.png" ColorString="&amp;b" DetailColor="B" />
     <part Name="Description" Short="{{crystalline|Crystalline}} points fan out from a {{gigantic|gigantic}} {{jewels|central jewel}}." />
     <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
@@ -205,7 +205,7 @@
 
   <object Name="ElongatedCrystallinePoint" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{giant|elongated}} {{jewels|crystalline point}}" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;b" DetailColor="B" />
+    <part Name="Render" DisplayName="{{giant|elongated}} {{crystallized|crystalline point}}" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;b" DetailColor="B" />
     <part Name="Description" Short="{{giant|Long}}, {{giant|slender}}, {{crystalline|crystalline}} points fan out from a {{jewels|central jewel}}." />
     <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
@@ -228,7 +228,7 @@
 
   <object Name="BurrowingCrystallinePoint" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="burrowing {{crystalline|crystalline point}}" RenderString="F" Tile="Creatures/natural-weapon-claw.bmp" ColorString="&amp;b" DetailColor="B" />
+    <part Name="Render" DisplayName="burrowing {{crystallized|crystalline point}}" RenderString="F" Tile="Creatures/natural-weapon-claw.bmp" ColorString="&amp;b" DetailColor="B" />
     <part Name="Description" Short="{{crystalline|Crystalline}} points fan out from a {{jewels|central jewel}}. The points can lock together perfectly to form a spade ideal for parting earth and stone." />
     <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
@@ -251,7 +251,7 @@
 
   <object Name="GiganticBurrowingCrystallinePoint" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{gigantic|gigantic}} burrowing {{crystalline|crystalline point}}" RenderString="F" Tile="GiganticFist_Alt.png" ColorString="&amp;m" DetailColor="W" />
+    <part Name="Render" DisplayName="{{gigantic|gigantic}} burrowing {{crystallized|crystalline point}}" RenderString="F" Tile="GiganticFist_Alt.png" ColorString="&amp;m" DetailColor="W" />
     <part Name="Description" Short="{{crystalline|Crystalline}} points fan out from a {{gigantic|gigantic}} {{jewels|central jewel}}. The points can lock together perfectly to form a spade ideal for parting earth and stone." />
     <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
@@ -274,7 +274,7 @@
 
   <object Name="ElongatedBurrowingCrystallinePoint" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{giant|elongated}} burrowing {{crystalline|crystalline point}}" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;b" DetailColor="m" />
+    <part Name="Render" DisplayName="{{giant|elongated}} burrowing {{crystallized|crystalline point}}" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;b" DetailColor="m" />
     <part Name="Description" Short="{{giant|Long}}, {{giant|slender}}, {{crystalline|crystalline}} points fan out from a {{jewels|central jewel}}. The points can lock together perfectly to form a spade ideal for parting earth and stone." />
     <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
@@ -297,7 +297,7 @@
   
   <object Name="GiganticElongatedCrystallinePoint" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{giant|elongated}} {{crystaline|crystalline point}}" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;b" DetailColor="B" />
+    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{giant|elongated}} {{crystallized|crystalline point}}" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;b" DetailColor="B" />
     <part Name="Description" Short="{{giant|Long}}, {{giant|slender}}, {{crystalline|crystalline}} points fan out from a {{gigantic|gigantic}} {{jewels|central jewel}}." />
     <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
@@ -320,7 +320,7 @@
 
   <object Name="GiganticElongatedBurrowingCrystallinePoint" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{giant|elongated}} burrowing {{crystalline|crystalline point}}" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;m" DetailColor="W" />
+    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{giant|elongated}} burrowing {{crystallized|crystalline point}}" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;m" DetailColor="W" />
     <part Name="Description" Short="{{giant|Long}}, {{giant|slender}}, {{crystalline|crystalline}} points fan out from a {{gigantic|gigantic}} {{jewels|central jewel}}. The points can lock together perfectly to form a spade ideal for parting earth and stone." />
     <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
@@ -341,6 +341,11 @@
       <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_metal_blocked" />
   </object>
   <!-- End Crystalline Natural Weapons -->
+
+  <object  Name="Crystalline Point" Load="Merge">
+		<part Name="Render" DisplayName="{{crystallized|crystalline point}}" Load="Merge" />
+	</object>
+
   <!-- Gigantic Modable Changes -->
   
 	<object  Name="LightSource" Load="Merge">
