@@ -591,4 +591,53 @@ namespace Mods.GigantismPlus.HarmonyPatches
             return false; // Skip the original method
         }
     }
-}
+
+    [HarmonyPatch(typeof(XRL.World.Parts.Mutation.Crystallinity))]
+    public static class Crystallinity_RefractChance_Patches
+    {
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(XRL.World.Parts.Mutation.Crystallinity.Mutate))]
+        static void MutatePrefix(Crystallinity __instance, GameObject GO)
+        {
+            if (GO.HasPart<XRL.World.Parts.Mutation.GigantismPlus>())
+            {
+                // Wait for the original method to create the RefractLight part
+                // Then in the postfix we'll modify its chance
+                __instance.RefractAdded = true;
+            }
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(XRL.World.Parts.Mutation.Crystallinity.Mutate))]
+        static void MutatePostfix(Crystallinity __instance, GameObject GO)
+        {
+            if (GO.HasPart<XRL.World.Parts.Mutation.GigantismPlus>() && __instance.RefractAdded)
+            {
+                var refractPart = GO.GetPart<RefractLight>();
+                if (refractPart != null)
+                {
+                    refractPart.Chance = 35; // Increase from default 25 to 35
+                }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(XRL.World.Parts.Mutation.Crystallinity))]
+    public static class Crystallinity_LevelText_Patches
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(XRL.World.Parts.Mutation.Crystallinity.GetLevelText))]
+        static void GetLevelTextPostfix(Crystallinity __instance, ref string __result)
+        {
+            if (__instance.ParentObject.HasPart<XRL.World.Parts.Mutation.GigantismPlus>())
+            {
+                // Replace the original 25% text with our modified version
+                __result = __result.Replace(
+                    "25% chance to refract light-based attacks",
+                    "25% chance to refract light-based attacks, +10% from being {{gigantic|Gigantic}}"
+                );
+            }
+        }
+    }
+
+} //!--- namespace Mods.GigantismPlus.HarmonyPatches
