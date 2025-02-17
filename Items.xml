@@ -151,7 +151,7 @@
 
   <object Name="ElongatedBurrowingClaw" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{giant|elongated burrowing}} claw" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;x" DetailColor="W" />
+    <part Name="Render" DisplayName="{{giant|elongated}} burrowing claw" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;x" DetailColor="W" />
     <part Name="Description" Short="{{giant|Long}}, {{giant|slender}} claws designed for tearing through earth and rock jut from an {{giant|oddly large}} paw." />
     <part Name="MeleeWeapon" BaseDamage="1d5" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
