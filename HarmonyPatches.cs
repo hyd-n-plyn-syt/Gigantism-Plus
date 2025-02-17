@@ -636,7 +636,7 @@ namespace Mods.GigantismPlus.HarmonyPatches
                 // Replace the original 25% text with our modified version
                 __result = __result.Replace(
                     "25% chance to refract light-based attacks",
-                    "25% chance to refract light-based attacks, +10% from being {{gigantic|Gigantic}}"
+                    "35% chance to refract light-based attacks (25% base chance {{rules|+}} 10% from {{gigantism|Gigantism}} ({{r|D}}))"
                 );
             }
         }
