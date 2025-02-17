@@ -594,6 +594,7 @@ namespace Mods.GigantismPlus.HarmonyPatches
 
     [HarmonyPatch(typeof(XRL.World.Parts.Mutation.Crystallinity))]
     public static class Crystallinity_RefractChance_Patches
+    // Increase the chance to refract light-based attacks from 25% to 35% when GigantismPlus is present
     {
         [HarmonyPrefix]
         [HarmonyPatch(nameof(XRL.World.Parts.Mutation.Crystallinity.Mutate))]
@@ -624,6 +625,7 @@ namespace Mods.GigantismPlus.HarmonyPatches
 
     [HarmonyPatch(typeof(XRL.World.Parts.Mutation.Crystallinity))]
     public static class Crystallinity_LevelText_Patches
+    // Modify the Crystallinity mutation level text to include the GigantismPlus bonus
     {
         [HarmonyPostfix]
         [HarmonyPatch(nameof(XRL.World.Parts.Mutation.Crystallinity.GetLevelText))]
