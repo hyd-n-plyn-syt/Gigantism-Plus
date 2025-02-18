@@ -341,11 +341,37 @@
       <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_metal_blocked" />
   </object>
   <!-- End Crystalline Natural Weapons -->
+  <!--> Gigantic Cybernetics <-->
+
+  <object Name="MassiveExoframeAlpha" Inherits="BaseCyberneticsEquipment_6point">
+    <part Name="Physics" Weight="20" />
+    <part Name="Description" Short="An archaic exoframe that is so large, you'll be considered gigantic while it's implanted. It's installed directly onto the exterior of your body, linking into your very being." />
+    <part Name="Render" DisplayName="{{Y|massive exoframe alpha}}" Tile="Items/sw_exoskeleton.bmp" ColorString="&amp;b" DetailColor="B" />
+    <part Name="CyberneticsBaseItem" Slots="Body,Back" Cost="6" BehaviorDescription="You are considered a gigantic creature while the exoframe is installed." />
+    <part Name="MassiveExoframe" WorksOnSelf="false" WorksOnImplantee="true" />
+    <tag Name="StartingCybernetic:General" />
+  </object>
+  <object Name="MassiveExoframeManipulatorA" Inherits="BaseCudgel">
+    <part Name="Render" DisplayName="{{G|exoframe manipulator alpha}}" Tile="Items/sw_carbidehand.bmp" ColorString="&amp;G" DetailColor="r" />
+    <part Name="MeleeWeapon" MaxStrengthBonus="999" BaseDamage="1d6" Skill="Cudgel" Stat="Strength" />
+    <part Name="Commerce" Value="0" />
+    <part Name="Description" Short="The gigantic manipulator of a massive exoframe alpha cybernetic implant." />
+    <part Name="Metal" />
+    <tag Name="Tier" Value="7" />
+    <part Name="Physics" Weight="0" IsReal="false" />
+    <tag Name="ExcludeFromDynamicEncounters" Value="*noinherit" />
+    <tag Name="Mods" Value="ModGigantic" />
+    <tag Name="WeaponUnarmed" />
+  </object>
+
+  <!--> End Gigantic Cybernetics <-->
+  <!-- Modified BaseGame Natural Weapons -->
 
   <object  Name="Crystalline Point" Load="Merge">
 		<part Name="Render" DisplayName="{{crystallized|crystalline point}}" Load="Merge" />
 	</object>
 
+  <!-- End Modified BaseGame Natural Weapons -->
   <!-- Gigantic Modable Changes -->
   
 	<object  Name="LightSource" Load="Merge">

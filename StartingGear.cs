@@ -11,8 +11,8 @@ namespace Mods.GigantismPlus
         public void mutate(GameObject player)
         {
             Debug.Entry(1, "/ Checking if Gigantification of starting gear should occur.");
-            // Is the player Gigantic, and is the option to have gigantic starting gear set?
-            if (player.HasPart("GigantismPlus") && Options.EnableGiganticStartingGear)
+            // Check for either mutation OR cybernetic as source of gigantism
+            if ((player.HasPart("GigantismPlus") || player.HasPart("MassiveExoframe")) && Options.EnableGiganticStartingGear)
             {
                 if (Options.EnableGiganticStartingGear_Grenades) Debug.Entry(3, "| Checking", "grenades will be Gigantified");
                 if (!Options.EnableGiganticStartingGear_Grenades) Debug.Entry(3, "| Checking", "grenades won't be Gigantified");
@@ -104,6 +104,23 @@ namespace Mods.GigantismPlus
             {
                 Debug.Entry(1, "\\Check failed.");
                 Debug.Entry(1, "________________________________________");
+            }
+
+            // Check if player has the exoframe
+            if (player.HasPart<MassiveExoframe>())
+            {
+                // Cycle the player's inventory and equipped items
+                foreach (GameObject item in player.GetInventoryAndEquipment())
+                {
+                    if (ItemModding.ModificationApplicable("ModGigantic", item) 
+                        && !item.HasPart<ModGigantic>()
+                        && !item.HasTag("DynamicObjectsTable:TradeGoods")
+                        && !item.HasTag("DynamicObjectsTable:Tonics_NonRare"))
+                    {
+                        ItemModding.ApplyModification(item, "ModGigantic");
+                        player.AutoEquip(item);
+                    }
+                }
             }
 
         }
