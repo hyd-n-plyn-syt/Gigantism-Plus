@@ -91,7 +91,7 @@
 
   <object Name="GiganticElongatedBurrowingClaw" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{giant|elongated}} burrowing claw" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;X" DetailColor="W" />
+    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{giant|elongated}} burrowing claw" RenderString="F" Tile="ElongatedBurrowingClaw.png" ColorString="&amp;X" DetailColor="W" />
     <part Name="Description" Short="{{gigantic|Gigantic}}, {{giant|long}}, {{giant|slender}} spades designed for tearing through earth and rock jut from an oddly {{gigantic|immense}} paw." />
     <part Name="MeleeWeapon" BaseDamage="1d3" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
@@ -151,7 +151,7 @@
 
   <object Name="ElongatedBurrowingClaw" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{giant|elongated}} burrowing claw" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;x" DetailColor="W" />
+    <part Name="Render" DisplayName="{{giant|elongated}} burrowing claw" RenderString="F" Tile="ElongatedBurrowingClaw.png" ColorString="&amp;x" DetailColor="W" />
     <part Name="Description" Short="{{giant|Long}}, {{giant|slender}} claws designed for tearing through earth and rock jut from an {{giant|oddly large}} paw." />
     <part Name="MeleeWeapon" BaseDamage="1d5" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
@@ -183,7 +183,7 @@
   <object Name="GiganticCrystallinePoint" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
     <part Name="Render" DisplayName="{{gigantic|gigantic}} {{crystallized|crystalline point}}" RenderString="F" Tile="GiganticFist_Alt.png" ColorString="&amp;b" DetailColor="B" />
-    <part Name="Description" Short="{{crystalline|Crystalline}} points fan out from a {{gigantic|gigantic}} {{jewels|central jewel}}." />
+    <part Name="Description" Short="{{crystallized|Crystalline}} points fan out from a {{gigantic|gigantic}} {{jewels|central jewel}}." />
     <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
     <part Name="NaturalEquipment" />
@@ -205,8 +205,8 @@
 
   <object Name="ElongatedCrystallinePoint" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{giant|elongated}} {{crystallized|crystalline point}}" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;b" DetailColor="B" />
-    <part Name="Description" Short="{{giant|Long}}, {{giant|slender}}, {{crystalline|crystalline}} points fan out from a {{jewels|central jewel}}." />
+    <part Name="Render" DisplayName="{{giant|elongated}} {{crystallized|crystalline point}}" RenderString="F" Tile="ElongatedCrystallinePoint.png" ColorString="&amp;b" DetailColor="B" />
+    <part Name="Description" Short="{{giant|Long}}, {{giant|slender}}, {{crystallized|crystalline}} points fan out from a {{jewels|central jewel}}." />
     <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
     <part Name="NaturalEquipment" />
@@ -229,7 +229,7 @@
   <object Name="BurrowingCrystallinePoint" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
     <part Name="Render" DisplayName="burrowing {{crystallized|crystalline point}}" RenderString="F" Tile="Creatures/natural-weapon-claw.bmp" ColorString="&amp;b" DetailColor="B" />
-    <part Name="Description" Short="{{crystalline|Crystalline}} points fan out from a {{jewels|central jewel}}. The points can lock together perfectly to form a spade ideal for parting earth and stone." />
+    <part Name="Description" Short="{{crystallized|Crystalline}} points fan out from a {{jewels|central jewel}}. The points can lock together perfectly to form a spade ideal for parting earth and stone." />
     <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
     <part Name="NaturalEquipment" />
@@ -252,7 +252,7 @@
   <object Name="GiganticBurrowingCrystallinePoint" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
     <part Name="Render" DisplayName="{{gigantic|gigantic}} burrowing {{crystallized|crystalline point}}" RenderString="F" Tile="GiganticFist_Alt.png" ColorString="&amp;m" DetailColor="W" />
-    <part Name="Description" Short="{{crystalline|Crystalline}} points fan out from a {{gigantic|gigantic}} {{jewels|central jewel}}. The points can lock together perfectly to form a spade ideal for parting earth and stone." />
+    <part Name="Description" Short="{{crystallized|Crystalline}} points fan out from a {{gigantic|gigantic}} {{jewels|central jewel}}. The points can lock together perfectly to form a spade ideal for parting earth and stone." />
     <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
     <part Name="NaturalEquipment" />
@@ -274,8 +274,8 @@
 
   <object Name="ElongatedBurrowingCrystallinePoint" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{giant|elongated}} burrowing {{crystallized|crystalline point}}" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;b" DetailColor="m" />
-    <part Name="Description" Short="{{giant|Long}}, {{giant|slender}}, {{crystalline|crystalline}} points fan out from a {{jewels|central jewel}}. The points can lock together perfectly to form a spade ideal for parting earth and stone." />
+    <part Name="Render" DisplayName="{{giant|elongated}} burrowing {{crystallized|crystalline point}}" RenderString="F" Tile="ElongatedBurrowingCrystallinePoint.png" ColorString="&amp;b" DetailColor="m" />
+    <part Name="Description" Short="{{giant|Long}}, {{giant|slender}}, {{crystallized|crystalline}} points fan out from a {{jewels|central jewel}}. The points can lock together perfectly to form a spade ideal for parting earth and stone." />
     <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
     <part Name="NaturalEquipment" />
@@ -297,8 +297,8 @@
   
   <object Name="GiganticElongatedCrystallinePoint" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{giant|elongated}} {{crystallized|crystalline point}}" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;b" DetailColor="B" />
-    <part Name="Description" Short="{{giant|Long}}, {{giant|slender}}, {{crystalline|crystalline}} points fan out from a {{gigantic|gigantic}} {{jewels|central jewel}}." />
+    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{giant|elongated}} {{crystallized|crystalline point}}" RenderString="F" Tile="ElongatedCrystallinePoint.png" ColorString="&amp;b" DetailColor="B" />
+    <part Name="Description" Short="{{giant|Long}}, {{giant|slender}}, {{crystallized|crystalline}} points fan out from a {{gigantic|gigantic}} {{jewels|central jewel}}." />
     <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
     <part Name="NaturalEquipment" />
@@ -320,8 +320,8 @@
 
   <object Name="GiganticElongatedBurrowingCrystallinePoint" Inherits="MeleeWeapon">
     <part Name="Armor" WornOn="Hand" />
-    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{giant|elongated}} burrowing {{crystallized|crystalline point}}" RenderString="F" Tile="ElongatedPaw_Alt.png" ColorString="&amp;m" DetailColor="W" />
-    <part Name="Description" Short="{{giant|Long}}, {{giant|slender}}, {{crystalline|crystalline}} points fan out from a {{gigantic|gigantic}} {{jewels|central jewel}}. The points can lock together perfectly to form a spade ideal for parting earth and stone." />
+    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{giant|elongated}} burrowing {{crystallized|crystalline point}}" RenderString="F" Tile="ElongatedBurrowingCrystallinePoint.png" ColorString="&amp;m" DetailColor="W" />
+    <part Name="Description" Short="{{giant|Long}}, {{giant|slender}}, {{crystallized|crystalline}} points fan out from a {{gigantic|gigantic}} {{jewels|central jewel}}. The points can lock together perfectly to form a spade ideal for parting earth and stone." />
     <part Name="MeleeWeapon" MaxStrengthBonus="999" Skill="ShortBlades" Stat="Strength" />
     <part Name="Commerce" Value="0" />
     <part Name="NaturalEquipment" />
