@@ -351,6 +351,9 @@
 	<object  Name="LightSource" Load="Merge">
 		<tag Name="Mods" Value="Gigantify" Load="Merge" />
 	</object>
+  <object  Name="Hoversled" Load="Merge">
+		<tag Name="Mods" Value="Gigantify" Load="Merge" />
+	</object>
 
   <!-- End Gigantic Modable Changes -->
 
