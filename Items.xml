@@ -270,8 +270,8 @@
     <part Name="Description" 
           Short="An archaic exoframe that is so large, you'll be considered gigantic while it's implanted. It's installed directly onto the exterior of your body, linking into your very being." 
           />
-    <part Name="Render" DisplayName="{{Y|massive exoframe alpha}}" 
-          Tile="Items/sw_exoskeleton.bmp" 
+    <part Name="Render" DisplayName="{{Y|massive exoframe alpha}}"
+          RenderString="M" Tile="Items/sw_exoskeleton.bmp" 
           ColorString="&amp;b" DetailColor="B" 
           />
     <part Name="CyberneticsBaseItem" 
@@ -283,8 +283,8 @@
   </object>
   
   <object Name="MassiveExoframeManipulatorA" Inherits="BaseCudgel">
-    <part Name="Render" DisplayName="{{G|exo{{r|frame}} manipulator {{r|a}}lpha}}" 
-          Tile="GiganticFist_Alt.png" 
+    <part Name="Render" DisplayName="{{G|exo{{r|frame}} manipulator {{r|a}}lpha}}"
+          RenderString="M" Tile="GiganticManipulator.png" 
           ColorString="&amp;G" DetailColor="r" 
           />
     <part Name="MeleeWeapon" 
