@@ -10,7 +10,7 @@ using Mods.GigantismPlus.HarmonyPatches;
 namespace XRL.World.Parts
 {
     [Serializable]
-    public class MassiveExoframe : IActivePart
+    public class MassiveExoframe : IPart
     {
         [Serializable]
         public class CompactedExoframe : IActivePart // Inner marker class
@@ -18,6 +18,7 @@ namespace XRL.World.Parts
             public CompactedExoframe() 
             {
                 WorksOnSelf = true;
+                WorksOnImplantee = true;
             }
 
             public override bool WantEvent(int ID, int cascade)
@@ -62,10 +63,10 @@ namespace XRL.World.Parts
             {
                 return true;
             }
-        } //!--- private class CompactedExoframe : IActivePart  
+        } //!--- public class CompactedExoframe : IActivePart  
 
-        public new bool WorksOnSelf = true;
-        public new bool WorksOnImplantee = true;
+        [NonSerialized]
+        private GameObject _User;
 
         public static readonly string COMPACT_MODE_COMMAND_NAME = "CommandToggleExoframeCompactMode";
         public Guid EnableActivatedAbilityID = Guid.Empty;
@@ -98,11 +99,11 @@ namespace XRL.World.Parts
         {
             get
             {
-                return ParentObject.IsGiganticCreature;
+                return _User.IsGiganticCreature;
             }
             private set
             {
-                ParentObject.IsGiganticCreature = value;
+                _User.IsGiganticCreature = value;
                 if (IsPseudoGiganticCreature == value)
                 {
                     IsPseudoGiganticCreature = !value;
@@ -115,12 +116,12 @@ namespace XRL.World.Parts
         {
             get
             {
-                return ParentObject.HasPart<CompactedExoframe>();
+                return _User.HasPart<CompactedExoframe>();
             }
             set
             {
-                if (value) ParentObject.RequirePart<CompactedExoframe>();
-                else ParentObject.RemovePart<CompactedExoframe>();
+                if (value) _User.RequirePart<CompactedExoframe>();
+                else _User.RemovePart<CompactedExoframe>();
 
                 if (IsGiganticCreature == value)
                 {
@@ -137,12 +138,103 @@ namespace XRL.World.Parts
             return base.WantEvent(ID, cascade)
                 || ID == ImplantedEvent.ID
                 || ID == UnimplantedEvent.ID
-                || ID == CanEnterInteriorEvent.ID
-                || ID == GetSlotsRequiredEvent.ID;
+                || ID == CanEnterInteriorEvent.ID;
         }
+
+        public virtual void OnImplanted(GameObject Object)
+        {
+            // base
+            _User = Object;
+             
+            // Require Part
+            Object.RequirePart<MassiveExoframe>();
+
+            /* Testing Mutation method.
+             *
+            // Make Gigantic
+            IsGiganticCreature = true;
+
+            // Active Ability
+            EnableActivatedAbilityID = 
+                AddMyActivatedAbility(
+                    Name: "{{C|{{W|[}}Standard{{W|]}}/Compact}}",
+                    Command: COMPACT_MODE_COMMAND_NAME,
+                    Class: "Cybernetics",
+                    Description: null, 
+                    Icon: "&#214",
+                    DisabledMessage: null,
+                    Toggleable: true,
+                    DefaultToggleState: false,
+                    ActiveToggle: true,
+                    IsAttack: false,
+                    IsRealityDistortionBased: false,
+                    IsWorldMapUsable: false
+                    );
+
+            ActivatedAbilityEntry abilityEntry = Object.GetActivatedAbility(EnableActivatedAbilityID);
+            abilityEntry.DisplayName = "{{C|{{W|[}}Standard{{W|]}}\nCompact\n}}"; ;
+            */
+
+            // Natural Weapon
+            if (_manipulatorObject == null)
+            {
+                _manipulatorObject = GameObjectFactory.Factory.CreateObject("MassiveExoframeManipulatorA");
+            }
+            Body body = Object.Body;
+            if (body != null)
+            {
+                foreach (BodyPart part in body.GetParts())
+                {
+                    if (part.Type == "Hand")
+                    {
+                        part.DefaultBehavior = _manipulatorObject;
+                    }
+                }
+            }
+            
+        } //!--- public override void OnImplanted(GameObject Object)
+
+        public virtual void OnUnimplanted(GameObject Object)
+        {
+            // Remove manipulator from hands
+            Body body = Object.Body;
+            if (body != null)
+            {
+                foreach (BodyPart part in body.GetParts())
+                {
+                    if (part.Type == "Hand" && part.DefaultBehavior == _manipulatorObject)
+                    {
+                        part.DefaultBehavior = null;
+                    }
+                }
+            }
+
+            /* Testing Mutation Method.
+             * 
+            DisengageCompactMode();
+            IsGiganticCreature = false;
+
+            if (EnableActivatedAbilityID != Guid.Empty)
+            {
+                RemoveMyActivatedAbility(ref EnableActivatedAbilityID);
+            }
+            */
+
+            Object.RemovePart<MassiveExoframe>();
+
+            /* Testing Mutation Method.
+             * 
+            Object.RemovePart<CompactedExoframe>();
+            */
+
+            CheckEquipment(Object, body);
+
+        } //!--- public override void OnUnimplanted(GameObject Object)
 
         public override bool HandleEvent(ImplantedEvent E)
         {
+            /* Temporarily Commenting this out to see if OnImplanted works instead.
+             * 
             E.Implantee.IsGiganticCreature = true;
             E.Implantee.RequirePart<MassiveExoframe>();
             // Create manipulator weapon if needed
@@ -192,11 +284,16 @@ namespace XRL.World.Parts
             }
 
             CheckEquipment(E.Implantee, E.Part?.ParentBody);
+            */
+
+            OnImplanted(E.Implantee);
             return base.HandleEvent(E);
         }
 
         public override bool HandleEvent(UnimplantedEvent E)
         {
+            /* Temporarily Commenting this out to see if OnImplanted works instead.
+             *
             // Remove manipulator from hands
             Body body = E.Part?.ParentBody;
             if (body != null)
@@ -219,11 +316,16 @@ namespace XRL.World.Parts
             E.Implantee.RemovePart<MassiveExoframe>();
 
             CheckEquipment(E.Implantee, E.Part?.ParentBody);
+            */
+
+            OnUnimplanted(E.Implantee);
             return base.HandleEvent(E);
         }
 
         public override bool HandleEvent(CanEnterInteriorEvent E)
         {
+            /* Testing Mutation Method.
+             * 
             if (ParentObject == E.Object)
                 return base.HandleEvent(E);
 
@@ -236,6 +338,7 @@ namespace XRL.World.Parts
                 E.Status = check ? 0 : E.Status;
                 Popup.Show("Your exoframe compacts itself to fit into the space.");
             }
+            */
             return base.HandleEvent(E);
         }
 
@@ -265,7 +368,6 @@ namespace XRL.World.Parts
         public void EngageCompactMode(bool Message = false)
         {
             Debug.Entry(2, "**public void EngageCompactMode(bool Message = false)");
-            GameObject actor = ParentObject;
             if (IsPseudoGiganticCreature)
                 return;
 
@@ -279,16 +381,16 @@ namespace XRL.World.Parts
                 ParentObject.UseEnergy(CompactModeEnergyCost, "Cybernetic Exoframe Compact Mode");
 
                 // Apply stat modifications
-                actor.ModIntProperty("AV", CompactModeAVModifier);
-                actor.ModIntProperty("DV", CompactModeDVModifier);
-                actor.ModIntProperty("Quickness", CompactModeQNModifier);
-                actor.ModIntProperty("MoveSpeed", CompactModeMSModifier);
+                _User.ModIntProperty("AV", CompactModeAVModifier);
+                _User.ModIntProperty("DV", CompactModeDVModifier);
+                _User.ModIntProperty("Quickness", CompactModeQNModifier);
+                _User.ModIntProperty("MoveSpeed", CompactModeMSModifier);
 
-                actor.PlayWorldSound("Sounds/Machines/sfx_machine_hydraulics");
+                _User.PlayWorldSound("Sounds/Machines/sfx_machine_hydraulics");
                 if (Message)
                     Popup.Show("Your exoframe compacts with hydraulic whirs and mechanical clicks.");
 
-                var abilityEntry = actor.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
+                ActivatedAbilityEntry abilityEntry = _User.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
                 abilityEntry.DisplayName = "{{C|Standard\n{{W|[}}Compact{{W|]}}\n}}";
             }
         }
@@ -296,7 +398,6 @@ namespace XRL.World.Parts
         public void DisengageCompactMode(bool Message = false)
         {
             Debug.Entry(2, "**public void DisengageCompactMode(bool Message = false)");
-            GameObject actor = ParentObject;
             if (!IsPseudoGiganticCreature)
                 return;
 
@@ -310,36 +411,37 @@ namespace XRL.World.Parts
                 ParentObject.UseEnergy(CompactModeEnergyCost, "Cybernetic Exoframe Standard Mode");
 
                 // Revert stat modifications
-                actor.ModIntProperty("AV", -CompactModeAVModifier);
-                actor.ModIntProperty("DV", -CompactModeDVModifier);
-                actor.ModIntProperty("Quickness", -CompactModeQNModifier);
-                actor.ModIntProperty("MoveSpeed", -CompactModeMSModifier);
+                _User.ModIntProperty("AV", -CompactModeAVModifier);
+                _User.ModIntProperty("DV", -CompactModeDVModifier);
+                _User.ModIntProperty("Quickness", -CompactModeQNModifier);
+                _User.ModIntProperty("MoveSpeed", -CompactModeMSModifier);
 
-                actor.PlayWorldSound("Sounds/Machines/sfx_machine_hydraulics");
+                _User.PlayWorldSound("Sounds/Machines/sfx_machine_hydraulics");
                 if (Message)
                     Popup.Show("Your exoframe expands with hydraulic whirs and mechanical clicks.");
 
-                var abilityEntry = actor.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
+                ActivatedAbilityEntry abilityEntry = _User.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
                 abilityEntry.DisplayName = "{{C|{{W|[}}Standard{{W|]}}\nCompact\n}}";
             }
         }
 
         public override bool FireEvent(Event E)
         {
+            /* Testing Mutation Method.
+             * 
             if (E.ID == COMPACT_MODE_COMMAND_NAME)
             {
                 Debug.Entry(2, "**MassiveExoframe.FireEvent(Event E)", E.ID);
 
-                GameObject actor = this.ParentObject;
-                Debug.Entry(4, "actor", actor.DisplayName);
-                if (actor.CurrentZone.ZoneWorld == "Interior" && !IsGiganticCreature)
+                Debug.Entry(4, "_User", _User.DisplayName);
+                if (_User.CurrentZone.ZoneWorld == "Interior" && !IsGiganticCreature)
                 {
                     Debug.Entry(3, "- Parent in interior, Abort");
                     Popup.Show("This space is too small for you to disengage compact mode!");
                     return base.FireEvent(E);
                 }
 
-                if (actor.HasPart<Vehicle>())
+                if (_User.HasPart<Vehicle>())
                 {
                     Debug.Entry(3, "- Parent has Vehicle, Abort");
                     return base.FireEvent(E);
@@ -350,8 +452,8 @@ namespace XRL.World.Parts
 
                 //  Debug
                 Debug.Entry(3, "**ToggleMyActivatedAbility(EnableActivatedAbilityID, null, Silent: true, null)");
-                string IsActiveAbilityToggledOn = actor.IsActivatedAbilityToggledOn(EnableActivatedAbilityID) ? "On" : "Off";
-                Debug.Entry(2, "**if (actor.IsActivatedAbilityToggledOn(EnableActivatedAbilityID))", IsActiveAbilityToggledOn);
+                string IsActiveAbilityToggledOn = IsMyActivatedAbilityToggledOn(EnableActivatedAbilityID) ? "On" : "Off";
+                Debug.Entry(2, "**if (_User.IsActivatedAbilityToggledOn(EnableActivatedAbilityID))", IsActiveAbilityToggledOn);
                 Debug.Entry(2, "- EnableActivatedAbilityID.ToString()", EnableActivatedAbilityID.ToString());
                 //! Debug
 
@@ -367,7 +469,8 @@ namespace XRL.World.Parts
                 }
 
             }
-            
+            */
+
             The.Core.RenderBase();
             return base.FireEvent(E);
         }
@@ -379,7 +482,11 @@ namespace XRL.World.Parts
 
         public override void Register(GameObject Object, IEventRegistrar Registrar)
         {
+            /* Testing Mutation Method.
+             * 
             Registrar.Register(COMPACT_MODE_COMMAND_NAME);
+            */
+
             base.Register(Object, Registrar);
         }
     }

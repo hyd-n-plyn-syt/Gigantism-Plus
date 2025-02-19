@@ -15,6 +15,7 @@ namespace XRL.World.Parts.Mutation
         
         private static readonly List<string> NaturalWeaponSupersedingMutations = new List<string>
         {
+            "MassiveExoframe",
             "GigantismPlus",
             "BurrowingClaws",
             "Crystallinity"

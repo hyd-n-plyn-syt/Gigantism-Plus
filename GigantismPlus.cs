@@ -62,6 +62,34 @@ namespace XRL.World.Parts.Mutation
                 return _IsVehicleCreature;
             }
         }
+        
+        public bool IsCyberGiant
+        {
+            get
+            {
+                return ParentObject.HasPart<MassiveExoframe>();
+            }
+        }
+
+        private string HunchedOverAbilityHunched
+        {
+            get 
+            {
+                if (ParentObject.HasPart<MassiveExoframe>())
+                    return "Compact";
+                return "Hunched";
+            } 
+        }
+
+        private string HunchedOverAbilityUpright
+        {
+            get
+            {
+                if (ParentObject.HasPart<MassiveExoframe>())
+                    return "Regular"; // was "Standard" but it's one too many characters
+                return "Upright";
+            }
+        }
 
         public static int GetFistDamageDieCount(int Level)
         {
@@ -183,6 +211,7 @@ namespace XRL.World.Parts.Mutation
 
         private static readonly List<string> NaturalWeaponSupersedingMutations = new List<string>
         {
+            "MassiveExoframe",
             "BurrowingClaws",
             "Crystallinity"
         };
@@ -438,7 +467,7 @@ namespace XRL.World.Parts.Mutation
                  * AddActivatedAbility(Name, Command, Class, Description, Icon, DisabledMessage, Toggleable, DefaultToggleState, ActiveToggle, IsAttack, IsRealityDistortionBased, IsWorldMapUsable, Silent, AIDisable, AlwaysAllowToggleOff, AffectedByWillpower, TickPerTurn, Distinct: false, Cooldown, CommandForDescription, UITileDefault, UITileToggleOn, UITileDisabled, UITileCoolingDown); */
                 EnableActivatedAbilityID =
                     AddMyActivatedAbility(
-                        Name: "{{C|" + "{{W|[}}Upright{{W|]}}/Hunched" + "}}",
+                        Name: "{{C|" + "{{W|[}}" + this.HunchedOverAbilityUpright + "{{W|]}}/" + this.HunchedOverAbilityUpright + "}}",
                         Command: HUNCH_OVER_COMMAND_NAME,
                         Class: "Physical Mutations",
                         Description: null,
@@ -453,7 +482,22 @@ namespace XRL.World.Parts.Mutation
                         );
 
                 ActivatedAbilityEntry abilityEntry = GO.GetActivatedAbility(EnableActivatedAbilityID);
-                abilityEntry.DisplayName = "{{C|" + "{{W|[}}Upright{{W|]}}\nHunched\n" + "}}";
+                abilityEntry.DisplayName = 
+                    "{{C|" + 
+                    "{{W|[}}" + this.HunchedOverAbilityUpright + "{{W|]}}\n" +
+                                this.HunchedOverAbilityHunched + "\n" +
+                       "}}";
+
+                /* This causes a village generation crash.
+                 * 
+                if (this.IsCyberGiant)
+                {
+                    abilityEntry.UITileDefault.ColorString = "b";
+                    abilityEntry.UITileDefault.DetailColor = char.Parse("B");
+                    abilityEntry.UITileToggleOn.ColorString = "b";
+                    abilityEntry.UITileToggleOn.DetailColor = char.Parse("B");
+                }
+                */
             }
 
             return base.Mutate(GO, Level);
@@ -734,7 +778,11 @@ namespace XRL.World.Parts.Mutation
                 }
 
                 ActivatedAbilityEntry abilityEntry = actor.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
-                abilityEntry.DisplayName = "{{C|" + "Upright\n{{W|[}}Hunched{{W|]}}\n" + "}}";
+                abilityEntry.DisplayName =
+                    "{{C|" + 
+                                this.HunchedOverAbilityUpright + "\n" +
+                    "{{W|[}}" + this.HunchedOverAbilityHunched + "{{W|]}}\n" +
+                       "}}";
 
             }
             Debug.Entry(1, "Should be Hunched Over");
@@ -765,7 +813,11 @@ namespace XRL.World.Parts.Mutation
                 Popup.Show("You stand tall, relaxing into your immense stature.");
 
                 ActivatedAbilityEntry abilityEntry = actor.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
-                abilityEntry.DisplayName = "{{C|" + "{{W|[}}Upright{{W|]}}\nHunched\n" + "}}";
+                abilityEntry.DisplayName =
+                    "{{C|" +
+                    "{{W|[}}" + this.HunchedOverAbilityUpright + "{{W|]}}\n" +
+                                this.HunchedOverAbilityHunched + "\n" +
+                       "}}";
 
                 // Old weight change code. Keeping just in case.
                 /*
