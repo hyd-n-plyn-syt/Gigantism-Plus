@@ -49,7 +49,8 @@ namespace Mods.GigantismPlus.HarmonyPatches
             // __state lets you keep stuff between Pre- and Postfixes (might be redundant for this one)
 
             __state = __instance; // make the transferable object the current instance.
-            if (__state.HasPart<PseudoGigantism>() && !__state.IsGiganticCreature) 
+            bool IsPretendBig = __state.HasPart("CompactedExoframe") || __state.HasPart<PseudoGigantism>();
+            if (IsPretendBig && !__state.IsGiganticCreature) 
             {
                 // is the GameObject PseudoGigantic but not Gigantic
                 Debug.Entry(4, "HarmonyPatches.cs | [HarmonyPrefix]");
@@ -65,7 +66,8 @@ namespace Mods.GigantismPlus.HarmonyPatches
         {
             // only need __state this time, since it holds the __instance anyway.
 
-            if (__state.HasPart<PseudoGigantism>() && __state.IsGiganticCreature)
+            bool IsPretendBig = __state.HasPart("CompactedExoframe") || __state.HasPart<PseudoGigantism>();
+            if (IsPretendBig && __state.IsGiganticCreature)
             {
                 // is the GameObject both PseudoGigantic and Gigantic (only supposed to be possible here)
                 Debug.Entry(4, "HarmonyPatches.cs | [HarmonyPostfix]");
@@ -95,7 +97,8 @@ namespace Mods.GigantismPlus.HarmonyPatches
             // __state lets you keep stuff between Pre- and Postfixes (might be redundant for this one)
 
             __state = Object;
-            if (__state.HasPart<PseudoGigantism>() && !__state.IsGiganticCreature)
+            bool IsPretendBig = __state.HasPart("CompactedExoframe") || __state.HasPart<PseudoGigantism>();
+            if (IsPretendBig && !__state.IsGiganticCreature)
             {
                 // is the GameObject PseudoGigantic but not Gigantic
                 Debug.Entry(4, "HarmonyPatches.cs | [HarmonyPrefix]");
@@ -111,7 +114,8 @@ namespace Mods.GigantismPlus.HarmonyPatches
         {
             // only need __state this time, since it holds the __instance anyway.
 
-            if (__state.HasPart<PseudoGigantism>() && __state.IsGiganticCreature)
+            bool IsPretendBig = __state.HasPart("CompactedExoframe") || __state.HasPart<PseudoGigantism>();
+            if (IsPretendBig && __state.IsGiganticCreature)
             {
                 // is the GameObject both PseudoGigantic and Gigantic (only supposed to be possible here)
                 Debug.Entry(4, "HarmonyPatches.cs | [HarmonyPostfix]");

@@ -106,6 +106,9 @@ namespace Mods.GigantismPlus
                 Debug.Entry(1, "________________________________________");
             }
 
+            /* The Debug.Entries appear to indicate that this code is redundant.
+             * Keeping it here in case.
+             * 
             // Check if player has the exoframe
             if (player.HasPart<MassiveExoframe>())
             {
@@ -122,6 +125,7 @@ namespace Mods.GigantismPlus
                     }
                 }
             }
+            */
 
         }
     }

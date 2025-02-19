@@ -238,7 +238,10 @@ namespace XRL.World.Parts.Mutation
                     Debug.Entry(4, $"-- Base: {weapon.BaseDamage} | PenCap: {weapon.MaxStrengthBonus}");
                 }
             }
-            Debug.Entry(2, "part null or not hand");
+            else
+            {
+                Debug.Entry(2, "part null or not hand");
+            }
             Debug.Entry(2, "xxAddElongatedNaturalEquipmentTo(BodyPart part)");
         } //!--- public void AddElongatedNaturalEquipmentTo(BodyPart part)
 

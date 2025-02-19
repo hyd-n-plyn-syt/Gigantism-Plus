@@ -308,8 +308,6 @@ namespace XRL.World.Parts.Mutation
                 || ID == GetExtraPhysicalFeaturesEvent.ID;
         }
 
-        // don't like that these are duplicates.
-        // I'm certain there's a way to collapse them into a single function that accepts either.
         public override bool HandleEvent(BeforeLevelGainedEvent E)
         {
             if (ShouldRapidAdvance(E.Level, E.Actor))
@@ -436,22 +434,25 @@ namespace XRL.World.Parts.Mutation
 
             if (!GO.HasPart<Vehicle>())
             {
-                /* AddActivatedAbility() - Fill Method Arguments.
+                /* AddActivatedAbility() - Full Method Arguments.
                  * AddActivatedAbility(Name, Command, Class, Description, Icon, DisabledMessage, Toggleable, DefaultToggleState, ActiveToggle, IsAttack, IsRealityDistortionBased, IsWorldMapUsable, Silent, AIDisable, AlwaysAllowToggleOff, AffectedByWillpower, TickPerTurn, Distinct: false, Cooldown, CommandForDescription, UITileDefault, UITileToggleOn, UITileDisabled, UITileCoolingDown); */
                 EnableActivatedAbilityID =
-                    AddMyActivatedAbility(Name: "{{C|" + "{{W|[}}Upright{{W|]}}/Hunched" + "}}",
-                                          Command: HUNCH_OVER_COMMAND_NAME,
-                                          Class: "Physical Mutations",
-                                          Description: null,
-                                          Icon: "&#214",
-                                          DisabledMessage: null,
-                                          Toggleable: true,
-                                          DefaultToggleState: false,
-                                          ActiveToggle: true, IsAttack: false,
-                                          IsRealityDistortionBased: false,
-                                          IsWorldMapUsable: false);
+                    AddMyActivatedAbility(
+                        Name: "{{C|" + "{{W|[}}Upright{{W|]}}/Hunched" + "}}",
+                        Command: HUNCH_OVER_COMMAND_NAME,
+                        Class: "Physical Mutations",
+                        Description: null,
+                        Icon: "&#214",
+                        DisabledMessage: null,
+                        Toggleable: true,
+                        DefaultToggleState: false,
+                        ActiveToggle: true, 
+                        IsAttack: false,
+                        IsRealityDistortionBased: false,
+                        IsWorldMapUsable: false
+                        );
 
-                ActivatedAbilityEntry abilityEntry = GO.ActivatedAbilities.GetAbility(EnableActivatedAbilityID);
+                ActivatedAbilityEntry abilityEntry = GO.GetActivatedAbility(EnableActivatedAbilityID);
                 abilityEntry.DisplayName = "{{C|" + "{{W|[}}Upright{{W|]}}\nHunched\n" + "}}";
             }
 
@@ -585,7 +586,10 @@ namespace XRL.World.Parts.Mutation
                     Debug.Entry(4, $"-- Base: {weapon.BaseDamage} | Hit: {weapon.HitBonus} | PenCap: {weapon.MaxStrengthBonus}");
                 }//GiganticFistObject uses FistDamageDieCount d FistDamageDieSize + (StrengthMod / 2) + 3
             }
-            Debug.Entry(2, "part null or not hand");
+            else
+            {
+                Debug.Entry(2, "part null or not hand");
+            }
             Debug.Entry(2, "xxAddGiganticNaturalEquipmentTo(BodyPart part)");
         } //!--- public void AddGiganticFistTo(BodyPart part)
 
@@ -683,23 +687,21 @@ namespace XRL.World.Parts.Mutation
                     return base.FireEvent(E);
                 }
 
+                // Not prevented from taking action
                 ToggleMyActivatedAbility(EnableActivatedAbilityID, null, Silent: true, null);
                 Debug.Entry(3, "Hunch Ability Toggled");
 
                 Debug.Entry(3, "Proceeding to Hunch Ability Effects");
                 if (IsMyActivatedAbilityToggledOn(EnableActivatedAbilityID))
-                {
-                    // Hunch
-                    HunchOver(true);
-                }
+                    HunchOver(true); // Hunch
                 else
-                {
-                    // Stand upright
-                    StraightenUp(true);
-                }
+                    StraightenUp(true); // Stand upright
+
                 Debug.Entry(2, "IsPseudoGiganticCreature", (IsPseudoGiganticCreature ? "true" : "false"));
                 Debug.Entry(2, "IsGiganticCreature", (IsGiganticCreature ? "true" : "false"));
+
             }
+
             The.Core.RenderBase();
             return base.FireEvent(E);
         }
