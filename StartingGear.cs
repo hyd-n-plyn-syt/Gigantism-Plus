@@ -79,7 +79,7 @@ namespace Mods.GigantismPlus
                         // apply the gigantic mod to the item and attempt to auto-equip it
                         ItemModding.ApplyModification(item, "ModGigantic");
                         Debug.Entry(2, ItemName, "has been Gigantified");
-                        player.AutoEquip(item); Debug.Entry(2, ItemName, "AutoEquip Attempted");
+                        // player.AutoEquip(item); Debug.Entry(2, ItemName, "AutoEquip Attempted");
 
                     } 
                     else
@@ -98,7 +98,7 @@ namespace Mods.GigantismPlus
                 }
                 Debug.Entry(1, "\\ Gigantification of starting gear finished.");
                 Debug.Entry(1, "________________________________________");
-
+                player.WantToReequip();
             }
             else
             {

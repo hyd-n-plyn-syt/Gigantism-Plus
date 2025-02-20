@@ -266,9 +266,9 @@
   </object>
   
   <!-- End Crystalline Natural Weapons -->
-  <!--> Gigantic Cybernetics <-->
+  <!-- Gigantic Cybernetics -->
 
-  <object Name="MassiveExoframeAlpha" Inherits="BaseCyberneticsEquipment_6point">
+  <!--object Name="MassiveExoframeAlpha" Inherits="BaseCyberneticsEquipment_6point">
     <part Name="Physics" Weight="20" />
     <part Name="Description" 
           Short="An archaic exoframe that is so large, you'll be considered gigantic while it's implanted. It's installed directly onto the exterior of your body, linking into your very being." 
@@ -289,32 +289,197 @@
     <tag Name="CyberneticsUsesEqSlot" />
     <tag Name="CyberneticsOneOnly" />
     <tag Name="StartingCybernetic:General" />
-  </object>
+  </object-->
+
+  <!-- Base Gigantic Cybernetics Objects -->
   
-  <object Name="MassiveExoframeManipulatorA" Inherits="BaseCudgel">
-    <part Name="Render" DisplayName="{{G|exo{{r|frame}} manipulator {{r|a}}lpha}}"
-          RenderString="M" Tile="GiganticManipulator.png" 
-          ColorString="&amp;G" DetailColor="r" 
+  <object Name="BaseMassiveExoframe" Inherits="BaseCyberneticsEquipment">
+    <part Name="Physics" Weight="15" />
+    <part Name="Description" Short="" />
+    <part Name="Render" DisplayName="{{Y|massive exoframe}}"
+          RenderString="M" Tile="Items/sw_exoskeleton.bmp"
+          ColorString="&amp;c" DetailColor="r"
           />
-    <part Name="MeleeWeapon" 
-          MaxStrengthBonus="999" 
-          BaseDamage="1d6" 
-          Skill="Cudgel" 
-          Stat="Strength" 
-          />
-    <part Name="Commerce" Value="0" />
-    <part Name="Description" 
-          Short="The gigantic manipulator of a massive exoframe alpha cybernetic implant." 
+    <part Name="CyberneticsBaseItem"
+          Slots="Body" Cost="2"
+          BehaviorDescription="You are considered a gigantic creature while the exoframe is installed.
+                               You cannot wear equipment on your body."
           />
     <part Name="Metal" />
-    <tag Name="Tier" Value="7" />
-    <part Name="Physics" Weight="0" IsReal="false" />
-    <tag Name="ExcludeFromDynamicEncounters" Value="*noinherit" />
-    <part Name="ModGigantic" />
-    <tag Name="WeaponUnarmed" />
+    <part Name="NoDamage" />
+    <part Name="NoRust" />
+    <tag Name="CyberneticsUsesEqSlot" />
+    <tag Name="CyberneticsOneOnly" />
+    <part Name="CyberneticsMassiveExoframe" Model="Alpha" />
+    <!-- part Name="ModGigantic" /-->
+    <part Name="ModImprovedGigantismPlus" Tier="1" />
+    <part Name="ItemElements" Elements="immense::2" />
+    <tag Name="RenderImplantGreyInEquipment" />
+    <tag Name="BaseObject" Value="*noinherit" />
   </object>
 
-  <!--> End Gigantic Cybernetics <-->
+  <object Name="BaseMassiveExoframeManipulator" Inherits="GigantismPlusBaseNaturalWeapon">
+    <part Name="Render" DisplayName="{{Y|exo{{c|frame}} manipulator}}"
+          RenderString="M" Tile="GiganticManipulator.png"
+          ColorString="&amp;c" DetailColor="b"
+          />
+    <part Name="Description"
+          Short="The gigantic manipulator of a massive exoframe cybernetic implant."
+          />
+    <part Name="Metal" />
+    <part Name="ModGigantic" />
+    <tag Name="Tier" Value="2" />
+    <tag Name="BaseObject" Value="*noinherit" />
+  </object>
+
+  <!-- End Base Gigantic Cybernetics Objects -->
+  <!-- Massive Exoframes -->
+  
+  <object Name="MassiveExoframeAlpha" Inherits="BaseMassiveExoframe">
+    <part Name="Physics" Weight="75" />
+    <part Name="Description"
+          Short="A long un-wittnessed bulk of mechanical marvel competes for your peripheral even as your attention is drawn across its many valves, pistons, and {{b|carbide}} plates. Dust and debris break loose from the shelf of its {{giant|immense}} bredth and tumble, home-sick, as rocks might cascade down a mountain face. Several {{implanted|invasive interfaces}} hang like spilled innards, ready to bring the behemoth to life with the acquiescence of a willing tribute."
+          />
+    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{Y|massive exoframe {{b|alpha}}}}"
+          RenderString="M" Tile="Items/sw_exoskeleton.bmp"
+          ColorString="&amp;c" DetailColor="b"
+          />
+    <part Name="CyberneticsBaseItem"
+          Slots="Body" Cost="2"
+          BehaviorDescription="You are considered a gigantic creature while the exoframe is installed.
+You cannot wear equipment on your body."
+          />
+    <part Name="Commerce" Value="120" />
+    <part Name="CyberneticsMassiveExoframe" Model="Alpha" />
+    <part Name="ModImprovedGigantismPlus" Tier="2" />
+    <part Name="ItemElements" Elements="immense::2" />
+    <tag Name="StartingCybernetic:General" />
+  </object>
+
+  <object Name="MassiveExoframeDelta" Inherits="BaseMassiveExoframe">
+    <part Name="Physics" Weight="90" />
+    <part Name="Description"
+          Short="A long un-wittnessed bulk of mechanical marvel competes for your peripheral even as your attention is drawn across its many valves, pistons, and {{K|fullerite}} plates. Dust and debris break loose from the shelf of its {{giant|immense}} bredth and tumble, home-sick, as rocks might cascade down a mountain face. Several {{implanted|invasive interfaces}} hang like spilled innards, ready to bring the behemoth to life with the acquiescence of a willing tribute."
+          />
+    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{Y|massive exoframe {{K|delta}}}}"
+          RenderString="M" Tile="Items/sw_exoskeleton.bmp"
+          ColorString="&amp;c" DetailColor="K"
+          />
+    <part Name="CyberneticsBaseItem"
+          Slots="Body" Cost="4"
+          BehaviorDescription="You are considered a gigantic creature while the exoframe is installed.
+You cannot wear equipment on your body."
+          />
+    <part Name="Commerce" Value="240" />
+    <part Name="CyberneticsMassiveExoframe" Model="Delta" />
+    <part Name="ModImprovedGigantismPlus" Tier="4" />
+    <part Name="ItemElements" Elements="immense::4" />
+  </object>
+
+  <object Name="MassiveExoframeSigma" Inherits="BaseMassiveExoframe">
+    <part Name="Physics" Weight="45" />
+    <part Name="Description"
+          Short="A long un-wittnessed bulk of mechanical marvel competes for your peripheral even as your attention is drawn across its many valves, pistons, and {{G|crysteel}} plates. Dust and debris break loose from the shelf of its {{giant|immense}} bredth and tumble, home-sick, as rocks might cascade down a mountain face. Several {{implanted|invasive interfaces}} hang like spilled innards, ready to bring the behemoth to life with the acquiescence of a willing tribute."
+          />
+    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{Y|massive exoframe {{G|sigma}}}}"
+          RenderString="M" Tile="Items/sw_exoskeleton.bmp"
+          ColorString="&amp;c" DetailColor="G"
+          />
+    <part Name="CyberneticsBaseItem"
+          Slots="Body" Cost="8"
+          BehaviorDescription="You are considered a gigantic creature while the exoframe is installed.
+You cannot wear equipment on your body."
+          />
+    <part Name="Commerce" Value="600" />
+    <part Name="CyberneticsMassiveExoframe" Model="Sigma" />
+    <part Name="ModImprovedGigantismPlus" Tier="8" />
+    <part Name="ItemElements" Elements="immense::6" />
+  </object>
+
+  <object Name="MassiveExoframeOmega" Inherits="BaseMassiveExoframe">
+    <part Name="Physics" Weight="30" />
+    <part Name="Description"
+          Short="A long un-wittnessed bulk of mechanical marvel competes for your peripheral even as your attention is drawn across its many valves, pistons, and {{zetachrome|zetachrome}} plates. Dust and debris break loose from the shelf of its {{giant|immense}} bredth and tumble, home-sick, as rocks might cascade down a mountain face. Several {{implanted|invasive interfaces}} hang like spilled innards, ready to bring the behemoth to life with the acquiescence of a willing tribute."
+          />
+    <part Name="Render" DisplayName="{{gigantic|gigantic}} {{Y|massive exoframe {{zetachrome|omega}}}}"
+          RenderString="M" Tile="Items/sw_exoskeleton.bmp"
+          ColorString="&amp;c" DetailColor="M"
+          />
+    <part Name="CyberneticsBaseItem"
+          Slots="Body" Cost="16"
+          BehaviorDescription="You are considered a gigantic creature while the exoframe is installed.
+You cannot wear equipment on your body."
+          />
+    <part Name="Commerce" Value="2200" />
+    <part Name="CyberneticsMassiveExoframe" Model="Omega" />
+    <part Name="ModImprovedGigantismPlus" Tier="12" />
+    <part Name="ItemElements" Elements="immense::8" />
+    <part Name="Zetachrome" />
+  </object>
+
+  <!-- End Massive Exoframes -->
+  <!-- Exoframe Manipulator Objects -->
+  
+  <object Name="MassiveExoframeManipulatorAlpha" Inherits="BaseMassiveExoframeManipulator">
+    <part Name="Render" DisplayName="{{Y|E{{c|F}}-{{b|alpha}} manipulator}}"
+          RenderString="M" Tile="GiganticManipulator.png" 
+          ColorString="&amp;c" DetailColor="b" 
+          />
+    <part Name="Description" 
+          Short="The {{gigantic|gigantic}} manipulator of a massive exoframe {{b|alpha}} cybernetic implant." 
+          />
+    <part Name="Physics" Category="Natural Weapon" IsReal="false" Weight="3" />
+    <tag Name="Tier" Value="2" />
+    <tag Name="SwingSound" Value="Sounds/Melee/cudgels/sfx_melee_cudgel_fullerite_swing" />
+    <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_fullerite_blocked" />
+  </object>
+
+  <object Name="MassiveExoframeManipulatorDelta" Inherits="BaseMassiveExoframeManipulator">
+    <part Name="Render" DisplayName="{{Y|E{{c|F}}-{{K|delta}} manipulator}}"
+          RenderString="M" Tile="GiganticManipulator.png"
+          ColorString="&amp;c" DetailColor="K"
+          />
+    <part Name="Description"
+          Short="The {{gigantic|gigantic}} manipulator of a massive exoframe {{K|delta}} cybernetic implant."
+          />
+    <part Name="Physics" Category="Natural Weapon" IsReal="false" Weight="5" />
+    <tag Name="Tier" Value="4" />
+    <tag Name="SwingSound" Value="Sounds/Melee/cudgels/sfx_melee_cudgel_fullerite_swing" />
+    <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_fullerite_blocked" />
+  </object>
+
+  <object Name="MassiveExoframeManipulatorSigma" Inherits="BaseMassiveExoframeManipulator">
+    <part Name="Render" DisplayName="{{Y|E{{c|F}}-{{G|sigma}} manipulator}}"
+          RenderString="M" Tile="GiganticManipulator.png"
+          ColorString="&amp;c" DetailColor="G"
+          />
+    <part Name="Description"
+          Short="The {{gigantic|gigantic}} manipulator of a massive exoframe {{G|sigma}} cybernetic implant."
+          />
+    <part Name="Physics" Category="Natural Weapon" IsReal="false" Weight="2" />
+    <tag Name="Tier" Value="6" />
+    <tag Name="SwingSound" Value="Sounds/Melee/cudgels/sfx_melee_cudgel_crysteel_swing" />
+    <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_crysteel_blocked" />
+  </object>
+
+  <object Name="MassiveExoframeManipulatorOmega" Inherits="BaseMassiveExoframeManipulator">
+    <part Name="Render" DisplayName="{{Y|E{{c|F}}-{{zetachrome|omega}} manipulator}}"
+          RenderString="M" Tile="GiganticManipulator.png"
+          ColorString="&amp;c" DetailColor="M"
+          />
+    <part Name="Description"
+          Short="The {{gigantic|gigantic}} manipulator of a massive exoframe {{zetachrome|omega}} cybernetic implant."
+          />
+    <part Name="Physics" Category="Natural Weapon" IsReal="false" Weight="1" />
+    <tag Name="Tier" Value="8" />
+    <tag Name="SwingSound" Value="Sounds/Melee/cudgels/sfx_melee_cudgel_onehanded_zetachrome_swing" />
+    <tag Name="BlockedSound" Value="Sounds/Melee/multiUseBlock/sfx_melee_fullerite_blocked" />
+    <part Name="Zetachrome" />
+  </object>
+
+  <!-- Exoframe Manipulator Objects -->
+
+  <!-- End Gigantic Cybernetics -->
   <!-- Modified BaseGame Natural Weapons -->
 
   <object  Name="Crystalline Point" Load="Merge">

@@ -7,11 +7,13 @@ using XRL.World.Anatomy;
 using Mods.GigantismPlus;
 using Mods.GigantismPlus.HarmonyPatches;
 
-namespace XRL.World.Parts
+/*namespace XRL.World.Parts
 {
-    [Serializable]
-    public class MassiveExoframe : IPart
+    */[Serializable]
+    public class CyberneticsMassiveExoframe : IPart
     {
+        /* Potentially redundant
+         * 
         [Serializable]
         public class CompactedExoframe : IActivePart // Inner marker class
         {
@@ -64,10 +66,15 @@ namespace XRL.World.Parts
                 return true;
             }
         } //!--- public class CompactedExoframe : IActivePart  
+        */
 
         [NonSerialized]
         private GameObject _User;
 
+        public GameObject User => _User ?? (_User = ParentObject.Implantee);
+
+        /* Potentially redundant.
+         * 
         public static readonly string COMPACT_MODE_COMMAND_NAME = "CommandToggleExoframeCompactMode";
         public Guid EnableActivatedAbilityID = Guid.Empty;
 
@@ -130,8 +137,35 @@ namespace XRL.World.Parts
 
             }
         }
+        */
 
-        public GameObject _manipulatorObject;
+        public string Model = "Alpha";
+
+        public GameObject _ManipulatorObject;
+
+        public string ManipulatorBlueprintName
+        {
+            get
+            {
+                return "MassiveExoframeManipulator" + this.Model;
+            }
+
+        }
+
+        [NonSerialized]
+        protected GameObjectBlueprint _ManipulatorBlueprint;
+
+        public GameObjectBlueprint ManipulatorBlueprint
+        {
+            get
+            {
+                if (_ManipulatorBlueprint == null)
+                {
+                    _ManipulatorBlueprint = GameObjectFactory.Factory.GetBlueprint(ManipulatorBlueprintName);
+                }
+                return _ManipulatorBlueprint;
+            }
+        }
 
         public override bool WantEvent(int ID, int cascade)
         {
@@ -143,11 +177,12 @@ namespace XRL.World.Parts
 
         public virtual void OnImplanted(GameObject Object)
         {
+            Debug.Entry(2, "**public virtual void OnImplanted(GameObject Object)");
             // base
             _User = Object;
-             
+
             // Require Part
-            Object.RequirePart<MassiveExoframe>();
+            Object.RequirePart<CyberneticsMassiveExoframe>();
 
             /* Testing Mutation method.
              *
@@ -176,10 +211,15 @@ namespace XRL.World.Parts
             */
 
             // Natural Weapon
-            if (_manipulatorObject == null)
+            Debug.Entry(3, "**if (_ManipulatorObject == null)");
+            if (_ManipulatorObject == null)
             {
-                _manipulatorObject = GameObjectFactory.Factory.CreateObject("MassiveExoframeManipulatorA");
+                Debug.Entry(3, "-- (_ManipulatorObject == null");
+                _ManipulatorObject = GameObjectFactory.Factory.CreateObject(ManipulatorBlueprint);
             }
+
+            /* Seeing if I can have the GigantismPlus mutation handle this by hotswapping the Weapon Object.
+             * 
             Body body = Object.Body;
             if (body != null)
             {
@@ -187,15 +227,19 @@ namespace XRL.World.Parts
                 {
                     if (part.Type == "Hand")
                     {
-                        part.DefaultBehavior = _manipulatorObject;
+                        part.DefaultBehavior = _ManipulatorObject;
                     }
                 }
-            }
+            } 
+            */
             
         } //!--- public override void OnImplanted(GameObject Object)
 
         public virtual void OnUnimplanted(GameObject Object)
         {
+            Debug.Entry(3, "**public virtual void OnUnimplanted(GameObject Object)");
+            /* Might be redundant.
+             * 
             // Remove manipulator from hands
             Body body = Object.Body;
             if (body != null)
@@ -208,6 +252,7 @@ namespace XRL.World.Parts
                     }
                 }
             }
+            */
 
             /* Testing Mutation Method.
              * 
@@ -220,19 +265,22 @@ namespace XRL.World.Parts
             }
             */
 
-            Object.RemovePart<MassiveExoframe>();
+            Object.RemovePart<CyberneticsMassiveExoframe>();
+            Debug.Entry(3, "**Object.RemovePart<CyberneticsMassiveExoframe>()");
 
             /* Testing Mutation Method.
              * 
             Object.RemovePart<CompactedExoframe>();
             */
 
-            CheckEquipment(Object, body);
+            CheckEquipment(Object, Object.Body);
+            Debug.Entry(3, "**CheckEquipment(Object, Object.Body)");
 
         } //!--- public override void OnUnimplanted(GameObject Object)
 
         public override bool HandleEvent(ImplantedEvent E)
         {
+            Debug.Entry(3, "**public override bool HandleEvent(ImplantedEvent E)");
             /* Temporarily Commenting this out to see if OnImplanted works instead.
              * 
             E.Implantee.IsGiganticCreature = true;
@@ -287,11 +335,14 @@ namespace XRL.World.Parts
             */
 
             OnImplanted(E.Implantee);
+
+            Debug.Entry(3, "xxreturn base.HandleEvent(E)");
             return base.HandleEvent(E);
         }
 
         public override bool HandleEvent(UnimplantedEvent E)
         {
+            Debug.Entry(3, "**public override bool HandleEvent(UnimplantedEvent E)");
             /* Temporarily Commenting this out to see if OnImplanted works instead.
              *
             // Remove manipulator from hands
@@ -319,6 +370,7 @@ namespace XRL.World.Parts
             */
 
             OnUnimplanted(E.Implantee);
+            Debug.Entry(3, "xxreturn base.HandleEvent(E)");
             return base.HandleEvent(E);
         }
 
@@ -344,15 +396,21 @@ namespace XRL.World.Parts
 
         public void CheckEquipment(GameObject Actor, Body Body)
         {
+            Debug.Entry(3, "**public void CheckEquipment(GameObject Actor, Body Body)");
             if (Actor == null || Body == null)
+            { 
+                Debug.Entry(3, "xx(Actor == null || Body == null)");
                 return;
+            }
 
             List<GameObject> list = Event.NewGameObjectList();
+            Debug.Entry(3, "**foreach (BodyPart bodyPart in Body.LoopParts())");
             foreach (BodyPart bodyPart in Body.LoopParts())
             {
                 GameObject equipped = bodyPart.Equipped;
                 if (equipped != null && !list.Contains(equipped))
                 {
+                    Debug.Entry(3, "Part", equipped.DebugName);
                     list.Add(equipped);
                     int partCountEquippedOn = Body.GetPartCountEquippedOn(equipped);
                     int slotsRequiredFor = equipped.GetSlotsRequiredFor(Actor, bodyPart.Type, true);
@@ -363,8 +421,11 @@ namespace XRL.World.Parts
                     }
                 }
             }
+            Debug.Entry(3, "xxpublic void CheckEquipment(GameObject Actor, Body Body)");
         }
-
+        
+        /* Potentially redundant
+         * 
         public void EngageCompactMode(bool Message = false)
         {
             Debug.Entry(2, "**public void EngageCompactMode(bool Message = false)");
@@ -427,6 +488,7 @@ namespace XRL.World.Parts
 
         public override bool FireEvent(Event E)
         {
+            Debug.Entry(3, "**public override bool FireEvent(Event E)");
             /* Testing Mutation Method.
              * 
             if (E.ID == COMPACT_MODE_COMMAND_NAME)
@@ -469,25 +531,29 @@ namespace XRL.World.Parts
                 }
 
             }
-            */
+            *//*
 
-            The.Core.RenderBase();
+            // The.Core.RenderBase();
+            Debug.Entry(3, "xxpublic override bool FireEvent(Event E)");
             return base.FireEvent(E);
         }
+        */
+
 
         public override bool AllowStaticRegistration()
         {
             return true;
         }
-
+        
+        /* Testing Mutation Method.
+         *
         public override void Register(GameObject Object, IEventRegistrar Registrar)
         {
-            /* Testing Mutation Method.
-             * 
+             
             Registrar.Register(COMPACT_MODE_COMMAND_NAME);
-            */
 
             base.Register(Object, Registrar);
         }
-    }
-}
+        */
+    }/*
+}*/

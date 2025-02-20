@@ -219,7 +219,7 @@ namespace Mods.GigantismPlus.HarmonyPatches
 
             List<string> NaturalWeaponSupersedingMutations = new List<string>
             {
-                "MassiveExoframe",
+              //"MassiveExoframe",
                 "Crystallinity"
             };
 
@@ -251,7 +251,7 @@ namespace Mods.GigantismPlus.HarmonyPatches
 
             Debug.Entry(3, "**foreach (BodyPart hand in body.GetParts())");
             Debug.Entry(4, "**if (hand.Type == \"Hand\")");
-            foreach (BodyPart hand in body.GetParts())
+            foreach (BodyPart hand in body.GetParts(EvenIfDismembered: true))
             {
                 Debug.Entry(4, $"- Part is {hand.Type}");
                 if (hand.Type == "Hand")
@@ -383,7 +383,7 @@ namespace Mods.GigantismPlus.HarmonyPatches
 
             List<string> NaturalWeaponSupersedingMutations = new List<string>
             {
-                "MassiveExoframe"
+              //"MassiveExoframe"
             };
             
             int SupersededCount = 0;
@@ -415,8 +415,8 @@ namespace Mods.GigantismPlus.HarmonyPatches
             Debug.Entry(4, $"targetPartType is \"{targetPartType}\"");
             Debug.Entry(4, "Generating List<BodyPart> list");
             // Just change the body part search logic
-            List<BodyPart> list = (from p in body.GetParts()
-                                  where p.Type == targetPartType  // Changed from VariantType to Type
+            List<BodyPart> list = (from p in body.GetParts(EvenIfDismembered: true)
+                                   where p.Type == targetPartType  // Changed from VariantType to Type
                                    select p).ToList<BodyPart>();
 
 

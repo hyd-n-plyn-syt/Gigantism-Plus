@@ -67,7 +67,9 @@ namespace XRL.World.Parts.Mutation
         {
             get
             {
-                return ParentObject.HasPart<MassiveExoframe>();
+                if (ParentObject != null)
+                    return ParentObject.HasPart<CyberneticsMassiveExoframe>();
+                return false;
             }
         }
 
@@ -75,7 +77,7 @@ namespace XRL.World.Parts.Mutation
         {
             get 
             {
-                if (ParentObject.HasPart<MassiveExoframe>())
+                if (this.IsCyberGiant)
                     return "Compact";
                 return "Hunched";
             } 
@@ -85,7 +87,7 @@ namespace XRL.World.Parts.Mutation
         {
             get
             {
-                if (ParentObject.HasPart<MassiveExoframe>())
+                if (this.IsCyberGiant)
                     return "Regular"; // was "Standard" but it's one too many characters
                 return "Upright";
             }
@@ -192,7 +194,23 @@ namespace XRL.World.Parts.Mutation
             }
         }
 
-        public string NaturalWeaponBlueprintName => Variant.Coalesce("GiganticFist");
+        private string _NaturalWeaponBlueprintName = "GiganticFist";
+
+        public string NaturalWeaponBlueprintName 
+        {
+            get 
+            {
+                if (this.IsCyberGiant)
+                {
+                    return ParentObject.GetPart<CyberneticsMassiveExoframe>().ManipulatorBlueprintName;
+                }
+                return _NaturalWeaponBlueprintName; 
+            }
+            private set
+            {
+                this._NaturalWeaponBlueprintName = value;
+            }
+        }
         
         [NonSerialized]
         protected GameObjectBlueprint _NaturalWeaponBlueprint;
@@ -201,17 +219,18 @@ namespace XRL.World.Parts.Mutation
         {
             get
             {
-                if (_NaturalWeaponBlueprint == null)
-                {
-                    _NaturalWeaponBlueprint = GameObjectFactory.Factory.GetBlueprint(NaturalWeaponBlueprintName);
-                }
+                _NaturalWeaponBlueprint = GameObjectFactory.Factory.GetBlueprint(NaturalWeaponBlueprintName);
                 return _NaturalWeaponBlueprint;
+            }
+            set
+            {
+                _NaturalWeaponBlueprint = value;
             }
         }
 
         private static readonly List<string> NaturalWeaponSupersedingMutations = new List<string>
         {
-            "MassiveExoframe",
+          //"MassiveExoframe",
             "BurrowingClaws",
             "Crystallinity"
         };
@@ -245,10 +264,10 @@ namespace XRL.World.Parts.Mutation
         public override bool ChangeLevel(int NewLevel)
         {
 
-        // Straighten up if hunching.
-        // update HunchOver ability stats.
-        // Hunch over if hunched before level up.
-        bool WasHunched = false;
+            // Straighten up if hunching.
+            // update HunchOver ability stats.
+            // Hunch over if hunched before level up.
+            bool WasHunched = false;
             if (IsPseudoGiganticCreature && !IsVehicleCreature)
             {
                 WasHunched = true;
@@ -426,9 +445,11 @@ namespace XRL.World.Parts.Mutation
 
         public override string GetDescription()
         {
-            return "You are unusually large, will {{rules|struggle to enter small spaces}} without {{g|hunching over}}, and can typically {{rules|only}} use {{gigantic|gigantic}} equipment.\n"
+            string GigantismSource = (!this.IsCyberGiant) ? "unusually" : "{{c|cybernetically}}";
+            string WeaponName = this.NaturalWeaponBlueprint.DisplayName();
+            return "You are " + GigantismSource + " large, will {{rules|struggle to enter small spaces}} without {{g|hunching over}}, and can typically {{rules|only}} use {{gigantic|gigantic}} equipment.\n"
                  + "You are {{rules|heavy}}, can carry {{rules|twice}} as much weight, and all your natural weapons are {{gigantic|gigantic}}.\n\n"
-                 + "Your gigantic fists gain:\n"
+                 + "Your " + WeaponName + "s gain:\n"
                  + "{{rules|+1}} To-Hit every {{rules|2 mutation levels}}\n"
                  + "{{B|d1}} damage every {{B|3 mutation levels}}\n"
                  + "{{W|1d}} damage every {{W|5 mutation levels}}\n"
@@ -447,7 +468,8 @@ namespace XRL.World.Parts.Mutation
             {
                 MSPenalty = GetHunchedOverMSModifier(Level) + "}} MS";
             }
-            return "{{gigantic|Gigantic}} Fists {{rules|\x1A}}{{rules|4}}{{k|/\xEC}} {{r|\x03}}{{W|" + GetFistDamageDieCount(Level) + "}}{{rules|d}}{{B|" + GetFistDamageDieSize(Level) + "}}{{rules|+3}}\n"
+            string WeaponName = this.NaturalWeaponBlueprint.DisplayName();
+            return WeaponName + " {{rules|\x1A}}{{rules|4}}{{k|/\xEC}} {{r|\x03}}{{W|" + GetFistDamageDieCount(Level) + "}}{{rules|d}}{{B|" + GetFistDamageDieSize(Level) + "}}{{rules|+3}}\n"
                  + "and {{rules|" + GetFistHitBonus(Level) + "}} To-Hit\n"; /*+ "{{rules|" + GetHunchedOverQNModifier(Level) + " QN}} and {{rules|" + GetHunchedOverMSModifier(Level) + " MS}} when {{g|Hunched Over}}";
                  + "{{rules|" + GetHunchedOverQNModifier(Level) + " QN}} and {{rules|" + GetHunchedOverMSModifier(Level) + " MS}} when {{g|Hunched Over}}"; */
         }
@@ -614,12 +636,12 @@ namespace XRL.World.Parts.Mutation
                     Debug.Entry(3, "-- ElongatedPaws not Present");
                     Debug.Entry(3, "-- BurrowingClaws not Present");
 
-                    Debug.Entry(4, "**if (GiganticBurrowingClawObject == null)");
+                    /*Debug.Entry(4, "**if (GiganticFistObject == null)");
                     if (GiganticFistObject == null)
                     {
-                        Debug.Entry(3, "--- GiganticFistObject was null, init");
-                        GiganticFistObject = GameObjectFactory.Factory.CreateObject(NaturalWeaponBlueprint);
-                    }
+                        Debug.Entry(3, "--- GiganticFistObject was null, init");*/
+                        GiganticFistObject = GameObjectFactory.Factory.CreateObject(NaturalWeaponBlueprint);/*
+                    }*/
                     part.DefaultBehavior = GiganticFistObject;
                     var weapon = GiganticFistObject.GetPart<MeleeWeapon>();
                     weapon.BaseDamage = FistBaseDamage;
@@ -656,7 +678,7 @@ namespace XRL.World.Parts.Mutation
                 Debug.Entry(3, "- NaturalEquipment not Superseded");
 
                 Debug.Entry(3, "**foreach (BodyPart hand in body.GetParts())\n**if (hand.Type == \"Hand\")");
-                foreach (BodyPart hand in body.GetParts())
+                foreach (BodyPart hand in body.GetParts(EvenIfDismembered: true))
                 {
                     Debug.Entry(4, $"-- {hand.Type}");
                     if (hand.Type == "Hand")

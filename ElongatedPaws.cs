@@ -15,7 +15,7 @@ namespace XRL.World.Parts.Mutation
         
         private static readonly List<string> NaturalWeaponSupersedingMutations = new List<string>
         {
-            "MassiveExoframe",
+          //"MassiveExoframe",
             "GigantismPlus",
             "BurrowingClaws",
             "Crystallinity"
@@ -103,7 +103,7 @@ namespace XRL.World.Parts.Mutation
             if (body != null && !this.IsNaturalWeaponSuperseded)
             {
 
-                foreach (BodyPart hand in body.GetParts())
+                foreach (BodyPart hand in body.GetParts(EvenIfDismembered: true))
                 {
                     if (hand.Type == "Hand" && (hand.DefaultBehavior == ElongatedPawObject || hand.DefaultBehavior == GiganticElongatedPawObject || hand.DefaultBehavior == ElongatedBurrowingClawObject || hand.DefaultBehavior == GiganticElongatedBurrowingClawObject))
                     {
