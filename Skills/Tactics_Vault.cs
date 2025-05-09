@@ -874,39 +874,17 @@ namespace XRL.World.Parts.Skill
             Registrar.Register(COMMAND_TOGGLE);
             Registrar.Register(BEGIN_ATTACK_EVENT);
             Registrar.Register(ObjectLeavingCellEvent.ID, EventOrder.EXTREMELY_EARLY);
+            Registrar.Register(EnteringCellEvent.ID, EventOrder.EXTREMELY_EARLY);
             base.Register(Object, Registrar);
         }
         public override bool WantEvent(int ID, int cascade)
         {
-            bool zoneLoaded =
-                ParentObject != null
-             && ParentObject.CurrentZone == The.ActiveZone;
-
-            bool haveDiggableVaultablesAdjacent = false;
-            
-            if (false && IsBurrowerWantsToVault && zoneLoaded)
-            {
-                foreach (Cell cell in ParentObject.CurrentCell.GetAdjacentCells())
-                {
-                    if (cell != null && cell.HasDiggableVaultableObject())
-                    {
-                        haveDiggableVaultablesAdjacent = true;
-                        break;
-                    }
-                }
-            }
-
-            bool wantEnteredCell =
-                IsBurrowerWantsToVault
-             && haveDiggableVaultablesAdjacent;
-
             return base.WantEvent(ID, cascade)
-                || (DebugVaultDescriptions && zoneLoaded && ID == GetShortDescriptionEvent.ID)
+                || (DebugVaultDescriptions && ID == GetShortDescriptionEvent.ID)
                 || ID == BeforeAbilityManagerOpenEvent.ID
                 || ID == GetMovementCapabilitiesEvent.ID
                 || ID == CommandEvent.ID
                 || ID == GetItemElementsEvent.ID
-                || (wantEnteredCell && ID == EnteredCellEvent.ID)
                 || ID == PooledEvent<ShouldAttackToReachTargetEvent>.ID;
         }
         public override bool HandleEvent(BeforeAbilityManagerOpenEvent E)
@@ -924,7 +902,7 @@ namespace XRL.World.Parts.Skill
                 bool haveAutoActSetting = !AutoActSetting.IsNullOrEmpty();
 
                 StringBuilder SB = Event.NewStringBuilder();
-                SB.AppendColored("M", $"Vaulter").Append(": ")
+                SB.AppendColored("M", $"Vaulter").Append("[").AppendColored("g", $"{ParentObject?.CurrentCell?.Location}").Append("]").Append(": ")
                     .AppendLine()
                     .AppendColored("W", $"Cells and Vault State").AppendLine()
                     .Append(VANDR).Append($"[{MidVault.YehNah(true)}]{HONLY}MidVault: ").AppendColored("B", $"{MidVault}").AppendLine()
@@ -935,8 +913,8 @@ namespace XRL.World.Parts.Skill
                     .AppendColored("W", $"AutoAct State").AppendLine()
                     .Append(VANDR).Append($"[{WantToVault.YehNah()}]{HONLY}WantToVault: ").AppendColored("B", $"{WantToVault}").AppendLine()
                     .Append(VANDR).Append($"[{WasAutoActing.YehNah(WantToVault)}]{HONLY}WasAutoActing: ").AppendColored("B", $"{WasAutoActing}").AppendLine()
-                    .Append(VANDR).Append($"[{haveAutoActSetting.YehNah(WantToVault)}]{HONLY}AutoActSetting: ").AppendColored("o", $"{AutoActSetting?.Quote() ?? "null".Color("B")}").AppendLine();
-                    //.Append(TANDR).Append($"[{IsBurrowerWantsToVault.YehNah(!WantToVault)}]{HONLY}IsBurrowerWantsToVault: ").AppendColored("B", $"{IsBurrowerWantsToVault}").AppendLine();
+                    .Append(VANDR).Append($"[{haveAutoActSetting.YehNah(WantToVault)}]{HONLY}AutoActSetting: ").AppendColored("o", $"{AutoActSetting?.Quote() ?? "null".Color("B")}").AppendLine()
+                    .Append(TANDR).Append($"[{IsBurrowerWantsToVault.YehNah(!WantToVault)}]{HONLY}IsBurrowerWantsToVault: ").AppendColored("B", $"{IsBurrowerWantsToVault}").AppendLine();
                     
                 E.Infix.AppendLine().AppendRules(Event.FinalizeString(SB));
             }
@@ -1067,7 +1045,7 @@ namespace XRL.World.Parts.Skill
 
                 } // if (Vaultee != null)
             } // if (E.Actor == ParentObject && ParentObject != null && WantToVault)
-            if (false && IsBurrowerWantsToVault)
+            if (E.Cell.InActiveZone && IsBurrowerWantsToVault)
             {
                 GameObject Vaulter = ParentObject;
 
@@ -1114,15 +1092,15 @@ namespace XRL.World.Parts.Skill
             }
             return base.HandleEvent(E);
         }
-        public override bool HandleEvent(EnteredCellEvent E)
+        public override bool HandleEvent(EnteringCellEvent E)
         {
-            if (false && IsBurrowerWantsToVault && (!ParentObject.IsPlayer() || AutoAct.IsAnyMovement()))
+            if (E.Cell.InActiveZone && E.Actor == ParentObject && IsBurrowerWantsToVault && (!ParentObject.IsPlayer() || AutoAct.IsAnyMovement()))
             {
-                GameObject Vaulter = ParentObject;
+                GameObject Vaulter = E.Actor;
 
                 Debug.Entry(4,
                 $"@ {nameof(Tactics_Vault)}."
-                + $"{nameof(HandleEvent)}({nameof(EnteredCellEvent)} E)"
+                + $"{nameof(HandleEvent)}({nameof(EnteringCellEvent)} E)"
                 + $" E.Cell: [{E.Cell?.Location}],"
                 + $" E.Actor: {Vaulter?.DebugName ?? NULL}",
                 Indent: 0, Toggle: getDoDebug());
@@ -1136,7 +1114,7 @@ namespace XRL.World.Parts.Skill
                 Debug.LoopItem(4, $"AutoAct.IsAnyMovement", $"{AutoAct.IsAnyMovement()}",
                     Good: AutoAct.IsAnyMovement(), Indent: 1, Toggle: getDoDebug());
 
-                Debug.LoopItem(4, $"Checking adjacent cells for diggable vaultables...");
+                Debug.LoopItem(4, $"Checking adjacent cells for diggable vaultables...", Indent: 1);
                 foreach (Cell cell in ParentObject.CurrentCell.GetAdjacentCells())
                 {
                     if (cell != null && cell.HasDiggableVaultableObject())
@@ -1144,9 +1122,25 @@ namespace XRL.World.Parts.Skill
                         Debug.CheckYeh(4, $"Cell [{cell.Location}] contains a diggable vaultable", Indent: 1, Toggle: getDoDebug());
                         foreach (GameObject vaultable in cell.GetObjectsWithPart(nameof(Vaultable)))
                         {
-                            if (vaultable.HasIntProperty(DIGGABLE) 
-                                && CanVault(vaultable) 
-                                && vaultable.GetPart<Vaultable>().GetVaultableCellPairs().ContainsKey(Vaulter.CurrentCell))
+                            bool vaultableIsDiggable = vaultable.HasIntProperty(DIGGABLE);
+                            bool vaulterCanVaultVaultable = CanVault(vaultable);
+                            bool vaultableCellPairsContainsVaulter = vaultable.GetPart<Vaultable>().GetVaultableCellPairs().ContainsKey(E.Cell);
+                            bool swapDiggable =
+                                vaultableIsDiggable && vaulterCanVaultVaultable && vaultableCellPairsContainsVaulter;
+
+                            Debug.LoopItem(4, $"vaultableIsDiggable", $"{vaultableIsDiggable}",
+                                Good: vaultableIsDiggable, Indent: 2, Toggle: getDoDebug());
+
+                            Debug.LoopItem(4, $"vaulterCanVaultVaultable", $"{vaulterCanVaultVaultable}",
+                                Good: vaulterCanVaultVaultable, Indent: 2, Toggle: getDoDebug());
+
+                            Debug.LoopItem(4, $"vaultableCellPairsContainsVaulter", $"{vaultableCellPairsContainsVaulter}",
+                                Good: vaultableCellPairsContainsVaulter, Indent: 2, Toggle: getDoDebug());
+
+                            Debug.LoopItem(4, $"swapDiggable", $"{swapDiggable}",
+                                Good: swapDiggable, Indent: 1, Toggle: getDoDebug());
+                            Debug.Divider(4, HONLY, Count: 30, Indent: 1, Toggle: getDoDebug());
+                            if (swapDiggable)
                             {
                                 vaultable.SetIntProperty(WAS_DIGGABLE, 1);
                                 vaultable.SetIntProperty(DIGGABLE, 0, true);
@@ -1158,6 +1152,8 @@ namespace XRL.World.Parts.Skill
 
                                 Debug.LoopItem(4, $"WasDiggable".Quote(), $"{vaultable.HasIntProperty(WAS_DIGGABLE)}",
                                     Good: vaultable.HasIntProperty(WAS_DIGGABLE), Indent: 3, Toggle: getDoDebug());
+
+                                Debug.Divider(4, HONLY, Count: 30, Indent: 1, Toggle: getDoDebug());
                             }
                         }
                     }
