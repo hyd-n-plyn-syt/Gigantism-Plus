@@ -2,18 +2,29 @@
 <objects>
   <!-- 
       
-       1: Gigantic Exoframes
-       2: Modified BaseGame Natural Weapons
-       3: Modified BaseGame "Natural" Weapons
-       4: Sultan Masks
-       5: General GiganticEquippable Changes
-       6: Gigantic Modable Changes 
-       7: Gigantic Variants
-       8: Wrassle Gear
-       9: Weapon Elongating
-      10: Testing
+       1: Add NaturalEquipmentManager to Item
+       2: Gigantic Exoframes
+       3: Modified BaseGame Natural Weapons
+       4: Modified BaseGame "Natural" Weapons
+       5: Sultan Masks
+       6: General GiganticEquippable Changes
+       7: Gigantic Modable Changes 
+       8: Gigantic Variants
+       9: Wrassle Gear
+      10: Weapon Elongating
+      11: Testing
       
   -->
+  <!-- 
+  
+       Add NaturalEquipmentManager to Item
+       
+     -->
+  <object Name="Item" Load="Merge">
+    <part Name="NaturalEquipmentManager" />
+    <part Name="UD_MeleeWeapon_StrBonusCapper" />
+  </object>
+  
   <!-- 
       
       Gigantic Exoframes 
@@ -375,6 +386,11 @@ You cannot wear equipment on your body." />
     <part Name="Armor" WornOn="Foot" />
     <part Name="Physics" Weight="1" />
     <tag Name="BaseObject" Value="*noinherit" />
+	</object>
+	<object Name="WrassleBoot" Inherits="BaseWrassleBoot">
+    <part Name="Render" DisplayName="vibrant nanoweave bota"
+          Tile="Items/Nanoweave_Bota_01_Left.png" />
+    <part Name="WrassleGear" RandomTiles="Items/Nanoweave_Bota_~01-04~_Left.png,Items/Nanoweave_Bota_~01-04~_Right.png" />
 	</object>
 	<object Name="WrassleBootLeft" Inherits="BaseWrassleBoot">
     <part Name="Render" DisplayName="vibrant nanoweave bota"
